@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Commands {
 
-    INFO("/info");
+    INFO("/info"),
+    CLIENTS("/clients"),
+    MASTERS("/masters");
 
     private final String command;
 
