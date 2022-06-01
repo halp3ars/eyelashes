@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: doadmin
+    hikari:
+      maximum-pool-size: '5'
+    url: jdbc:postgresql://db-postgresql-fra1-69062-do-user-11372412-0.b.db.ondigitalocean.com:25060/eyelashes
+    password: AVNS_ClMzraDTLV4mXFQ
+  jpa:
+    generate-ddl: 'true'
+    properties:
+      javax:
+        persistence:
+          query:
+            timeout: '6000000'
+telegram:
+  nameBot: '@BeautyEyelashesBot'
+  tokenBot: '5531596418:AAFw9TtWSvIgZSD_-KpRi0JUDz1LWXmfQSY'

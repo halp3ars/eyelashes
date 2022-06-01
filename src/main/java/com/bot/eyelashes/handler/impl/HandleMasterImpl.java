@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class HandleMasterImpl implements Handle {
     @Override
-    public void handleButton() {
+    public void handleCallbackButton() {
 
     }
 

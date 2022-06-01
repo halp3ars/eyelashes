@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 public class HandleInfoImpl implements Handle {
     @Override
-    public void handleButton() {
+    public void handleCallbackButton() {
         InlineKeyboardButton buttonMainMenu = InlineKeyboardButton.builder()
                 .text("Меню")
                 .callbackData("menu")
