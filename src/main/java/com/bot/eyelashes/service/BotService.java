@@ -1,7 +1,7 @@
 package com.bot.eyelashes.service;
 
 import com.bot.eyelashes.config.properties.TelegramProperties;
-import com.bot.eyelashes.handler.impl.StartHandlerImpl;
+import com.bot.eyelashes.handler.impl.HandeStartImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,14 @@ public class BotService extends TelegramLongPollingBot {
 
 
     private final TelegramProperties telegramProperties;
-    private final StartHandlerImpl startHandler;
+    private final HandeStartImpl startHandler;
 
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.getMessage().getText().equals("/start")){
+        if (update.hasCallbackQuery()){
+            execute(startHandler.handleCallbackButton(update.getCallbackQuery()));
+        }else if(update.getMessage().getText().equals("/start")){
                execute(startHandler.getMessage(update));
         }
     }
@@ -53,23 +55,7 @@ public class BotService extends TelegramLongPollingBot {
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         }else if (callbackQuery.getData().equals("info")){
-            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-            buttons.add(
-                    Arrays.asList(
-                            InlineKeyboardButton.builder()
-                                    .text("Главаная")
-                                    .callbackData("main")
-                                    .build(),
-                            InlineKeyboardButton.builder()
-                                    .text("Назад")
-                                    .callbackData("back")
-                                    .build()));
-            execute(
-                    SendMessage.builder()
-                            .text("Информация о боте")
-                            .chatId(callbackQuery.getMessage().getChatId().toString())
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                            .build());
+
         }
 
 
