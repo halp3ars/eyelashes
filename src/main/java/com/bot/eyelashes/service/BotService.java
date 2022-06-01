@@ -87,7 +87,7 @@ public class BotService extends TelegramLongPollingBot {
                             .chatId(callbackQuery.getMessage().getChatId().toString())
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
-        }else if (callbackQuery.getData().equals("info")){
+        } else if (callbackQuery.getData().equals("info")){
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(
                     Arrays.asList(
