@@ -38,31 +38,76 @@ public class BotService extends TelegramLongPollingBot {
         Message message = update.getMessage();
         if (update.hasMessage() && message.getText().equals("/start")) {
             handleInfo(update.getMessage());
+        } else if (update.hasCallbackQuery()) {
+            handleCallback(update.getCallbackQuery());
         }
+
+
     }
 
     private void handleInfo(Message message) throws TelegramApiException {
-        if (message.hasText()) {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        buttons.add(
+                Arrays.asList(
+                        InlineKeyboardButton.builder()
+                                .text("Информация о боте")
+                                .callbackData("info")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("Начать работу")
+                                .callbackData("main")
+                                .build()));
+
+        execute(
+                SendMessage.builder()
+                        .text("Здраствуйте выберите одну из функций")
+                        .chatId(message.getChatId().toString())
+                        .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                        .build());
+
+    }
+
+    @SneakyThrows
+    private void handleCallback(CallbackQuery callbackQuery) {
+        if (callbackQuery.getData().equals("main")) {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(
                     Arrays.asList(
                             InlineKeyboardButton.builder()
-                                    .text("Информация о боте")
-                                    .callbackData("asd")
+                                    .text("Мастер")
+                                    .callbackData("master")
                                     .build(),
                             InlineKeyboardButton.builder()
-                                    .text("Начать работу")
+                                    .text("client")
                                     .callbackData("das")
                                     .build()));
-
             execute(
                     SendMessage.builder()
                             .text("Здраствуйте выберите одну из функций")
-                            .chatId(message.getChatId().toString())
+                            .chatId(callbackQuery.getMessage().getChatId().toString())
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
-            return;
+        }else if (callbackQuery.getData().equals("info")){
+            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+            buttons.add(
+                    Arrays.asList(
+                            InlineKeyboardButton.builder()
+                                    .text("Главаная")
+                                    .callbackData("main")
+                                    .build(),
+                            InlineKeyboardButton.builder()
+                                    .text("Назад")
+                                    .callbackData("back")
+                                    .build()));
+            execute(
+                    SendMessage.builder()
+                            .text("Информация о боте")
+                            .chatId(callbackQuery.getMessage().getChatId().toString())
+                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                            .build());
         }
+
+
     }
 
     @Override
