@@ -1,24 +1,20 @@
 package com.bot.eyelashes.service;
 
 import com.bot.eyelashes.config.properties.TelegramProperties;
+import com.bot.eyelashes.enums.CallbackQueryType;
 import com.bot.eyelashes.enums.Commands;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.impl.HandeStartImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BotService extends TelegramLongPollingBot {
 
@@ -28,12 +24,16 @@ public class BotService extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        Commands commands = Commands.getTypeCommand(update.getMessage().getText());
-        String commandName = commands.getCOMMAND();
-        Handle command = commands.getHANDLE();
-        if(commandName.equals(update.getMessage().getText())){
+        if(update.hasCallbackQuery()){
+            CallbackQueryType callbackQueryType = CallbackQueryType.getTypeCommand(update.getCallbackQuery().getData());
+            execute(callbackQueryType.getCALLBACK().getCallbackQuery(update.getCallbackQuery()));
+        }else if(update.getMessage().hasText()){
+            Commands commands = Commands.getTypeCommand(update.getMessage().getText());
+            String commandName = commands.getCOMMAND();
+            Handle command = commands.getHANDLE();
             execute(command.getMessage(update));
         }
+
     }
 
     @Override
