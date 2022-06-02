@@ -8,7 +8,12 @@ public class CallbackStartImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        return SendMessage.builder().chatId(callbackQuery.getMessage().getChatId().toString()).text("START_CALLBACK").build();
+        return SendMessage.builder()
+                .chatId(callbackQuery.getMessage()
+                        .getChatId()
+                        .toString())
+                .text("START_CALLBACK")
+                .build();
     }
 
     @Override

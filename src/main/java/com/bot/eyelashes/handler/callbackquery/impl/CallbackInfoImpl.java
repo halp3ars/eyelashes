@@ -8,8 +8,12 @@ public class CallbackInfoImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        return SendMessage.builder().chatId(callbackQuery.getMessage().getChatId().toString()).text("INFO_CALLBACK").build();
+        return null;
     }
+    //HASH MAP
+    //Webhook ??
+    // registr
+    // State
 
     @Override
     public void getHandlerQueryType() {

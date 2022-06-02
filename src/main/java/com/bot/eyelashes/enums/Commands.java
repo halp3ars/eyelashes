@@ -2,9 +2,9 @@ package com.bot.eyelashes.enums;
 
 
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.impl.HandeStartImpl;
+import com.bot.eyelashes.handler.impl.HandleMainMenuImpl;
+import com.bot.eyelashes.handler.impl.HandleStartImpl;
 import com.bot.eyelashes.handler.impl.HandleInfoImpl;
-import com.bot.eyelashes.handler.impl.HandleMasterImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Commands {
     INFO("/info", new HandleInfoImpl()),
-    START("/start",new HandeStartImpl());
+    START("/start",new HandleStartImpl()),
+    MENU("/menu", new HandleMainMenuImpl());
 
     private final String COMMAND;
     private final Handle HANDLE;

@@ -8,11 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class HandleMasterImpl implements Handle {
 
     @Override
-    public SendMessage handleCallbackButton(CallbackQuery callbackQuery) {
-        return null;
-    }
-
-    @Override
     public SendMessage getMessage(Update update) {
         return null;
     }
