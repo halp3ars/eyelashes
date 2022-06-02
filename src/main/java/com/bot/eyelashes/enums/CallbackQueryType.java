@@ -6,7 +6,7 @@ import com.bot.eyelashes.handler.callbackquery.impl.CallbackInfoImpl;
 
 public enum CallbackQueryType {
 //    REGISTRATION(new C ), AUTH, MENU, INFO, START,MENU_CLIENT, MENU_MASTER;
-    INFO(new CallbackInfoImpl()), START(new CallbackStartImpl());
+    INFO(new CallbackInfoImpl()), START(new CallbackStartImpl()),MASTER(new CallbackInfoImpl()),CLIENT(new CallbackStartImpl());
 
     private final Callback CALLBACK;
 

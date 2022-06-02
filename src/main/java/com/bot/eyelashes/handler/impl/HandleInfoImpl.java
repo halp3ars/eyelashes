@@ -18,21 +18,23 @@ import java.util.List;
 public class HandleInfoImpl implements Handle {
 
     @Override
-    public SendMessage handleCallbackButton(CallbackQuery callbackQuery) {
-
-        return SendMessage.builder().build();
-    }
-
-    @Override
     public SendMessage getMessage(Update update) {
-        List<List<InlineKeyboardButton>> buttonMainMenu =  new ArrayList<>();
+        List<List<InlineKeyboardButton>> buttonMainMenu = new ArrayList<>();
         buttonMainMenu.add(
                 Arrays.asList(
                         InlineKeyboardButton.builder()
                                 .text("Меню")
                                 .callbackData("START")
                                 .build()));
-        return SendMessage.builder().chatId(update.getMessage().getChatId().toString()).text("хкй").replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttonMainMenu).build()).build();
+        return SendMessage.builder()
+                .chatId(update.getMessage()
+                        .getChatId()
+                        .toString())
+                .text("хкй")
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboard(buttonMainMenu)
+                        .build())
+                .build();
 
     }
 }
