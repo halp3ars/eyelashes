@@ -9,9 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class TelegramProperties {
 
     private String messageTextInfo;
-
     private String nameBot;
-
     private String tokenBot;
 
 }

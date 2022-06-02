@@ -4,7 +4,6 @@ import com.bot.eyelashes.handler.Handle;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -33,7 +32,7 @@ public class HandleInfoImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
-                        .text("Мастер")
+                        .text("Меню")
                         .callbackData("MENU")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
