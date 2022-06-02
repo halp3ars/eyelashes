@@ -17,12 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HandleInfoImpl implements Handle {
 
-    private final TelegramProperties telegramProperties;
     @Override
     public SendMessage handleCallbackButton(CallbackQuery callbackQuery) {
-        if(callbackQuery.getData().equals("main")){
 
-        }
         return SendMessage.builder().build();
     }
 
@@ -33,9 +30,9 @@ public class HandleInfoImpl implements Handle {
                 Arrays.asList(
                         InlineKeyboardButton.builder()
                                 .text("Меню")
-                                .callbackData("menu")
+                                .callbackData("MENU")
                                 .build()));
-        return SendMessage.builder().text(telegramProperties.getMessageTextInfo()).replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttonMainMenu).build()).build();
+        return SendMessage.builder().chatId(update.getMessage().getChatId().toString()).text("хкй").replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttonMainMenu).build()).build();
 
     }
 }
