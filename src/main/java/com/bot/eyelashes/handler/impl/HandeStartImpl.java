@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -26,10 +27,10 @@ public class HandeStartImpl implements Handle {
     }
 
     @Override
-    public SendMessage getMessage(Update update) {
+    public SendMessage getMessage(Message message) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        InlineKeyboardButton buttonStart = InlineKeyboardButton.builder().text("Начать").callbackData("START").build();
+        InlineKeyboardButton buttonStart = InlineKeyboardButton.builder().text("Начать").callbackData("INFO").build();
         buttons.add(Arrays.asList(buttonStart));
-        return SendMessage.builder().chatId(update.getMessage().getChatId().toString()).replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build()).text(START_MESSAGE).build();
+        return SendMessage.builder().chatId(message.getChatId().toString()).replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build()).text(START_MESSAGE).build();
     }
 }

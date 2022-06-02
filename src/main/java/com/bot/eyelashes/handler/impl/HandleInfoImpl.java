@@ -24,15 +24,15 @@ public class HandleInfoImpl implements Handle {
     }
 
     @Override
-    public SendMessage getMessage(Update update) {
+    public SendMessage getMessage(Message message) {
         List<List<InlineKeyboardButton>> buttonMainMenu =  new ArrayList<>();
         buttonMainMenu.add(
                 Arrays.asList(
                         InlineKeyboardButton.builder()
                                 .text("Меню")
-                                .callbackData("MENU")
+                                .callbackData("START")
                                 .build()));
-        return SendMessage.builder().chatId(update.getMessage().getChatId().toString()).text("хкй").replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttonMainMenu).build()).build();
+        return SendMessage.builder().chatId(message.getChatId().toString()).text("хкй").replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttonMainMenu).build()).build();
 
     }
 }
