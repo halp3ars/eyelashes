@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 public class CallbackClientImpl implements Callback {
-
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         return SendMessage.builder()

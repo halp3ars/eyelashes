@@ -1,7 +1,9 @@
 package com.bot.eyelashes.handler.impl;
 
+import com.bot.eyelashes.config.properties.TelegramProperties;
 import com.bot.eyelashes.handler.Handle;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,15 +14,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class HandleInfoImpl implements Handle {
+
 
     @Override
     public SendMessage getMessage(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId()
                         .toString())
-                .text("НАШ БОТ ЛУЧШИЙ БОТ НА ПЛАНЕТ ЗЕМЛЯ ИГОРЬ ЛОХ ЧТО ПРОЦЕНТВО")
+                .text("Amd")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                         .keyboard(createInlineKeyboard().getKeyboard())
                         .build())
