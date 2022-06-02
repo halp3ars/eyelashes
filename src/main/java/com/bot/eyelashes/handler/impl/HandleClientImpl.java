@@ -1,8 +1,7 @@
 package com.bot.eyelashes.handler.impl;
 
+import com.bot.eyelashes.enums.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,33 +12,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
-@Service
-public class HandleStartImpl implements Handle {
-
-    private final String START_MESSAGE = "Здравствуйте это бот для записи на процедуры в салоне красоты";
-
+public class HandleClientImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId()
                         .toString())
+                .text("Выберите вид деятельности")
                 .replyMarkup(createInlineKeyboard())
-                .text(START_MESSAGE)
                 .build();
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard() {
+    public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
-                        .text("Начать")
-                        .callbackData("MENU")
+                        .text(TypeOfActivity.EYEBROWS.getActivity())
+                        .callbackData("EYEBROWS")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text(TypeOfActivity.EYELASH.getActivity())
+                        .callbackData("EYELASH")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text(TypeOfActivity.NAILS.getActivity())
+                        .callbackData("NAILS")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 }

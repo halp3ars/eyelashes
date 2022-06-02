@@ -1,9 +1,9 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.enums.CallbackQueryType;
 import com.bot.eyelashes.handler.Handle;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,10 +16,9 @@ import java.util.List;
 public class HandleInfoImpl implements Handle {
 
     @Override
-    public SendMessage getMessage(Update update) {
+    public SendMessage getMessage(Message message) {
         return SendMessage.builder()
-                .chatId(update.getMessage()
-                        .getChatId()
+                .chatId(message.getChatId()
                         .toString())
                 .text("НАШ БОТ ЛУЧШИЙ БОТ НА ПЛАНЕТ ЗЕМЛЯ ИГОРЬ ЛОХ ЧТО ПРОЦЕНТВО")
                 .replyMarkup(InlineKeyboardMarkup.builder()
@@ -35,7 +34,7 @@ public class HandleInfoImpl implements Handle {
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
                         .text("Мастер")
-                        .callbackData(CallbackQueryType.MENU.name())
+                        .callbackData("MENU")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

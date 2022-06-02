@@ -1,7 +1,7 @@
 package com.bot.eyelashes.enums;
 
 public enum TypeOfActivity {
-    EYEBROWS("eyebrows"), EYELASH("eyelash"), NAILS("nails");
+    EYEBROWS("Брови"), EYELASH("Ресницы"), NAILS("Ногти");
     private String activity;
 
     TypeOfActivity(String activity) {
