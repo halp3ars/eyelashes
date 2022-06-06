@@ -1,4 +1,4 @@
-package com.bot.eyelashes.enums.map;
+package com.bot.eyelashes.map;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.impl.*;
@@ -21,7 +21,6 @@ public class CommandMap {
     public Handle getCommand(String keyCommand) {
         return COMMAND_MAP.get(keyCommand);
     }
-
     public static Set<String> getCommandKeySet() {
         return COMMAND_MAP.keySet();
     }

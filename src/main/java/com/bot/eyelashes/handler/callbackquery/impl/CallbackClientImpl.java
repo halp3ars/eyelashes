@@ -9,18 +9,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 public class CallbackClientImpl implements Callback {
 
     @Override
-    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
+    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
         return SendMessage.builder()
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .replyMarkup(getHandlerQueryType())
+                .replyMarkup(getMarkup())
                 .text("Виды услуг")
                 .build();
     }
 
     @Override
-    public InlineKeyboardMarkup getHandlerQueryType() {
+    public InlineKeyboardMarkup getMarkup() {
         HandleClientImpl handleClient = new HandleClientImpl();
         return handleClient.createInlineKeyboard();
     }

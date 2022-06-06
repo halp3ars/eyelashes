@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties(TelegramProperties.class)
 public class EyelashesApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EyelashesApplication.class, args);
     }

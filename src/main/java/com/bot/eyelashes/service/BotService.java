@@ -1,8 +1,8 @@
 package com.bot.eyelashes.service;
 
 import com.bot.eyelashes.config.properties.TelegramProperties;
-import com.bot.eyelashes.enums.map.CallBackQueryTypeMap;
-import com.bot.eyelashes.enums.map.CommandMap;
+import com.bot.eyelashes.map.CallBackQueryTypeMap;
+import com.bot.eyelashes.map.CommandMap;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,15 @@ public class BotService extends TelegramLongPollingBot {
 
     private final TelegramProperties telegramProperties;
 
+    private final CallBackQueryTypeMap callBackQueryTypeMap;
+
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(update.hasCallbackQuery()){
-            CallBackQueryTypeMap callBackQueryTypeMap = new CallBackQueryTypeMap();
             Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData());
-            execute(callback.getCallbackQuery(update.getCallbackQuery()));
+            execute(callback.getMessageByCallback(update.getCallbackQuery()));
         }else if(message.hasText()){
             CommandMap commandMap = new CommandMap();
             Handle handle = commandMap.getCommand(message.getText());

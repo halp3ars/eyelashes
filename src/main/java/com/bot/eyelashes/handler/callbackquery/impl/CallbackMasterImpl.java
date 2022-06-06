@@ -7,12 +7,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 
 public class CallbackMasterImpl implements Callback {
     @Override
-    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
+    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
         return null;
     }
 
     @Override
-    public InlineKeyboardMarkup getHandlerQueryType() {
+    public InlineKeyboardMarkup getMarkup() {
         return null;
     }
 }

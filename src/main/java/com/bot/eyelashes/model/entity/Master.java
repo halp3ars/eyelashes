@@ -1,11 +1,10 @@
 package com.bot.eyelashes.model.entity;
 
-import com.bot.eyelashes.enums.TypeOfActivity;
+import com.bot.eyelashes.map.TypeOfActivity;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Setter
 @Getter
@@ -26,8 +25,7 @@ public class Master {
     private String phoneNumber;
     @Column(name = "address")
     private String address;
-
-    @Enumerated(EnumType.STRING)
-    private TypeOfActivity activity;
+    @Column(name = "activity")
+    private String activity;
 
 }

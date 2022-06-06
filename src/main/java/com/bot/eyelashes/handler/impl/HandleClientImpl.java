@@ -1,7 +1,7 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.enums.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.map.TypeOfActivity;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -23,20 +23,22 @@ public class HandleClientImpl implements Handle {
                 .build();
     }
 
+    @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        TypeOfActivity typeOfActivity = new TypeOfActivity();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
-                        .text(TypeOfActivity.EYEBROWS.getActivity())
+                        .text(typeOfActivity.getCommand("EYEBROWS"))
                         .callbackData("EYEBROWS")
                         .build(),
                 InlineKeyboardButton.builder()
-                        .text(TypeOfActivity.EYELASH.getActivity())
-                        .callbackData("EYELASH")
+                        .text(typeOfActivity.getCommand("EYELASHES"))
+                        .callbackData("EYELASHES")
                         .build(),
                 InlineKeyboardButton.builder()
-                        .text(TypeOfActivity.NAILS.getActivity())
+                        .text(typeOfActivity.getCommand("NAILS"))
                         .callbackData("NAILS")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);

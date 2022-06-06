@@ -27,7 +27,8 @@ public class HandleInfoImpl implements Handle {
 
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard() {
+    @Override
+    public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(
