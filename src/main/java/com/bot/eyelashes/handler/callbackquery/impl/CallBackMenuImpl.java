@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.List;
+
 public class CallBackMenuImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
@@ -17,6 +19,7 @@ public class CallBackMenuImpl implements Callback {
                 .text("Меню")
                 .build();
     }
+
 
     @Override
     public InlineKeyboardMarkup getHandlerQueryType() {

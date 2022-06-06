@@ -1,12 +1,12 @@
 package com.bot.eyelashes.handler.callbackquery.impl;
 
-import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.impl.HandleClientImpl;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+
+import java.util.List;
 
 public class CallbackClientImpl implements Callback {
     @Override
@@ -19,6 +19,7 @@ public class CallbackClientImpl implements Callback {
                 .text("Виды услуг")
                 .build();
     }
+
 
     @Override
     public InlineKeyboardMarkup getHandlerQueryType() {

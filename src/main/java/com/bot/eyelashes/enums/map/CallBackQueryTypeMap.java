@@ -4,10 +4,16 @@ import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.callbackquery.impl.CallBackMenuImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterImpl;
+import com.bot.eyelashes.repository.MasterRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+
 
 public class CallBackQueryTypeMap {
     private static final Map<String, Callback> CALLBACK_MAP = new HashMap<>();

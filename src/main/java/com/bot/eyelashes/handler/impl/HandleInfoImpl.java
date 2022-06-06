@@ -1,12 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.config.properties.TelegramProperties;
 import com.bot.eyelashes.handler.Handle;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -14,10 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class HandleInfoImpl implements Handle {
-
-
     @Override
     public SendMessage getMessage(Message message) {
         return SendMessage.builder()
@@ -31,10 +24,11 @@ public class HandleInfoImpl implements Handle {
 
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard() {
+    @Override
+    public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Arrays.asList(
+        buttons.add(List.of(
                 InlineKeyboardButton.builder()
                         .text("Мастер")
                         .callbackData("MENU")
@@ -42,5 +36,4 @@ public class HandleInfoImpl implements Handle {
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 }

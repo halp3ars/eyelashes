@@ -27,7 +27,10 @@ public class Master {
     @Column(name = "address")
     private String address;
 
-    @Enumerated(EnumType.STRING)
-    private TypeOfActivity activity;
+    @Column(name = "activity_type")
+    private String activity;
+
+    @Column(name = "telegram_id")
+    private Long telegramId;
 
 }

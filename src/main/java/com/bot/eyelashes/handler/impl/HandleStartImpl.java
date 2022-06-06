@@ -30,7 +30,8 @@ public class HandleStartImpl implements Handle {
                 .build();
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard() {
+    @Override
+    public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(

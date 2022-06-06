@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HandleClientImpl implements Handle {
-
     @Override
     public SendMessage getMessage(Message message) {
         return SendMessage.builder()
@@ -24,6 +23,7 @@ public class HandleClientImpl implements Handle {
                 .build();
     }
 
+    @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
