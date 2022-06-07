@@ -9,8 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 public class CallBackMenuImpl implements Callback {
     @Override
     public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+        HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
         return SendMessage.builder()
-                .replyMarkup(getMarkup())
+                .replyMarkup(handleMainMenu.createInlineKeyboard())
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
@@ -18,9 +19,4 @@ public class CallBackMenuImpl implements Callback {
                 .build();
     }
 
-    @Override
-    public InlineKeyboardMarkup getMarkup() {
-        HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
-        return handleMainMenu.createInlineKeyboard();
-    }
 }

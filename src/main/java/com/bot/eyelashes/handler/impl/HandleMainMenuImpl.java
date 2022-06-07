@@ -3,6 +3,7 @@ package com.bot.eyelashes.handler.impl;
 import com.bot.eyelashes.handler.Handle;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -14,12 +15,12 @@ public class HandleMainMenuImpl implements Handle {
 
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
                 .replyMarkup(createInlineKeyboard())
-                .chatId(message.getChatId()
+                .chatId(update.getMessage().getChatId()
                         .toString())
-                .text("Меншечька")
+                .text("Меню")
                 .build();
     }
 

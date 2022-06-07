@@ -8,5 +8,4 @@ public interface Callback {
 
     SendMessage getMessageByCallback(CallbackQuery callbackQuery);
 
-    InlineKeyboardMarkup getMarkup();
 }

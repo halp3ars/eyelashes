@@ -10,18 +10,16 @@ public class CallbackClientImpl implements Callback {
 
     @Override
     public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+        HandleClientImpl handleClient = new HandleClientImpl();
         return SendMessage.builder()
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .replyMarkup(getMarkup())
+                .replyMarkup(handleClient.createInlineKeyboard())
                 .text("Виды услуг")
                 .build();
     }
 
-    @Override
-    public InlineKeyboardMarkup getMarkup() {
-        HandleClientImpl handleClient = new HandleClientImpl();
-        return handleClient.createInlineKeyboard();
-    }
+
+
 }

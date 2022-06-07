@@ -11,8 +11,4 @@ public class CallbackMasterImpl implements Callback {
         return null;
     }
 
-    @Override
-    public InlineKeyboardMarkup getMarkup() {
-        return null;
-    }
 }

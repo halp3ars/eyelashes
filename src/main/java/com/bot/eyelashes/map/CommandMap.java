@@ -21,6 +21,7 @@ public class CommandMap {
     public Handle getCommand(String keyCommand) {
         return COMMAND_MAP.get(keyCommand);
     }
+
     public static Set<String> getCommandKeySet() {
         return COMMAND_MAP.keySet();
     }

@@ -27,12 +27,12 @@ public class BotService extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(update.hasCallbackQuery()){
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData());
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData().split("/")[0]);
             execute(callback.getMessageByCallback(update.getCallbackQuery()));
         }else if(message.hasText()){
             CommandMap commandMap = new CommandMap();
             Handle handle = commandMap.getCommand(message.getText());
-            execute(handle.getMessage(update.getMessage()));
+            execute(handle.getMessage(update));
         }
     }
 

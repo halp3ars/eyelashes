@@ -4,11 +4,6 @@ import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.callbackquery.impl.CallBackMenuImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterImpl;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackTypeOfActivityImpl;
-import com.bot.eyelashes.repository.MasterRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +24,7 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("EYEBROWS", callback);
         CALLBACK_MAP.put("EYELASHES", callback);
     }
-    
-    
+
 
     public static Set<String> getCallbackKeySet() {
         return CALLBACK_MAP.keySet();

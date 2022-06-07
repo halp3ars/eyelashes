@@ -2,8 +2,11 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.map.TypeOfActivity;
+import lombok.Getter;
+import lombok.Setter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -14,14 +17,15 @@ import java.util.List;
 public class HandleClientImpl implements Handle {
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
-                .chatId(message.getChatId()
+                .chatId(update.getMessage().getChatId()
                         .toString())
                 .text("Выберите вид деятельности")
                 .replyMarkup(createInlineKeyboard())
                 .build();
     }
+
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {

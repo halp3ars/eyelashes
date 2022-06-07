@@ -1,8 +1,5 @@
 package com.bot.eyelashes.map;
 
-import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.impl.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

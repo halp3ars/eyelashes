@@ -1,6 +1,5 @@
 package com.bot.eyelashes.model.entity;
 
-import com.bot.eyelashes.map.TypeOfActivity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "master")
 public class Master {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +27,7 @@ public class Master {
     private String address;
     @Column(name = "activity")
     private String activity;
+    @Column(name = "telegram_id")
+    private Long telegramId;
 
 }

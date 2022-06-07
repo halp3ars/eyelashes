@@ -17,8 +17,9 @@ public class CallbackTypeOfActivityImpl implements Callback {
 
     @Override
     public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+        HandleTypeOfActivityImpl handleTypeOfActivity = new HandleTypeOfActivityImpl(masterRepository);
         return SendMessage.builder()
-                .replyMarkup(getMarkup())
+                .replyMarkup(handleTypeOfActivity.createInlineKeyboardWithCallback(callbackQuery))
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
@@ -26,9 +27,4 @@ public class CallbackTypeOfActivityImpl implements Callback {
                 .build();
     }
 
-    @Override
-    public InlineKeyboardMarkup getMarkup() {
-        HandleTypeOfActivityImpl handleTypeOfActivity = new HandleTypeOfActivityImpl(masterRepository);
-        return handleTypeOfActivity.createInlineKeyboard();
-    }
 }

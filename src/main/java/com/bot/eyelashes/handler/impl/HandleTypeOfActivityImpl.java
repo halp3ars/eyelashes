@@ -4,9 +4,9 @@ import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.map.TypeOfActivity;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -21,28 +21,30 @@ public class HandleTypeOfActivityImpl implements Handle {
     private final MasterRepository masterRepository;
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
-                .chatId(message.getChatId()
+                .chatId(update.getMessage()
+                        .getChatId()
                         .toString())
-                .replyMarkup(createInlineKeyboard())
+                .replyMarkup(createInlineKeyboardWithCallback(update.getCallbackQuery()))
                 .text("Мастера")
                 .build();
     }
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
+        return null;
+    }
 
+    public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();
-        for (int buttonsIndex = 0; buttonsIndex < masterRepository.findByActivity(typeOfActivity.getCommand("EYEBROWS")).size();buttonsIndex++){
-            buttons.add(Arrays.asList(
-                    InlineKeyboardButton.builder()
-                            .text(masterRepository.findByActivity("Брови").get(buttonsIndex).getName())
-                            .callbackData("DAS")
-                            .build()
-                    ));}
+        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
+                .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
+                                .text(master.getName())
+                                .callbackData("setMaster/nails/"+master.getId())
+                                .build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
