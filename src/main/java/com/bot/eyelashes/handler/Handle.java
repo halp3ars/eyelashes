@@ -8,8 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 public interface Handle {
-    SendMessage getMessage(Message message);
+    SendMessage getMessage(Update update);
     InlineKeyboardMarkup createInlineKeyboard();
-
 
 }

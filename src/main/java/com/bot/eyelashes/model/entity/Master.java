@@ -1,17 +1,16 @@
 package com.bot.eyelashes.model.entity;
 
-import com.bot.eyelashes.enums.TypeOfActivity;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "master")
 public class Master {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
