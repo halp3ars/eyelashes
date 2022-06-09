@@ -49,7 +49,6 @@ public class Bot extends TelegramLongPollingBot {
                 replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
                 execute(replyMessage);
             }
-
             if (update.getMessage().getText().startsWith("/")) {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));

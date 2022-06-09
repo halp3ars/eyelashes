@@ -2,6 +2,7 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.enums.map.TypeOfActivity;
+import com.bot.eyelashes.model.entity.Master;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +42,12 @@ public class HandleTypeOfActivityImpl implements Handle {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();
-        log.info("Before loop");
-        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()).toUpperCase())
+        List<Master> asd = masterRepository.findByActivity("Брови");
+        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
                 .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
                         .text(master.getName())
                         .callbackData("SET_MASTER/" + callbackQuery.getData() + "/" + master.getId())
                         .build())));
-        log.info("After loop");
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

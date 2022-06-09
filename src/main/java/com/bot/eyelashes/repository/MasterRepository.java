@@ -10,5 +10,4 @@ import java.util.List;
 public interface MasterRepository extends JpaRepository<Master, Long> {
 
     List<Master> findByActivity(String activity);
-
 }
