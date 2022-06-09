@@ -16,7 +16,7 @@ public class CallbackRecordToMasterImpl implements Callback {
     private final MasterRepository masterRepository;
 
     @Override
-    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleRecordToMasterImpl handleRecordToMaster = new HandleRecordToMasterImpl(masterRepository);
         return SendMessage.builder()
                 .text("ads")

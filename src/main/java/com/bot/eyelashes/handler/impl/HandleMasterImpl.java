@@ -4,6 +4,7 @@ import com.bot.eyelashes.handler.Handle;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -13,8 +14,9 @@ import java.util.List;
 
 @Service
 public class HandleMasterImpl implements Handle {
+
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return null;
     }
 
@@ -29,7 +31,6 @@ public class HandleMasterImpl implements Handle {
                 .text("ФИО")
                 .callbackData("FULL_NAME")
                 .build());
-
         buttons.add(Arrays.asList(
                         InlineKeyboardButton.builder()
                                 .text("Контакт")
@@ -41,7 +42,6 @@ public class HandleMasterImpl implements Handle {
                                 .build()
                 )
         );
-
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(rowDataUser)
                 .keyboard(buttons)

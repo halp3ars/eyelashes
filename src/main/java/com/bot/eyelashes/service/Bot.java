@@ -25,6 +25,8 @@ public class Bot extends TelegramLongPollingBot {
     private final TelegramProperties telegramProperties;
     private final BotStateContext botStateContext;
     private SendMessage replyMessage;
+
+    private final CallBackQueryTypeMap callBackQueryTypeMap;
     private final MasterDataCache masterDataCache;
 
     @SneakyThrows
@@ -33,11 +35,8 @@ public class Bot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         CommandMap commandMap = new CommandMap();
         BotState botState;
-
         if (update.hasCallbackQuery()) {
-            CallBackQueryTypeMap callBackQueryTypeMap = new CallBackQueryTypeMap();
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                    .getData());
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData().split("/")[0]);
             execute(callback.getCallbackQuery(update.getCallbackQuery()));
         } else if (update.getMessage().hasText()) {
             if (update.getMessage().getText().equals("registration")) {
@@ -53,7 +52,7 @@ public class Bot extends TelegramLongPollingBot {
 
             if (update.getMessage().getText().startsWith("/")) {
                 Handle handle = commandMap.getCommand(message.getText());
-                execute(handle.getMessage(update.getMessage()));
+                execute(handle.getMessage(update));
             }
         }
     }

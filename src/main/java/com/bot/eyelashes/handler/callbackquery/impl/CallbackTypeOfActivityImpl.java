@@ -16,7 +16,7 @@ public class CallbackTypeOfActivityImpl implements Callback {
     private final MasterRepository masterRepository;
 
     @Override
-    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleTypeOfActivityImpl handleTypeOfActivity = new HandleTypeOfActivityImpl(masterRepository);
         return SendMessage.builder()
                 .replyMarkup(handleTypeOfActivity.createInlineKeyboardWithCallback(callbackQuery))

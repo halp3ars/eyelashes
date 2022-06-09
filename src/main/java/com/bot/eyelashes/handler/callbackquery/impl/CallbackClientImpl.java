@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 public class CallbackClientImpl implements Callback {
 
     @Override
-    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleClientImpl handleClient = new HandleClientImpl();
         return SendMessage.builder()
                 .chatId(callbackQuery.getMessage()

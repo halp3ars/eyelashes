@@ -15,7 +15,7 @@ public class CallbackRecordMenuImpl implements Callback {
     private final MasterRepository masterRepository;
 
     @Override
-    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository);
         return SendMessage.builder()
                 .replyMarkup(handleRecordToMaster.createInlineKeyboardWithCallback(callbackQuery))

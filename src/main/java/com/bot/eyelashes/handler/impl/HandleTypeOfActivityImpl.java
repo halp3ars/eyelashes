@@ -4,6 +4,7 @@ import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,6 +16,7 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class HandleTypeOfActivityImpl implements Handle {
 
     private final MasterRepository masterRepository;
@@ -39,11 +41,13 @@ public class HandleTypeOfActivityImpl implements Handle {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();
-        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
+        log.info("Before loop");
+        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()).toUpperCase())
                 .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
-                                .text(master.getName())
-                                .callbackData("SET_MASTER/" + callbackQuery.getData() + "/" + master.getId())
-                                .build())));
+                        .text(master.getName())
+                        .callbackData("SET_MASTER/" + callbackQuery.getData() + "/" + master.getId())
+                        .build())));
+        log.info("After loop");
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

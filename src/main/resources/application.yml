@@ -1,10 +1,10 @@
 spring:
   datasource:
-    username: postgres
+    username: doadmin
     hikari:
       maximum-pool-size: '5'
-    url: jdbc:postgresql://localhost:5432/Bot
-    password: admin
+    url: jdbc:postgresql://db-postgresql-fra1-69062-do-user-11372412-0.b.db.ondigitalocean.com:25060/eyelashes
+    password: AVNS_ClMzraDTLV4mXFQ
   jpa:
     generate-ddl: 'true'
     properties:

@@ -20,10 +20,12 @@ public class HandleStartImpl implements Handle {
     private final String START_MESSAGE = "Здравствуйте это бот для записи на процедуры в салоне красоты";
 
 
+
+
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
-                .chatId(message.getChatId()
+                .chatId(update.getMessage().getChatId()
                         .toString())
                 .replyMarkup(createInlineKeyboard())
                 .text(START_MESSAGE)

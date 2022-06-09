@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 
 public class CallbackMasterImpl implements Callback {
+
+
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         return SendMessage.builder()
