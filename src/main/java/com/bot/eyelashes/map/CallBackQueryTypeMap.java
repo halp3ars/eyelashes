@@ -1,7 +1,7 @@
 package com.bot.eyelashes.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.callbackquery.impl.CallBackMenuImpl;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackMenuImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,15 +16,15 @@ public class CallBackQueryTypeMap {
 
     private static final Map<String, Callback> CALLBACK_MAP = new HashMap<>();
 
-    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordMenu,@Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordToMaster) {
-        CALLBACK_MAP.put("MENU", new CallBackMenuImpl());
+    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,@Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordToMaster) {
+        CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
         CALLBACK_MAP.put("MASTER", new CallbackMasterImpl());
         CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
         CALLBACK_MAP.put("NAILS", callbackActivity);
         CALLBACK_MAP.put("EYEBROWS", callbackActivity);
         CALLBACK_MAP.put("EYELASHES", callbackActivity);
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
-        CALLBACK_MAP.put("RECORD", callbackRecordToMaster);
+//        CALLBACK_MAP.put("RECORD", callbackRecordToMaster);
     }
 
 

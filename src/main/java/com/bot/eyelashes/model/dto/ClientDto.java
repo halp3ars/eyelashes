@@ -9,6 +9,6 @@ public class ClientDto {
         private String middleName;
         private String surname;
         private String phoneNumber;
-        private String nickname;
+        private Long telegramId;
 
 }

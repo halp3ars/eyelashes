@@ -3,6 +3,7 @@ package com.bot.eyelashes.service;
 import com.bot.eyelashes.config.properties.TelegramProperties;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
+import com.bot.eyelashes.handler.impl.HandleClientImpl;
 import com.bot.eyelashes.map.CallBackQueryTypeMap;
 import com.bot.eyelashes.map.CommandMap;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
