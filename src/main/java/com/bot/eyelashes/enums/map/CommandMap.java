@@ -11,9 +11,11 @@ public class CommandMap {
     private static final Map<String, Handle> COMMAND_MAP = new HashMap<>();
 
     public CommandMap() {
+        COMMAND_MAP.put("/info", new HandleInfoImpl());
         COMMAND_MAP.put("/start", new HandleStartImpl());
         COMMAND_MAP.put("/menu", new HandleMainMenuImpl());
-        COMMAND_MAP.put("/client", new HandleClientImpl());
+        COMMAND_MAP.put("/master", new HandleMasterImpl());
+        COMMAND_MAP.put("/registration", new HandleMasterImpl());
     }
 
     public Handle getCommand(String keyCommand) {

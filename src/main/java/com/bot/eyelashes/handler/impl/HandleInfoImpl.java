@@ -1,11 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -13,34 +10,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
-@Service
-public class HandleStartImpl implements Handle {
-
-    private final String START_MESSAGE = "Здравствуйте это бот для записи на процедуры в салоне красоты";
-
-
+public class HandleInfoImpl implements Handle {
     @Override
     public SendMessage getMessage(Message message) {
         return SendMessage.builder()
                 .chatId(message.getChatId()
                         .toString())
-                .replyMarkup(createInlineKeyboard())
-                .text(START_MESSAGE)
+                .text("Amd")
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboard(createInlineKeyboard().getKeyboard())
+                        .build())
                 .build();
+
     }
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Arrays.asList(
+        buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Начать")
+                        .text("Мастер")
                         .callbackData("MENU")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 }

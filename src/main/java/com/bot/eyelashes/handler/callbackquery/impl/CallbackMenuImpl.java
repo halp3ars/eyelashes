@@ -7,8 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public class CallbackMenuImpl implements Callback {
     @Override
-    public SendMessage getMessageByCallback(CallbackQuery callbackQuery) {
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
+
         return SendMessage.builder()
                 .replyMarkup(handleMainMenu.createInlineKeyboard())
                 .chatId(callbackQuery.getMessage()
@@ -17,5 +18,4 @@ public class CallbackMenuImpl implements Callback {
                 .text("Меню")
                 .build();
     }
-
 }
