@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 
 public interface Callback {
 
-    SendMessage getCallbackQuery(CallbackQuery callbackQuery);
+    SendMessage getMessageByCallback(CallbackQuery callbackQuery);
 
-    InlineKeyboardMarkup getHandlerQueryType();
 }

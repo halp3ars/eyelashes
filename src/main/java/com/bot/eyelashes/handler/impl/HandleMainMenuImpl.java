@@ -15,15 +15,16 @@ public class HandleMainMenuImpl implements Handle {
 
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
                 .replyMarkup(createInlineKeyboard())
-                .chatId(message.getChatId()
+                .chatId(update.getMessage().getChatId()
                         .toString())
-                .text("Меншечька")
+                .text("Меню")
                 .build();
     }
 
+    @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();

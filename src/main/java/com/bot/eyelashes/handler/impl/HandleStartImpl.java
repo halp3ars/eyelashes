@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,16 +22,18 @@ public class HandleStartImpl implements Handle {
 
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
         return SendMessage.builder()
-                .chatId(message.getChatId()
+                .chatId(update.getMessage().getChatId()
                         .toString())
                 .replyMarkup(createInlineKeyboard())
                 .text(START_MESSAGE)
                 .build();
     }
 
-    private InlineKeyboardMarkup createInlineKeyboard() {
+
+    @Override
+    public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(
