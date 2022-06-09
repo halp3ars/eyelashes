@@ -1,7 +1,7 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.map.TypeOfActivity;
+import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

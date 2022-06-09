@@ -20,12 +20,10 @@ public class Master {
     @Column(name = "name")
     private String name;
     @Column(name = "middlename")
-    private String middlename;
+    private String middleName;
     @Column(name = "phonenumber")
     private String phoneNumber;
-    @Column(name = "address")
-    private String address;
-    @Column(name = "activity")
+    @Column(name = "activity_type")
     private String activity;
     @Column(name = "telegram_id")
     private Long telegramId;

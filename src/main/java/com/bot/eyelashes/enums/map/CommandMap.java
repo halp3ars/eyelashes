@@ -1,4 +1,4 @@
-package com.bot.eyelashes.map;
+package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.impl.*;
@@ -11,11 +11,9 @@ public class CommandMap {
     private static final Map<String, Handle> COMMAND_MAP = new HashMap<>();
 
     public CommandMap() {
-        COMMAND_MAP.put("/info", new HandleInfoImpl());
         COMMAND_MAP.put("/start", new HandleStartImpl());
         COMMAND_MAP.put("/menu", new HandleMainMenuImpl());
         COMMAND_MAP.put("/client", new HandleClientImpl());
-        COMMAND_MAP.put("/master", new HandleMasterImpl());
     }
 
     public Handle getCommand(String keyCommand) {

@@ -1,4 +1,4 @@
-package com.bot.eyelashes.map;
+package com.bot.eyelashes.enums.map;
 
 import java.util.HashMap;
 import java.util.Map;
