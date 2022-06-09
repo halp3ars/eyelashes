@@ -20,7 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BotService extends TelegramLongPollingBot {
+public class Bot extends TelegramLongPollingBot {
 
     private final TelegramProperties telegramProperties;
     private final BotStateContext botStateContext;
@@ -33,8 +33,6 @@ public class BotService extends TelegramLongPollingBot {
         Message message = update.getMessage();
         CommandMap commandMap = new CommandMap();
         BotState botState;
-//        SendMessage replyMessage = new SendMessage();
-
 
         if (update.hasCallbackQuery()) {
             CallBackQueryTypeMap callBackQueryTypeMap = new CallBackQueryTypeMap();

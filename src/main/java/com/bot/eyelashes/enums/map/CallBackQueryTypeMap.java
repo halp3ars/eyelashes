@@ -2,7 +2,6 @@ package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.callbackquery.impl.CallBackMenuImpl;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterImpl;
 
 import java.util.HashMap;
@@ -15,7 +14,6 @@ public class CallBackQueryTypeMap {
     public CallBackQueryTypeMap() {
         CALLBACK_MAP.put("MENU", new CallBackMenuImpl());
         CALLBACK_MAP.put("MASTER", new CallbackMasterImpl());
-        CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
     }
 
 

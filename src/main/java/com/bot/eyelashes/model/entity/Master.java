@@ -24,10 +24,8 @@ public class Master {
     private String middleName;
     @Column(name = "phonenumber")
     private String phoneNumber;
-
     @Column(name = "activity_type")
     private String activity;
-
     @Column(name = "telegram_id")
     private Long telegramId;
 

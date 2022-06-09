@@ -15,8 +15,6 @@ import java.util.List;
 public class HandleMasterImpl implements Handle {
     @Override
     public SendMessage getMessage(Message message) {
-//        HandleRegistrationMasterImpl handleRegistrationMaster = new HandleRegistrationMasterImpl();
-//        return handleRegistrationMaster.getMessage(message);
         return null;
     }
 
