@@ -2,12 +2,10 @@ package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.impl.*;
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class CommandMap {
     private static final Map<String, Handle> COMMAND_MAP = new HashMap<>();
@@ -18,6 +16,7 @@ public class CommandMap {
         COMMAND_MAP.put("/menu", new HandleMainMenuImpl());
         COMMAND_MAP.put("/client", new HandleClientImpl());
         COMMAND_MAP.put("/master", new HandleMasterImpl());
+        COMMAND_MAP.put("/registration", new HandleMasterImpl());
     }
 
     public Handle getCommand(String keyCommand) {

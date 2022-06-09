@@ -4,26 +4,19 @@ import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.impl.HandleMainMenuImpl;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-
-import java.util.List;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class CallBackMenuImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
+        HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
+
         return SendMessage.builder()
-                .replyMarkup(getHandlerQueryType())
+                .replyMarkup(handleMainMenu.createInlineKeyboard())
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
                 .text("Меню")
                 .build();
-    }
-
-
-    @Override
-    public InlineKeyboardMarkup getHandlerQueryType() {
-        HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
-        return handleMainMenu.createInlineKeyboard();
     }
 }
