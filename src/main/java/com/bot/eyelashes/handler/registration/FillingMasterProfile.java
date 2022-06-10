@@ -2,6 +2,7 @@ package com.bot.eyelashes.handler.registration;
 
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
+import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -103,5 +104,10 @@ public class FillingMasterProfile implements HandleRegistration {
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
+    }
+
+    @Override
+    public ClientBotState getHandleClientName() {
+        return null;
     }
 }

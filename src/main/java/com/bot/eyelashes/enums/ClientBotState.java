@@ -1,0 +1,7 @@
+package com.bot.eyelashes.enums;
+
+public enum ClientBotState {
+
+    ASK_CLIENT_FULL_NAME,ASK_CLIENT_PHONE,FILLING_CLIENT_PROFILE,PROFILE_CLIENT_FIELD,CLIENT_REGISTRED;
+
+}

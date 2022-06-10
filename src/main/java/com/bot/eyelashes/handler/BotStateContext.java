@@ -14,26 +14,33 @@ import java.util.Map;
 public class BotStateContext {
     private final Map<BotState, HandleRegistration> messageHandlers = new HashMap<>();
 
+
+
     public BotStateContext(List<HandleRegistration> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandleName(), handler));
     }
+
+
 
     public SendMessage processInputMessage(BotState currentState, Message message) {
         HandleRegistration currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.getMessage(message);
     }
 
+
+
     private HandleRegistration findMessageHandler(BotState currentState) {
         if (isFillingProfileState(currentState)) {
             return messageHandlers.get(BotState.FILLING_PROFILE);
         }
-
         return messageHandlers.get(currentState);
     }
 
+
+
     private boolean isFillingProfileState(BotState currentState) {
         return switch (currentState) {
-            case ASK_READY, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_FULL_NAME, FILLING_PROFILE, REGISTREDET ->
+            case ASK_READY, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_FULL_NAME, FILLING_PROFILE, REGISTREDET->
                     true;
             default -> false;
         };

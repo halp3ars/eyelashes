@@ -48,7 +48,6 @@ public class MasterDataCache implements DataCache {
         mastersData.put(userId, masterDto);
     }
 
-    @Override
     public void setMasterInDb(MasterDto masterDto) {
         Master master = masterMapper.toEntity(masterDto);
         masterRepository.save(master);

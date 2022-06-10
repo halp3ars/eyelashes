@@ -12,5 +12,4 @@ public interface DataCache {
 
     void saveUserProfileData(Long userId, MasterDto masterDto);
 
-    void setMasterInDb(MasterDto masterDto);
 }
