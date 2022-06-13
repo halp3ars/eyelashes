@@ -1,29 +1,35 @@
 package com.bot.eyelashes.handler.callbackquery.impl;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
+import com.bot.eyelashes.handler.impl.HandleCheckRecordImpl;
+import com.bot.eyelashes.model.dto.RecordToMasterDto;
+import com.bot.eyelashes.model.entity.Master;
+import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
-@Service("CallbackRecordMenuImpl")
+@Service("CallbackCheckRecordImpl")
 @RequiredArgsConstructor
-public class CallbackRecordMenuImpl implements Callback {
+public class CallbackCheckRecordImpl implements Callback {
 
     private final MasterRepository masterRepository;
 
+    private final RecordToMasterRepository record;
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository);
+        HandleCheckRecordImpl handleCheckRecord = new HandleCheckRecordImpl(masterRepository,record);
+        Long userId = callbackQuery.getMessage().getFrom().getId();
         return SendMessage.builder()
-                .replyMarkup(handleRecordToMaster.createInlineKeyboardWithCallback(callbackQuery))
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .text("Вы хотитите записаться \uD83D\uDCC5 или позвонить \uD83D\uDCDE?")
+                .replyMarkup(handleCheckRecord.createInlineKeyboardWithCallback(callbackQuery))
+                .text("asd")
                 .build();
     }
 }

@@ -34,7 +34,7 @@ public class ClientBotStateContext {
 
     private boolean isFillingClientProfile(ClientBotState currentState){
         return switch (currentState) {
-            case ASK_CLIENT_FULL_NAME,ASK_CLIENT_PHONE,FILLING_CLIENT_PROFILE,PROFILE_CLIENT_FIELD,CLIENT_REGISTRED->
+            case ASK_CLIENT_FULL_NAME,ASK_CLIENT_PHONE,FILLING_CLIENT_PROFILE,PROFILE_CLIENT_FIELD,CLIENT_REGISTRED,ASK_CLIENT_DATE,ASK_CLIENT_TIME->
                     true;
             default -> false;
         };

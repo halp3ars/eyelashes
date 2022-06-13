@@ -12,6 +12,8 @@ spring:
         persistence:
           query:
             timeout: '6000000'
+
+
 telegram:
   nameBot: '@ndfsdjkgnj_bot'
   tokenBot: '5590216654:AAGzsNWK1xsfSxqZ-waJf_C2g-4VxLGZ8ok'

@@ -1,11 +1,11 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.model.entity.Master;
+import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,24 +13,21 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 
 @RequiredArgsConstructor
-@Slf4j
-public class HandleTypeOfActivityImpl implements Handle {
+public class HandleCheckRecordImpl implements Handle {
+
 
     private final MasterRepository masterRepository;
 
+    private final RecordToMasterRepository record;
+
     @Override
     public SendMessage getMessage(Update update) {
-        return SendMessage.builder()
-                .chatId(update.getMessage()
-                        .getChatId()
-                        .toString())
-                .replyMarkup(createInlineKeyboardWithCallback(update.getCallbackQuery()))
-                .text("Мастера")
-                .build();
+        return null;
     }
 
     @Override
@@ -41,12 +38,16 @@ public class HandleTypeOfActivityImpl implements Handle {
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        TypeOfActivity typeOfActivity = new TypeOfActivity();
-        masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
-                .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
-                        .text(master.getName())
-                        .callbackData("SET_MASTER/" + callbackQuery.getData() + "/" + master.getId())
-                        .build())));
+        Long userId = callbackQuery.getMessage().getChatId();
+        Optional<RecordToMaster> recordToMaster = record.findByClientId(userId);
+        Long masterId = recordToMaster.get().getMasterId();
+        Optional<Master> masterByTelegramId = masterRepository.findByTelegramId(masterId);
+        String phoneNumber = masterByTelegramId.get().getPhoneNumber();
+        buttons.add(Arrays.asList(
+                InlineKeyboardButton.builder().text("Отменить запись").callbackData("DECLINE_RECORD").build(),
+                InlineKeyboardButton.builder().text("Свзяаться").url("https://t.me/" + phoneNumber ).build(),
+                InlineKeyboardButton.builder().text("Перенести запись").callbackData("CHANGE_DATE").build()
+        ));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

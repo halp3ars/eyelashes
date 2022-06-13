@@ -17,7 +17,7 @@ public class HandleInfoImpl implements Handle {
         return SendMessage.builder()
                 .chatId(update.getMessage().getChatId()
                         .toString())
-                .text("Amd")
+                .text("Наш бот работает")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                         .keyboard(createInlineKeyboard().getKeyboard())
                         .build())

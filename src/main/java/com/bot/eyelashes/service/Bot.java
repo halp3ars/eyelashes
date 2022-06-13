@@ -51,55 +51,54 @@ public class Bot extends TelegramLongPollingBot {
                 .hasText()) {
             if (update.getMessage()
                     .getText()
-                    .equals("registration")) {
-                botState = BotState.FILLING_PROFILE;
-                masterDataCache.setUsersCurrentBotState(update.getMessage()
-                        .getFrom()
-                        .getId(), botState);
-                replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
-                masterRegistration = true;
-                execute(replyMessage);
-            } else if (update.getMessage()
-                    .getText()
-                    .equals("clientRegistration")) {
-                clientBotState = ClientBotState.FILLING_CLIENT_PROFILE;
-                masterRegistration = false;
-                clientDataCache.setClientBotState(update.getMessage()
-                        .getFrom()
-                        .getId(), clientBotState);
-                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
-                execute(replyMessage);
+                    .startsWith("/")) {
+                Handle handle = commandMap.getCommand(message.getText());
+                execute(handle.getMessage(update));
             } else {
-                if (masterRegistration) {
-                    botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
+                if (update.getMessage()
+                        .getText()
+                        .equals("registration")) {
+                    botState = BotState.FILLING_PROFILE;
+                    masterDataCache.setUsersCurrentBotState(update.getMessage()
                             .getFrom()
-                            .getId());
+                            .getId(), botState);
                     replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                    masterRegistration = true;
                     execute(replyMessage);
-                } else if(!masterRegistration) {
-                    clientBotState = clientDataCache.getClientBotState(update.getMessage()
+                } else if (update.getMessage()
+                        .getText()
+                        .equals("clientRegistration")) {
+                    clientBotState = ClientBotState.FILLING_CLIENT_PROFILE;
+                    masterRegistration = false;
+                    clientDataCache.setClientBotState(update.getMessage()
                             .getFrom()
-                            .getId());
+                            .getId(), clientBotState);
                     replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
                     execute(replyMessage);
+                } else {
+                    if (masterRegistration) {
+                        botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
+                                .getFrom()
+                                .getId());
+                        replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                        execute(replyMessage);
+                    } else if (!masterRegistration) {
+                        clientBotState = clientDataCache.getClientBotState(update.getMessage()
+                                .getFrom()
+                                .getId());
+                        replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
+                        execute(replyMessage);
+                    }
                 }
             }
         }
 
-        if (update.getMessage()
-                .getText()
-                .startsWith("/")) {
-            Handle handle = commandMap.getCommand(message.getText());
-            execute(handle.getMessage(update));
-        }
     }
 
     @Override
     public String getBotUsername() {
         return telegramProperties.getNameBot();
     }
-
-
     @Override
     public String getBotToken() {
         return telegramProperties.getTokenBot();
