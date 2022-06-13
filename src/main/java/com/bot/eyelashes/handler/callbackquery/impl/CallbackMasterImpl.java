@@ -11,7 +11,7 @@ public class CallbackMasterImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         return SendMessage.builder()
-                .text("Для регистрации введите registration ")
+                .text("Для регистрации введите registration, если вы зарегистрированы то введите auth")
                 .chatId(callbackQuery.getMessage().getChatId().toString())
                 .build();
     }

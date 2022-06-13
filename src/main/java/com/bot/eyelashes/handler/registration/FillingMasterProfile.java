@@ -82,8 +82,7 @@ public class FillingMasterProfile implements HandleRegistration {
         if (botState.equals(BotState.REGISTREDET)) {
             masterDataCache.setMasterInDb(masterDto);
             replyToUser = SendMessage.builder()
-                    .text("Запишите график работы")
-                    .replyMarkup(keyboardForRegistration())
+                    .text("Для записи графика работы\nВведите Расписание")
                     .chatId(userId.toString())
                     .build();
         }
@@ -91,19 +90,6 @@ public class FillingMasterProfile implements HandleRegistration {
 
         masterDataCache.saveUserProfileData(userId, masterDto);
         return replyToUser;
-    }
-
-    private InlineKeyboardMarkup keyboardForRegistration() {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .callbackData("SCHEDULE")
-                        .text("Расписание")
-                        .build()
-        ));
-        return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
-                .build();
     }
 
     @Override
