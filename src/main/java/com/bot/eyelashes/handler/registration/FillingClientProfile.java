@@ -94,7 +94,7 @@ public class FillingClientProfile implements HandleRegistration {
             clientDto.setTelegramId(userId);
             clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
             replyToClient = SendMessage.builder()
-                    .text("Введите дату записи в формате 2022-11-11")
+                    .text("Введите дату записи в формате ГГГГ-ММ-ДД")
                     .chatId(chatId.toString())
                     .build();
         }
@@ -110,17 +110,10 @@ public class FillingClientProfile implements HandleRegistration {
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setTime(clientAnswer);
             recordToMasterDto.setClientId(userId);
-            clientDataCache.setClientBotState(userId, ClientBotState.CLIENT_REGISTRED);
-            replyToClient = SendMessage.builder()
-                    .text("Вы записаны на " + recordToMasterDto.getDate() + " " + recordToMasterDto.getTime() + "\n Напишите что-либо для продолжения")
-                    .chatId(chatId.toString())
-                    .build();
-        }
-        if (clientBotState.equals(ClientBotState.CLIENT_REGISTRED)) {
             clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()
-                    .text("Выберите что вы хотите сделать далее")
+                    .text("Вы записаны на " + recordToMasterDto.getDate() + " " + recordToMasterDto.getTime() + "\n Напишите что-либо для продолжения")
                     .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();
