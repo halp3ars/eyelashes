@@ -1,6 +1,7 @@
 package com.bot.eyelashes.cache;
 
 import com.bot.eyelashes.enums.BotState;
+import com.bot.eyelashes.handler.BotStateHandleContext;
 import com.bot.eyelashes.mapper.MasterMapper;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.entity.Master;
@@ -29,6 +30,15 @@ public class MasterDataCache implements DataCache {
         BotState botState = mastersBotStates.get(userId);
         if (botState == null) {
             botState = BotState.FILLING_PROFILE;
+        }
+
+        return botState;
+    }
+
+    public BotState getMessageCurrentState(Long userId) {
+        BotState botState = mastersBotStates.get(userId);
+        if (botState == null) {
+            botState = BotState.ASK_FULL_NAME;
         }
 
         return botState;

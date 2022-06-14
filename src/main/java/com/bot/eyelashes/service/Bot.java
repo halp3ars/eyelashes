@@ -10,6 +10,7 @@ import com.bot.eyelashes.enums.StateSchedule;
 import com.bot.eyelashes.enums.map.CallBackQueryTypeMap;
 import com.bot.eyelashes.enums.map.CommandMap;
 import com.bot.eyelashes.handler.BotStateContext;
+import com.bot.eyelashes.handler.BotStateHandleContext;
 import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
@@ -45,6 +46,7 @@ public class Bot extends TelegramLongPollingBot {
     private final MasterDataCache masterDataCache;
     private final ScheduleDataCacheImpl scheduleDataCache;
     private final MasterRepository masterRepository;
+    private final BotStateHandleContext botStateHandleContext;
 
     private boolean masterRegistration = true;
     private boolean clientRegistration = true;
@@ -59,26 +61,20 @@ public class Bot extends TelegramLongPollingBot {
         StateSchedule stateSchedule;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                    .getData()
-                    .split("/")[0]);
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData().split("/")[0]);
             masterRegistration = false;
             clientRegistration = false;
             schedule = false;
-            execute(callback.getCallbackQuery(update.getCallbackQuery()));
-        } else if (update.getMessage()
-                .hasText()) {
-            if (update.getMessage()
-                    .getText()
-                    .equals("Регистрация".toLowerCase())) {
+            if (update.getCallbackQuery().getData().equals("REGISTRATION")) {
                 botState = BotState.FILLING_PROFILE;
-                masterDataCache.setUsersCurrentBotState(update.getMessage()
-                        .getFrom()
-                        .getId(), botState);
-                replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                masterDataCache.setUsersCurrentBotState(Long.valueOf(update.getCallbackQuery().getId()), botState);
+                replyMessage = botStateContext.processCallback(botState, update.getCallbackQuery());
                 masterRegistration = true;
                 execute(replyMessage);
-            } else if (update.getMessage()
+            }
+            execute(callback.getCallbackQuery(update.getCallbackQuery()));
+        } else if (update.getMessage().hasText()) {
+            if (update.getMessage()
                     .getText()
                     .equals("clientRegistration")) {
                 clientBotState = ClientBotState.FILLING_CLIENT_PROFILE;
@@ -112,12 +108,12 @@ public class Bot extends TelegramLongPollingBot {
                 execute(handle.getMessage(update));
             }else {
                 if (masterRegistration) {
-                    botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
+                    botState = masterDataCache.getMessageCurrentState(update.getMessage()
                             .getFrom()
                             .getId());
-                    replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                    replyMessage = botStateHandleContext.processInputMessage(botState, update.getMessage());
                     execute(replyMessage);
-                } else if (clientRegistration) {
+                }  if (clientRegistration) {
                     clientBotState = clientDataCache.getClientBotState(update.getMessage()
                             .getFrom()
                             .getId());

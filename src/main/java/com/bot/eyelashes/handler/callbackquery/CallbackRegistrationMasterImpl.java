@@ -1,58 +1,54 @@
-package com.bot.eyelashes.handler.registration;
+package com.bot.eyelashes.handler.callbackquery;
 
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
-import com.bot.eyelashes.enums.ClientBotState;
+import com.bot.eyelashes.handler.BotStateHandleContext;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-@Component
-@Slf4j
+@Service("CallbackRegistrationMaster")
 @RequiredArgsConstructor
-public class FillingMasterProfile implements HandleRegistration {
+public class CallbackRegistrationMasterImpl implements CallbackRegistration {
     private final MasterDataCache masterDataCache;
     private final MessageService messageService;
+    private final BotStateHandleContext botStateHandleContext;
+    @Override
+    public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
+        if (masterDataCache.getUsersCurrentBotState(callbackQuery.getMessage().getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
+            masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage().getFrom().getId(), BotState.ASK_FULL_NAME);
+        }
+        return processUsersInput(callbackQuery.getMessage());
+    }
 
     @Override
     public SendMessage getMessage(Message message) {
-        if (masterDataCache.getMessageCurrentState(message.getFrom()
-                        .getId())
-                .equals(BotState.ASK_FULL_NAME)) {
-            masterDataCache.setUsersCurrentBotState(message.getFrom()
-                    .getId(), BotState.ASK_PHONE);
+        if (masterDataCache.getMessageCurrentState(message.getFrom().getId()).equals(BotState.ASK_FULL_NAME)) {
+            masterDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_PHONE);
         }
         return processUsersInput(message);
     }
 
     @Override
     public BotState getHandleName() {
-        return BotState.ASK_FULL_NAME;
+        return BotState.FILLING_PROFILE;
     }
 
-    private SendMessage processUsersInput(Message inputMsg) {
-        String usersAnswer = inputMsg.getText();
-        Long userId = inputMsg.getFrom()
+    private SendMessage processUsersInput(Message inputMessage) {
+        String usersAnswer = inputMessage.getText();
+        Long userId = inputMessage.getFrom()
                 .getId();
-        Long chatId = inputMsg.getChatId();
+        Long chatId = inputMessage.getChatId();
 
         MasterDto masterDto = masterDataCache.getUserProfileData(userId);
         BotState botState = masterDataCache.getUsersCurrentBotState(userId);
 
         SendMessage replyToUser = null;
+
         if (botState.equals(BotState.ASK_FULL_NAME)) {
             replyToUser = messageService.getReplyMessage(chatId, "Введите ФИО");
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE);
@@ -90,10 +86,7 @@ public class FillingMasterProfile implements HandleRegistration {
 
         masterDataCache.saveUserProfileData(userId, masterDto);
         return replyToUser;
+
     }
 
-    @Override
-    public ClientBotState getHandleClientName() {
-        return null;
-    }
 }

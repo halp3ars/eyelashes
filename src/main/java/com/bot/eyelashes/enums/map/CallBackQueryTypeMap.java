@@ -16,7 +16,10 @@ public class CallBackQueryTypeMap {
 
     private static final Map<String, Callback> CALLBACK_MAP = new HashMap<>();
 
-    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,@Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordToMaster) {
+    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,
+                                @Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,
+                                @Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordToMaster
+                                /*@Qualifier("CallbackRegistrationMaster") Callback callbackRegistrationMaster*/) {
         CALLBACK_MAP.put("MASTER", new CallbackMasterImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
         CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
@@ -24,6 +27,8 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("EYEBROWS", callbackActivity);
         CALLBACK_MAP.put("EYELASHES", callbackActivity);
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
+        CALLBACK_MAP.put("SCHEDULE", callbackRecordMenu);
+//        CALLBACK_MAP.put("REGISTRATION", callbackRegistrationMaster);
     }
 
 

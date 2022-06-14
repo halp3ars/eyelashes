@@ -2,42 +2,41 @@ package com.bot.eyelashes.handler;
 
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.handler.callbackquery.CallbackRegistration;
+import com.bot.eyelashes.handler.registration.HandleRegistration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class BotStateContext {
-    private final Map<BotState, CallbackRegistration> messageHandlers = new HashMap<>();
+public class BotStateHandleContext {
+    private final Map<BotState, HandleRegistration> messageHandlers = new HashMap<>();
 
 
 
-    public BotStateContext(List<CallbackRegistration> messageHandlers) {
+    public BotStateHandleContext(List<HandleRegistration> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandleName(), handler));
     }
 
 
 
-    public SendMessage processCallback(BotState currentState, CallbackQuery callbackQuery) {
-        CallbackRegistration currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.getCallbackQuery(callbackQuery);
+    public SendMessage processInputMessage(BotState currentState, Message message) {
+        HandleRegistration currentMessageHandler = findMessageHandler(currentState);
+        return currentMessageHandler.getMessage(message);
     }
 
 
 
-
-
-    private CallbackRegistration findMessageHandler(BotState currentState) {
+    private HandleRegistration findMessageHandler(BotState currentState) {
         if (isFillingProfileState(currentState)) {
-            return messageHandlers.get(BotState.FILLING_PROFILE);
+            return messageHandlers.get(BotState.ASK_FULL_NAME);
         }
         return messageHandlers.get(currentState);
     }
-
 
     private boolean isFillingProfileState(BotState currentState) {
         return switch (currentState) {
