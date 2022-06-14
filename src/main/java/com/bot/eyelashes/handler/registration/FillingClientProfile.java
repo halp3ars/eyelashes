@@ -8,6 +8,7 @@ import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FillingClientProfile implements HandleRegistration {
 
 
@@ -31,12 +33,17 @@ public class FillingClientProfile implements HandleRegistration {
 
     @Override
     public SendMessage getMessage(Update update) {
-        Message message = update.getMessage();
-        if (clientDataCache.getClientBotState(message.getFrom()
-                        .getId())
+        Message message;
+        if (update.hasCallbackQuery()) {
+            message = update.getCallbackQuery()
+                    .getMessage();
+        } else {
+            message = update.getMessage();
+        }
+
+        if (clientDataCache.getClientBotState(message.getChatId())
                 .equals(ClientBotState.FILLING_CLIENT_PROFILE)) {
-            clientDataCache.setClientBotState(message.getFrom()
-                    .getId(), ClientBotState.ASK_CLIENT_FULL_NAME);
+            clientDataCache.setClientBotState(message.getChatId(), ClientBotState.ASK_CLIENT_FULL_NAME);
         }
         return processClientInput(update);
     }
@@ -44,10 +51,27 @@ public class FillingClientProfile implements HandleRegistration {
 
     private SendMessage processClientInput(Update update) {
         Message message = update.getMessage();
-        String clientAnswer = message.getText();
-        Long userId = message.getFrom()
-                .getId();
-        Long chatId = message.getChatId();
+        String clientAnswer;
+        Long userId;
+        Long chatId;
+        if (update.hasCallbackQuery()) {
+            clientAnswer = update.getCallbackQuery()
+                    .getMessage()
+                    .getText();
+            chatId = update.getCallbackQuery()
+                    .getMessage()
+                    .getChatId();
+            userId = update.getCallbackQuery()
+                    .getMessage()
+                    .getChatId();
+        } else {
+            clientAnswer = message.getText();
+            userId = message.getFrom()
+                    .getId();
+            chatId = message.getChatId();
+            log.info(userId + " " + chatId);
+        }
+
         ClientDto clientDto = clientDataCache.getClientProfileData(userId);
         ClientBotState clientBotState = clientDataCache.getClientBotState(userId);
         RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(userId);
@@ -95,9 +119,12 @@ public class FillingClientProfile implements HandleRegistration {
         if (clientBotState.equals(ClientBotState.CLIENT_REGISTRED)) {
             clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
-            replyToClient = SendMessage.builder().text("Выберите что вы хотите сделать далее").replyMarkup(createInlineMarkupLastMessage())
+            replyToClient = SendMessage.builder()
+                    .text("Выберите что вы хотите сделать далее")
+                    .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();
+            clientDataCache.setClientBotState(userId, ClientBotState.NONE);
         }
         clientDataCache.saveRecordData(userId, recordToMasterDto);
         clientDataCache.saveClientProfileData(userId, clientDto);
@@ -114,8 +141,14 @@ public class FillingClientProfile implements HandleRegistration {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder().text("Готов").callbackData("CHECK_RECORD").build(),
-                InlineKeyboardButton.builder().text("На главную").callbackData("MENU").build()
+                InlineKeyboardButton.builder()
+                        .text("Готов")
+                        .callbackData("CHECK_RECORD")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("На главную")
+                        .callbackData("MENU")
+                        .build()
         ));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

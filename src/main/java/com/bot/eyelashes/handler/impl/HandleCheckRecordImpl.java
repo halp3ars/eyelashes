@@ -65,8 +65,8 @@ public class HandleCheckRecordImpl implements Handle {
         String phoneNumber = masterByTelegramId.get().getPhoneNumber();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder().text("Отменить запись").callbackData("DECLINE_RECORD").build(),
-                InlineKeyboardButton.builder().text("Свзяаться").url("https://t.me/" + phoneNumber ).build(),
-                InlineKeyboardButton.builder().text("Перенести запись").callbackData("CHANGE_DATE").build()
+                InlineKeyboardButton.builder().text("Свзяаться").url("https://t.me/" + phoneNumber ).build()
+//                InlineKeyboardButton.builder().text("Перенести запись").callbackData("CHANGE_DATE").build()
         ));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

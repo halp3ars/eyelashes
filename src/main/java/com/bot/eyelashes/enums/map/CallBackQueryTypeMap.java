@@ -28,7 +28,7 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
         CALLBACK_MAP.put("CHECK_RECORD", callbackCheckRecord);
         CALLBACK_MAP.put("DECLINE_RECORD", callbackDecline);
-        CALLBACK_MAP.put("RECORD", new CallbackRecordImpl());
+//        CALLBACK_MAP.put("RECORD", new CallbackRecordImpl());
 
     }
 
