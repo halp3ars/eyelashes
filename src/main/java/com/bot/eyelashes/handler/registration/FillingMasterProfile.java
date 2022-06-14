@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -68,23 +70,32 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDto.setName(fullName[1]);
             masterDto.setSurname(fullName[0]);
             masterDto.setMiddleName(fullName[2]);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона: ");
+            replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона начиная с +7: ");
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_ACTIVITY);
         }
         if (botState.equals(BotState.ASK_ACTIVITY)) {
+            if (isValidPhone(usersAnswer)) {
+                masterDto.setPhone(usersAnswer);
+                masterDto.setTelegramId(userId);
+                replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
+                masterDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FIELD);
+            } else
+                replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
 
-            masterDto.setPhone(usersAnswer);
-            masterDto.setTelegramId(userId);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
-            masterDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FIELD);
         }
         if (botState.equals(BotState.PROFILE_FIELD)) {
             masterDto.setActivity(usersAnswer);
-            masterDataCache.setUsersCurrentBotState(userId, BotState.REGISTREDET);
+            masterDataCache.setMasterInDb(masterDto);
             replyToUser = SendMessage.builder()
-                    .text(String.format("%s %s", "Данные по вашей анкете\n", masterDto))
-                    .chatId(chatId.toString())
+                    .text("Запишите график работы")
+                    .replyMarkup(keyboardForRegistration())
+                    .chatId(userId.toString())
                     .build();
+//            masterDataCache.setUsersCurrentBotState(userId, BotState.REGISTREDET);
+//            replyToUser = SendMessage.builder()
+//                    .text(String.format("%s %s", "Данные по вашей анкете\n", masterDto))
+//                    .chatId(chatId.toString())
+//                    .build();
 
         }
         if (botState.equals(BotState.REGISTREDET)) {
@@ -112,6 +123,12 @@ public class FillingMasterProfile implements HandleRegistration {
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
+    }
+
+    private boolean isValidPhone(String phone) {
+        Pattern pattern = Pattern.compile("^(\\+7|7|8)?[\\s\\-]?\\(?[489][0-9]{2}\\)?[\\s\\-]?[0-9]{3}[\\s\\-]?[0-9]{2}[\\s\\-]?[0-9]{2}$");
+        Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
     }
 
     @Override
