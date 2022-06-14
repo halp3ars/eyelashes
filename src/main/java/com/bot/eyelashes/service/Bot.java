@@ -62,7 +62,7 @@ public class Bot extends TelegramLongPollingBot {
                     masterDataCache.setUsersCurrentBotState(update.getMessage()
                             .getFrom()
                             .getId(), botState);
-                    replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                    replyMessage = botStateContext.processInputMessage(botState, update);
                     masterRegistration = true;
                     execute(replyMessage);
                 } else if (update.getMessage()
@@ -73,20 +73,20 @@ public class Bot extends TelegramLongPollingBot {
                     clientDataCache.setClientBotState(update.getMessage()
                             .getFrom()
                             .getId(), clientBotState);
-                    replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
+                    replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                     execute(replyMessage);
                 } else {
                     if (masterRegistration) {
                         botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
                                 .getFrom()
                                 .getId());
-                        replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
+                        replyMessage = botStateContext.processInputMessage(botState, update);
                         execute(replyMessage);
                     } else if (!masterRegistration) {
                         clientBotState = clientDataCache.getClientBotState(update.getMessage()
                                 .getFrom()
                                 .getId());
-                        replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
+                        replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                         execute(replyMessage);
                     }
                 }

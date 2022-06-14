@@ -30,6 +30,26 @@ public class HandleCheckRecordImpl implements Handle {
         return null;
     }
 
+    public SendMessage getMessageWithCallback(CallbackQuery callbackQuery){
+        Long userId = callbackQuery.getMessage()
+                .getChatId();
+        Optional<RecordToMaster> byClientId = record.findByClientId(userId);
+        Optional<Master> master = masterRepository.findByTelegramId(byClientId.get()
+                .getMasterId());
+        return SendMessage.builder()
+                .chatId(callbackQuery.getMessage()
+                        .getChatId()
+                        .toString())
+                .replyMarkup(createInlineKeyboardWithCallback(callbackQuery))
+                .text("Вы записаны к " + master.get()
+                        .getName() + " " + master.get()
+                        .getSurname() +
+                        " На " + byClientId.get()
+                        .getTime() + " " + byClientId.get()
+                        .getDate())
+                .build();
+    }
+
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         return null;

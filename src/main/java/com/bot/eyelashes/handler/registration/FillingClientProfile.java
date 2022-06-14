@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -29,18 +30,20 @@ public class FillingClientProfile implements HandleRegistration {
     private final MessageService messageService;
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
+        Message message = update.getMessage();
         if (clientDataCache.getClientBotState(message.getFrom()
                         .getId())
                 .equals(ClientBotState.FILLING_CLIENT_PROFILE)) {
             clientDataCache.setClientBotState(message.getFrom()
                     .getId(), ClientBotState.ASK_CLIENT_FULL_NAME);
         }
-        return processClientInput(message);
+        return processClientInput(update);
     }
 
 
-    private SendMessage processClientInput(Message message) {
+    private SendMessage processClientInput(Update update) {
+        Message message = update.getMessage();
         String clientAnswer = message.getText();
         Long userId = message.getFrom()
                 .getId();
