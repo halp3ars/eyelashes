@@ -17,18 +17,18 @@ public class CallBackQueryTypeMap {
 
     private static final Map<String, Callback> CALLBACK_MAP = new HashMap<>();
 
-    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,@Qualifier("CallbackRecordToMasterImpl") Callback callbackRecordToMaster, @Qualifier("CallbackCheckRecordImpl") Callback callbackCheckRecord,
-    @Qualifier("CallbackRecordImpl") Callback callbackRecordImpl,@Qualifier("CallbackDeclineImpl") Callback callbackDecline) {
+    public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu, @Qualifier("CallbackCheckRecordImpl") Callback callbackCheckRecord,
+    @Qualifier("CallbackDeclineImpl") Callback callbackDecline, @Qualifier("CallbackClientImpl") Callback callbackClient) {
         CALLBACK_MAP.put("MASTER", new CallbackMasterImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
-        CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
+        CALLBACK_MAP.put("CLIENT", callbackClient);
         CALLBACK_MAP.put("NAILS", callbackActivity);
         CALLBACK_MAP.put("EYEBROWS", callbackActivity);
         CALLBACK_MAP.put("EYELASHES", callbackActivity);
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
-        CALLBACK_MAP.put("RECORD", callbackRecordImpl);
         CALLBACK_MAP.put("CHECK_RECORD", callbackCheckRecord);
         CALLBACK_MAP.put("DECLINE_RECORD", callbackDecline);
+        CALLBACK_MAP.put("RECORD", new CallbackRecordImpl());
 
     }
 

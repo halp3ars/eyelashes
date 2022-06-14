@@ -1,11 +1,9 @@
 package com.bot.eyelashes.cache;
 
-import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.mapper.ClientMapper;
 import com.bot.eyelashes.mapper.RecordMapper;
 import com.bot.eyelashes.model.dto.ClientDto;
-import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.model.entity.Client;
 import com.bot.eyelashes.model.entity.RecordToMaster;
@@ -23,9 +21,9 @@ public class ClientDataCache{
 
 
 
-    private Map<Long,ClientBotState> ClientState = new ConcurrentHashMap<>();
-    private Map<Long, ClientDto> ClientData = new ConcurrentHashMap<>();
-    private Map<Long, RecordToMasterDto> RecordData = new ConcurrentHashMap<>();
+    private Map<Long,ClientBotState> clientState = new ConcurrentHashMap<>();
+    private Map<Long, ClientDto> clientData = new ConcurrentHashMap<>();
+    private Map<Long, RecordToMasterDto> recordData = new ConcurrentHashMap<>();
     private final ClientRepository clientRepository;
     private final RecordToMasterRepository recordRepository;
     private final ClientMapper clientMapper;
@@ -33,12 +31,12 @@ public class ClientDataCache{
 
 
     public void setClientBotState(Long userId, ClientBotState clientBotState){
-        ClientState.put(userId,clientBotState);
+        clientState.put(userId,clientBotState);
     }
 
 
     public ClientBotState getClientBotState(Long userId){
-        ClientBotState clientBotState = ClientState.get(userId);
+        ClientBotState clientBotState = clientState.get(userId);
         if(clientBotState == null){
             clientBotState = ClientBotState.FILLING_CLIENT_PROFILE;
         }
@@ -46,9 +44,8 @@ public class ClientDataCache{
         return clientBotState;
     }
 
-
     public ClientDto getClientProfileData(Long userId) {
-        ClientDto clientDto = ClientData.get(userId);
+        ClientDto clientDto = clientData.get(userId);
         if (clientDto == null) {
             clientDto = new ClientDto();
         }
@@ -56,22 +53,22 @@ public class ClientDataCache{
     }
 
     public void saveClientProfileData(Long userId, ClientDto clientDto){
-        ClientData.put(userId,clientDto);
+        clientData.put(userId,clientDto);
     }
 
     public RecordToMasterDto getRecordData(Long userId){
-        RecordToMasterDto recordToMasterDto = RecordData.get(userId);
+        RecordToMasterDto recordToMasterDto = recordData.get(userId);
         if(recordToMasterDto == null){
             recordToMasterDto = new RecordToMasterDto();
         }
         return recordToMasterDto;
     }
 
-
-
     public void saveRecordData(Long userId, RecordToMasterDto recordToMasterDto){
-        RecordData.put(userId,recordToMasterDto);
+        recordData.put(userId,recordToMasterDto);
     }
+
+
 
     public void setClientIntoDb(ClientDto clientDto){
         Client client = clientMapper.toEntity(clientDto);

@@ -26,7 +26,7 @@ public class HandleCheckRecordImpl implements Handle {
     private final RecordToMasterRepository record;
 
     @Override
-    public SendMessage getMessage(Update update) {
+    public SendMessage getMessage(Update update){
         return null;
     }
 
