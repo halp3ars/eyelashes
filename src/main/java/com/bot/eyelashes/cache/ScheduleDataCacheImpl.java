@@ -35,13 +35,17 @@ public class ScheduleDataCacheImpl {
         return stateSchedule;
     }
 
+    public StateSchedule getMessageCurrentState(Long userId) {
+        StateSchedule stateSchedule = mastersStateSchedule.get(userId);
+        if (stateSchedule == null)
+            stateSchedule = StateSchedule.COUNT_DAY;
+
+        return stateSchedule;
+    }
+
     public ScheduleDto getUserProfileData(Long userId) {
         return scheduleData.get(userId);
     }
-
-//    public void saveSchedule(Long userId) {
-//        scheduleDa
-//    }
 
 
     public void saveScheduleForMaster(ScheduleDto scheduleDto) {

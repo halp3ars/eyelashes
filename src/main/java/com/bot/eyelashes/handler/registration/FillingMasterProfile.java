@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -28,19 +29,24 @@ public class FillingMasterProfile implements HandleRegistration {
     private final MessageService messageService;
 
     @Override
-    public SendMessage getMessage(Message message) {
-        if (masterDataCache.getMessageCurrentState(message.getFrom()
-                        .getId())
-                .equals(BotState.ASK_FULL_NAME)) {
+    public SendMessage getMessage(Update update) {
+        Message message;
+        if(update.hasCallbackQuery()){
+            message = update.getCallbackQuery().getMessage();
+        }else {
+            message = update.getMessage();
+        }
+
+        if (masterDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
             masterDataCache.setUsersCurrentBotState(message.getFrom()
-                    .getId(), BotState.ASK_PHONE);
+                    .getId(), BotState.ASK_FULL_NAME);
         }
         return processUsersInput(message);
     }
 
     @Override
     public BotState getHandleName() {
-        return BotState.ASK_FULL_NAME;
+        return BotState.FILLING_PROFILE;
     }
 
     private SendMessage processUsersInput(Message inputMsg) {
@@ -66,6 +72,7 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_ACTIVITY);
         }
         if (botState.equals(BotState.ASK_ACTIVITY)) {
+
             masterDto.setPhone(usersAnswer);
             masterDto.setTelegramId(userId);
             replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
@@ -78,11 +85,13 @@ public class FillingMasterProfile implements HandleRegistration {
                     .text(String.format("%s %s", "Данные по вашей анкете\n", masterDto))
                     .chatId(chatId.toString())
                     .build();
+
         }
         if (botState.equals(BotState.REGISTREDET)) {
             masterDataCache.setMasterInDb(masterDto);
             replyToUser = SendMessage.builder()
-                    .text("Для записи графика работы\nВведите Расписание")
+                    .text("Запишите график работы")
+                    .replyMarkup(keyboardForRegistration())
                     .chatId(userId.toString())
                     .build();
         }
@@ -90,6 +99,19 @@ public class FillingMasterProfile implements HandleRegistration {
 
         masterDataCache.saveUserProfileData(userId, masterDto);
         return replyToUser;
+    }
+
+    private InlineKeyboardMarkup keyboardForRegistration() {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        buttons.add(Arrays.asList(
+                InlineKeyboardButton.builder()
+                        .callbackData("SCHEDULE")
+                        .text("Расписание")
+                        .build()
+        ));
+        return InlineKeyboardMarkup.builder()
+                .keyboard(buttons)
+                .build();
     }
 
     @Override

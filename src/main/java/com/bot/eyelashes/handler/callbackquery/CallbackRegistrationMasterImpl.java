@@ -2,7 +2,6 @@ package com.bot.eyelashes.handler.callbackquery;
 
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
-import com.bot.eyelashes.handler.BotStateHandleContext;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +15,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class CallbackRegistrationMasterImpl implements CallbackRegistration {
     private final MasterDataCache masterDataCache;
     private final MessageService messageService;
-    private final BotStateHandleContext botStateHandleContext;
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         if (masterDataCache.getUsersCurrentBotState(callbackQuery.getMessage().getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
             masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage().getFrom().getId(), BotState.ASK_FULL_NAME);
         }
         return processUsersInput(callbackQuery.getMessage());
-    }
-
-    @Override
-    public SendMessage getMessage(Message message) {
-        if (masterDataCache.getMessageCurrentState(message.getFrom().getId()).equals(BotState.ASK_FULL_NAME)) {
-            masterDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_PHONE);
-        }
-        return processUsersInput(message);
     }
 
     @Override
@@ -61,28 +51,6 @@ public class CallbackRegistrationMasterImpl implements CallbackRegistration {
             replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона: ");
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_ACTIVITY);
         }
-        if (botState.equals(BotState.ASK_ACTIVITY)) {
-            masterDto.setPhone(usersAnswer);
-            masterDto.setTelegramId(userId);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
-            masterDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FIELD);
-        }
-        if (botState.equals(BotState.PROFILE_FIELD)) {
-            masterDto.setActivity(usersAnswer);
-            masterDataCache.setUsersCurrentBotState(userId, BotState.REGISTREDET);
-            replyToUser = SendMessage.builder()
-                    .text(String.format("%s %s", "Данные по вашей анкете\n", masterDto))
-                    .chatId(chatId.toString())
-                    .build();
-        }
-        if (botState.equals(BotState.REGISTREDET)) {
-            masterDataCache.setMasterInDb(masterDto);
-            replyToUser = SendMessage.builder()
-                    .text("Для записи графика работы\nВведите Расписание")
-                    .chatId(userId.toString())
-                    .build();
-        }
-
 
         masterDataCache.saveUserProfileData(userId, masterDto);
         return replyToUser;

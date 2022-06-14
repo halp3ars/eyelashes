@@ -28,8 +28,8 @@ public class HandleScheduleImpl implements HandleSchedule {
 
     @Override
     public SendMessage getMessage(Message message) {
-        if (scheduleDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(StateSchedule.FILLING_SCHEDULE)) {
-            scheduleDataCache.setUsersCurrentBotState(message.getFrom().getId(), StateSchedule.COUNT_DAY);
+        if (scheduleDataCache.getMessageCurrentState(message.getFrom().getId()).equals(StateSchedule.COUNT_DAY)) {
+            scheduleDataCache.setUsersCurrentBotState(message.getFrom().getId(), StateSchedule.ASK_DATA_TIME);
         }
         return processInputMessage(message);
     }
@@ -38,7 +38,7 @@ public class HandleScheduleImpl implements HandleSchedule {
 
     @Override
     public StateSchedule getStateSchedule() {
-        return StateSchedule.FILLING_SCHEDULE;
+        return StateSchedule.COUNT_DAY;
     }
 
     private SendMessage processInputMessage(Message message) {
@@ -67,17 +67,15 @@ public class HandleScheduleImpl implements HandleSchedule {
             scheduleDto.setDate(LocalDate.parse(dataTime[0], dateTimeFormatter));
             scheduleDto.setTime(dataTime[1]);
             scheduleDto.setTelegramId(userId);
-            countDay--;
+            --countDay;
             if (countDay == 0)
-                scheduleDataCache.setUsersCurrentBotState(userId, StateSchedule.FILLED_SCHEDULE);
-            replyMessage = messageService.getReplyMessage(chatId, "записан");
+                replyMessage = SendMessage.builder().text("Ваше расписание записано.").chatId(chatId.toString()).replyMarkup(keyboard()).build();
+
+            if (countDay != 0)
+                replyMessage = messageService.getReplyMessage(chatId, "записан");
+
             scheduleDataCache.saveScheduleForMaster(scheduleDto);
         }
-
-        if (stateSchedule.equals(StateSchedule.FILLED_SCHEDULE)) {
-            replyMessage = messageService.getReplyMessage(userId, "все ок");
-        }
-
 
         return replyMessage;
     }
@@ -86,8 +84,8 @@ public class HandleScheduleImpl implements HandleSchedule {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Список клиентов")
-                        .callbackData("LIST_CLIENT")
+                        .text("Главное меню")
+                        .callbackData("MENU")
                         .build()
         ));
 
