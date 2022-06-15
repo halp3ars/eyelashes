@@ -55,7 +55,7 @@ public class HandleScheduleImpl implements HandleSchedule {
         }
         if (stateSchedule.equals(StateSchedule.ASK_DATA_TIME)) {
             countDay = Integer.parseInt(message.getText());
-            replyMessage = messageService.getReplyMessage(chatId, "Введите свое расписание в формате\nДата время");
+            replyMessage = messageService.getReplyMessage(chatId, "Укажите даты работы в формате ДД.ММ.ГГГГ ВРЕМЯ");
             scheduleDataCache.setUsersCurrentBotState(userId, StateSchedule.FILLING_DATA_TIME);
         }
         if (stateSchedule.equals(StateSchedule.FILLING_DATA_TIME)) {

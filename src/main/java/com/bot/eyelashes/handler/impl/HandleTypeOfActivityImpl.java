@@ -44,7 +44,7 @@ public class HandleTypeOfActivityImpl implements Handle {
         TypeOfActivity typeOfActivity = new TypeOfActivity();
         masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
                 .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
-                        .text(master.getName())
+                        .text(master.getName() + master.getSurname())
                         .callbackData("SET_MASTER/" + callbackQuery.getData() + "/" + master.getId())
                         .build())));
         inlineKeyboardMarkup.setKeyboard(buttons);

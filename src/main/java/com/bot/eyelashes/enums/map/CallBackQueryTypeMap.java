@@ -17,7 +17,6 @@ public class CallBackQueryTypeMap {
 
     public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,@Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu, @Qualifier("CallbackCheckRecordImpl") Callback callbackCheckRecord,
     @Qualifier("CallbackDeclineImpl") Callback callbackDecline, @Qualifier("CallbackClientImpl") Callback callbackClient) {
-        CALLBACK_MAP.put("MASTER", new CallbackMasterImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
         CALLBACK_MAP.put("CLIENT", callbackClient);
         CALLBACK_MAP.put("NAILS", callbackActivity);
@@ -26,7 +25,6 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
         CALLBACK_MAP.put("CHECK_RECORD", callbackCheckRecord);
         CALLBACK_MAP.put("DECLINE_RECORD", callbackDecline);
-
     }
 
 
