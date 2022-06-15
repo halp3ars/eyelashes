@@ -42,7 +42,6 @@ public class HandleTypeOfActivityImpl implements Handle {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();
-        List<Master> asd = masterRepository.findByActivity("Брови");
         masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
                 .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
                         .text(master.getName())

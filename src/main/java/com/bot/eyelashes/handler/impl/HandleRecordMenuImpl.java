@@ -1,8 +1,14 @@
 package com.bot.eyelashes.handler.impl;
 
+import com.bot.eyelashes.cache.ClientDataCache;
+import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.handler.registration.FillingClientProfile;
+import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.repository.MasterRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,15 +24,11 @@ public class HandleRecordMenuImpl implements Handle {
 
     private final MasterRepository masterRepository;
 
+    public static Long masterId;
+
     @Override
     public SendMessage getMessage(Update update) {
-        return SendMessage.builder()
-                .replyMarkup(createInlineKeyboardWithCallback(update.getCallbackQuery()))
-                .chatId(update.getMessage()
-                        .getChatId()
-                        .toString())
-                .text("Вы хотитите записаться \uD83D\uDCC5 или позвонить \uD83D\uDCDE?")
-                .build();
+        return null;
     }
 
     @Override
@@ -38,10 +40,12 @@ public class HandleRecordMenuImpl implements Handle {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         String callbackData = callbackQuery.getData();
-        String callBackId = callbackData.substring(callbackData.lastIndexOf("/") + 1);
-        Long id = masterRepository.findById(Long.parseLong(callBackId)).get()
+        String callBackMasterId = callbackData.substring(callbackData.lastIndexOf("/") + 1);
+        Long id = masterRepository.findById(Long.parseLong(callBackMasterId)).get()
                 .getId();
+        Long clientId = callbackQuery.getMessage().getFrom().getId();
         String phoneNumber = masterRepository.findById(id).get().getPhoneNumber();
+        masterId = masterRepository.findById(id).get().getTelegramId();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
                         .text("Записаться")

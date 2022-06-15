@@ -5,6 +5,7 @@ import com.bot.eyelashes.handler.registration.HandleRegistration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,9 @@ public class BotStateContext {
 
 
 
-    public SendMessage processInputMessage(BotState currentState, Message message) {
+    public SendMessage processInputMessage(BotState currentState, Update update) {
         HandleRegistration currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.getMessage(message);
+        return currentMessageHandler.getMessage(update);
     }
 
 

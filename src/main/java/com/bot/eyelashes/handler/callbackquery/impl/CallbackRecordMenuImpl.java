@@ -14,6 +14,7 @@ public class CallbackRecordMenuImpl implements Callback {
 
     private final MasterRepository masterRepository;
 
+
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository);
@@ -22,7 +23,7 @@ public class CallbackRecordMenuImpl implements Callback {
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .text("Вы хотитите записаться \uD83D\uDCC5 или позвонить \uD83D\uDCDE?")
+                .text("Вы хотитите записаться \uD83D\uDCC5 или свзяаться \uD83D\uDCDE?")
                 .build();
     }
 }

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -28,7 +29,8 @@ public class FillingMasterProfile implements HandleRegistration {
     private final MessageService messageService;
 
     @Override
-    public SendMessage getMessage(Message message) {
+    public SendMessage getMessage(Update update) {
+        Message message = update.getMessage();
         if (masterDataCache.getUsersCurrentBotState(message.getFrom()
                         .getId())
                 .equals(BotState.FILLING_PROFILE)) {

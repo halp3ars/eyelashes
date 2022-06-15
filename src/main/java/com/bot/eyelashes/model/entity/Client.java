@@ -22,7 +22,7 @@ public class Client {
     private String surname;
     @Column(name = "phone_number")
     private String phoneNumber;
-    @Column(name = "telegram_nickname")
-    private String nickname;
+    @Column(name = "telegram_ID")
+    private String telegramId;
 
 }

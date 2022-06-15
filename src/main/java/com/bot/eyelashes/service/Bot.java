@@ -33,7 +33,9 @@ public class Bot extends TelegramLongPollingBot {
     private final CallBackQueryTypeMap callBackQueryTypeMap;
     private final MasterDataCache masterDataCache;
 
-    private boolean masterRegistration = true;
+    private boolean masterRegistration = false;
+
+    private boolean clientRegistration = false;
 
     @SneakyThrows
     @Override
@@ -43,62 +45,64 @@ public class Bot extends TelegramLongPollingBot {
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
+            if (update.getCallbackQuery()
                     .getData()
-                    .split("/")[0]);
-            execute(callback.getCallbackQuery(update.getCallbackQuery()));
+                    .equals("RECORD")) {
+                clientBotState = ClientBotState.ASK_CLIENT_FULL_NAME;
+                clientRegistration = true;
+                clientDataCache.setClientBotState(update.getCallbackQuery()
+                        .getMessage()
+                        .getChatId(), clientBotState);
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
+                execute(replyMessage);
+            } else {
+                Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
+                        .getData()
+                        .split("/")[0]);
+                execute(callback.getCallbackQuery(update.getCallbackQuery()));
+            }
         } else if (update.getMessage()
                 .hasText()) {
             if (update.getMessage()
                     .getText()
-                    .equals("registration")) {
-                botState = BotState.FILLING_PROFILE;
-                masterDataCache.setUsersCurrentBotState(update.getMessage()
+                    .startsWith("/")) {
+                Handle handle = commandMap.getCommand(message.getText());
+                execute(handle.getMessage(update));
+            }
+//            if (clientRegistration) {
+//                botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
+//                        .getFrom()
+//                        .getId());
+//                replyMessage = botStateContext.processInputMessage(botState, update);
+//                execute(replyMessage);
+//            }
+//            if (update.getMessage()
+//                    .getText()
+//                    .equals("registration")) {
+//                botState = BotState.FILLING_PROFILE;
+//                masterDataCache.setUsersCurrentBotState(update.getMessage()
+//                        .getFrom()
+//                        .getId(), botState);
+//                replyMessage = botStateContext.processInputMessage(botState, update);
+//                masterRegistration = true;
+//                execute(replyMessage);
+//            }
+            if (clientRegistration) {
+                clientBotState = clientDataCache.getClientBotState(update.getMessage()
                         .getFrom()
-                        .getId(), botState);
-                replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
-                masterRegistration = true;
+                        .getId());
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            } else if (update.getMessage()
-                    .getText()
-                    .equals("clientRegistration")) {
-                clientBotState = ClientBotState.FILLING_CLIENT_PROFILE;
-                masterRegistration = false;
-                clientDataCache.setClientBotState(update.getMessage()
-                        .getFrom()
-                        .getId(), clientBotState);
-                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
-                execute(replyMessage);
-            } else {
-                if (masterRegistration) {
-                    botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
-                            .getFrom()
-                            .getId());
-                    replyMessage = botStateContext.processInputMessage(botState, update.getMessage());
-                    execute(replyMessage);
-                } else if(!masterRegistration) {
-                    clientBotState = clientDataCache.getClientBotState(update.getMessage()
-                            .getFrom()
-                            .getId());
-                    replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
-                    execute(replyMessage);
-                }
             }
         }
-
-        if (update.getMessage()
-                .getText()
-                .startsWith("/")) {
-            Handle handle = commandMap.getCommand(message.getText());
-            execute(handle.getMessage(update));
-        }
     }
+
+
 
     @Override
     public String getBotUsername() {
         return telegramProperties.getNameBot();
     }
-
 
     @Override
     public String getBotToken() {

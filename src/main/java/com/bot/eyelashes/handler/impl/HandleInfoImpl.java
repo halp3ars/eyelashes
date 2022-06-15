@@ -17,7 +17,7 @@ public class HandleInfoImpl implements Handle {
         return SendMessage.builder()
                 .chatId(update.getMessage().getChatId()
                         .toString())
-                .text("Amd")
+                .text("Наш бот работает")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                         .keyboard(createInlineKeyboard().getKeyboard())
                         .build())
@@ -31,7 +31,7 @@ public class HandleInfoImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Мастер")
+                        .text("Меню")
                         .callbackData("MENU")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);

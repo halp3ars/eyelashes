@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface ClientMapper {
 
 
-    @Mapping(source = "name", target = "name")
+    @Mapping(source = "telegramId", target = "telegramId")
     Client toEntity(ClientDto clientDto);
 }
