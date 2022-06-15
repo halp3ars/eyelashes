@@ -15,6 +15,6 @@ public class MasterDto {
     private String middleName;
 
     public String toString() {
-        return this.getSurname() + this.getName() + this.getMiddleName() + "\nНомер телефона =" + this.getPhone() + "\n Вид услуг =" + this.getActivity() +"\nОтправьте готово для продолжения";
+        return "ФИО: " + this.getSurname() + " " + this.getName() + " " + this.getMiddleName() + " " + "\nНомер телефона: " + this.getPhone() + "\n Вид услуг: " + this.getActivity() +"\nОтправьте готово для продолжения";
     }
 }
