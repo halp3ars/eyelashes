@@ -91,12 +91,6 @@ public class FillingMasterProfile implements HandleRegistration {
                     .replyMarkup(keyboardForRegistration())
                     .chatId(userId.toString())
                     .build();
-//            masterDataCache.setUsersCurrentBotState(userId, BotState.REGISTREDET);
-//            replyToUser = SendMessage.builder()
-//                    .text(String.format("%s %s", "Данные по вашей анкете\n", masterDto))
-//                    .chatId(chatId.toString())
-//                    .build();
-
         }
         if (botState.equals(BotState.REGISTREDET)) {
             masterDataCache.setMasterInDb(masterDto);
