@@ -45,6 +45,8 @@ public class Bot extends TelegramLongPollingBot {
 
     private final BotStateContext botStateContext;
     private final HandleScheduleContext handleScheduleContext;
+    private final MasterRepository masterRepository;
+    private final MessageService messageService;
 
     private boolean masterRegistration;
     private boolean clientRegistration;
@@ -60,21 +62,25 @@ public class Bot extends TelegramLongPollingBot {
         StateSchedule stateSchedule;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                    .getData()
-                    .split("/")[0]);
 
-            if (update.getCallbackQuery()
-                    .getData()
-                    .equals("MASTER")) {
-                botState = BotState.ASK_PHONE;
-                masterRegistration = true;
-                schedule = false;
-                masterDataCache.setUsersCurrentBotState(update.getCallbackQuery()
-                        .getMessage()
-                        .getChatId(), botState);
-                replyMessage = botStateContext.processInputMessage(botState, update);
-                execute(replyMessage);
+
+            if (update.getCallbackQuery().getData().equals("MASTER")) {
+                if (masterRepository.existsByTelegramId(update.getCallbackQuery().getMessage().getChatId())) {
+                    execute(SendMessage.builder()
+                            .chatId(update.getCallbackQuery().getMessage().getChatId().toString())
+                            .text("Вы авторизированы")
+                            .build());
+                }else {
+                    botState = BotState.ASK_PHONE;
+                    masterRegistration = true;
+                    schedule = false;
+                    masterDataCache.setUsersCurrentBotState(update.getCallbackQuery()
+                            .getMessage()
+                            .getChatId(), botState);
+                    replyMessage = botStateContext.processInputMessage(botState, update);
+                    execute(replyMessage);
+                }
+
             } else if (update.getCallbackQuery()
                     .getData()
                     .equals("RECORD")) {
@@ -96,8 +102,13 @@ public class Bot extends TelegramLongPollingBot {
                 schedule = true;
                 masterRegistration = false;
                 execute(replyMessage);
+            } else {
+                Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
+                        .getData()
+                        .split("/")[0]);
+                execute(callback.getCallbackQuery(update.getCallbackQuery()));
             }
-            execute(callback.getCallbackQuery(update.getCallbackQuery()));
+
         } else if (update.getMessage()
                 .hasText()) {
             if ((update.getMessage()
