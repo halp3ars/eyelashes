@@ -31,7 +31,7 @@ public class HandleInfoImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Мастер")
+                        .text("Меню")
                         .callbackData("MENU")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);

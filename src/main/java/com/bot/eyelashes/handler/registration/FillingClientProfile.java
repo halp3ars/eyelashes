@@ -113,7 +113,7 @@ public class FillingClientProfile implements HandleRegistration {
             clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()
-                    .text("Вы записаны на " + recordToMasterDto.getDate() + " " + recordToMasterDto.getTime() + "\n Напишите что-либо для продолжения")
+                    .text("Вы записаны на " + recordToMasterDto.getDate() + " " + recordToMasterDto.getTime() + "\nНажмите какую-либо кнопку для продолжение")
                     .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();

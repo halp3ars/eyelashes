@@ -13,8 +13,5 @@ public class ClientDto {
         private String phoneNumber;
         private Long telegramId;
 
-        public String toString() {
-                return this.getSurname()  +  " "  + this.getName() +  " "  + this.getMiddleName() + "\nНомер телефона =" + this.getPhoneNumber() + "\nОтправьте готово для продолжения";
-        }
 
 }

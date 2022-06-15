@@ -20,7 +20,7 @@ public class CallbackDeclineImpl implements Callback {
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         record.deleteByClientId(callbackQuery.getMessage().getChatId());
         return SendMessage.builder()
-                .text("Вы успешно сняты с записи ")
+                .text("Вы успешно сняты с записи")
                 .chatId(callbackQuery.getMessage().getChatId().toString())
                 .build();
     }

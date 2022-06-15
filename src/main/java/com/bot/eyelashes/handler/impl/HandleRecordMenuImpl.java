@@ -28,13 +28,7 @@ public class HandleRecordMenuImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
-        return SendMessage.builder()
-                .replyMarkup(createInlineKeyboardWithCallback(update.getCallbackQuery()))
-                .chatId(update.getMessage()
-                        .getChatId()
-                        .toString())
-                .text("Вы хотитите записаться \uD83D\uDCC5 или позвонить \uD83D\uDCDE?")
-                .build();
+        return null;
     }
 
     @Override
