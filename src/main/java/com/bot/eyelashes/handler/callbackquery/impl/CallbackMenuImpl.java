@@ -9,7 +9,6 @@ public class CallbackMenuImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
-
         return SendMessage.builder()
                 .replyMarkup(handleMainMenu.createInlineKeyboard())
                 .chatId(callbackQuery.getMessage()

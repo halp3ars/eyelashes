@@ -12,6 +12,8 @@ spring:
         persistence:
           query:
             timeout: '6000000'
+
+
 telegram:
   nameBot: '@BeautyEyelashesBot'
   tokenBot: '5531596418:AAFw9TtWSvIgZSD_-KpRi0JUDz1LWXmfQSY'
