@@ -14,7 +14,5 @@ public interface MasterRepository extends JpaRepository<Master, Long> {
     Optional<Master> findByTelegramId(Long telegramId);
 
     List<Master> findByActivity(String activity);
-
-    Optional<Master> findByTelegramId(Long id);
     Boolean existsByTelegramId(Long id);
 }

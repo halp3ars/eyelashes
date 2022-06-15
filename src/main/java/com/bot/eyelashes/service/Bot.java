@@ -41,6 +41,7 @@ public class Bot extends TelegramLongPollingBot {
     private final CallBackQueryTypeMap callBackQueryTypeMap;
     private final MasterDataCache masterDataCache;
     private final ScheduleDataCacheImpl scheduleDataCache;
+    private final ClientBotStateContext clientBotStateContext;
 
     private final BotStateContext botStateContext;
     private final HandleScheduleContext handleScheduleContext;
@@ -48,6 +49,7 @@ public class Bot extends TelegramLongPollingBot {
     private boolean masterRegistration;
     private boolean clientRegistration;
     private boolean schedule;
+
 
     @SneakyThrows
     @Override
@@ -58,27 +60,49 @@ public class Bot extends TelegramLongPollingBot {
         StateSchedule stateSchedule;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData().split("/")[0]);
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
+                    .getData()
+                    .split("/")[0]);
 
-            if (update.getCallbackQuery().getData().equals("MASTER")) {
+            if (update.getCallbackQuery()
+                    .getData()
+                    .equals("MASTER")) {
                 botState = BotState.ASK_PHONE;
                 masterRegistration = true;
+                schedule = false;
                 masterDataCache.setUsersCurrentBotState(update.getCallbackQuery()
                         .getMessage()
                         .getChatId(), botState);
                 replyMessage = botStateContext.processInputMessage(botState, update);
                 execute(replyMessage);
-            } else if (update.getCallbackQuery().getData().equals("SCHEDULE")) {
+            } else if (update.getCallbackQuery()
+                    .getData()
+                    .equals("RECORD")) {
+                clientBotState = ClientBotState.ASK_CLIENT_FULL_NAME;
+                clientRegistration = true;
+                clientDataCache.setClientBotState(update.getCallbackQuery()
+                        .getMessage()
+                        .getChatId(), clientBotState);
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
+                execute(replyMessage);
+            } else if (update.getCallbackQuery()
+                    .getData()
+                    .equals("SCHEDULE")) {
                 stateSchedule = StateSchedule.ASK_DATA_TIME;
-                scheduleDataCache.setUsersCurrentBotState(update.getCallbackQuery().getMessage().getChatId(), stateSchedule);
+                scheduleDataCache.setUsersCurrentBotState(update.getCallbackQuery()
+                        .getMessage()
+                        .getChatId(), stateSchedule);
                 replyMessage = scheduleStateContext.processCallback(stateSchedule, update.getCallbackQuery());
                 schedule = true;
                 masterRegistration = false;
                 execute(replyMessage);
             }
             execute(callback.getCallbackQuery(update.getCallbackQuery()));
-        } else if (update.getMessage().hasText()) {
-            if ((update.getMessage().getText().startsWith("/"))) {
+        } else if (update.getMessage()
+                .hasText()) {
+            if ((update.getMessage()
+                    .getText()
+                    .startsWith("/"))) {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));
             }
@@ -88,32 +112,22 @@ public class Bot extends TelegramLongPollingBot {
                         .getId());
                 replyMessage = botStateContext.processInputMessage(botState, update);
                 execute(replyMessage);
-            }  else if (schedule) {
-                    stateSchedule = scheduleDataCache.getMessageCurrentState(update.getMessage()
-                            .getFrom()
-                            .getId());
-                    replyMessage = handleScheduleContext.processInputMessage(stateSchedule, update.getMessage());
-                    execute(replyMessage);
-                }
+            } else if (clientRegistration) {
+                clientBotState = clientDataCache.getClientBotState(update.getMessage()
+                        .getFrom()
+                        .getId());
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
+                execute(replyMessage);
+            } else if (schedule) {
+                stateSchedule = scheduleDataCache.getMessageCurrentState(update.getMessage()
+                        .getFrom()
+                        .getId());
+                replyMessage = handleScheduleContext.processInputMessage(stateSchedule, update.getMessage());
+                execute(replyMessage);
             }
         }
-
-    private SendMessage messageForAuthMaster(Long chatId) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .text("Список клиентов")
-                        .callbackData("LIST_CLIENT")
-                        .build()
-        ));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return SendMessage.builder()
-                .text("Для авторизированного мастера")
-                .replyMarkup(inlineKeyboardMarkup)
-                .chatId(chatId.toString())
-                .build();
     }
+
 
     @Override
     public String getBotUsername() {
