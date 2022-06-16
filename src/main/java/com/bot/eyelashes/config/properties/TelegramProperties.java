@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "telegram")
 public class TelegramProperties {
 
-    private String messageTextInfo;
     private String nameBot;
     private String tokenBot;
 

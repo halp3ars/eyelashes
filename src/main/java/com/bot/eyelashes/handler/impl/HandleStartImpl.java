@@ -19,11 +19,13 @@ public class HandleStartImpl implements Handle {
 
     private final String START_MESSAGE = "Здравствуйте это бот для записи на процедуры в салоне красоты";
 
+    public static Integer messageId;
 
     @Override
     public SendMessage getMessage(Update update) {
         return SendMessage.builder()
-                .chatId(update.getMessage().getChatId()
+                .chatId(update.getMessage()
+                        .getChatId()
                         .toString())
                 .replyMarkup(createInlineKeyboard())
                 .text(START_MESSAGE)
@@ -38,6 +40,10 @@ public class HandleStartImpl implements Handle {
                 InlineKeyboardButton.builder()
                         .text("Начать")
                         .callbackData("MENU")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("Список комманд")
+                        .callbackData("INFO")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

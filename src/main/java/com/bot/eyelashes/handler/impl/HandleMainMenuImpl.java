@@ -2,7 +2,7 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.MessageAutoDeleteTimerChanged;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,12 +16,15 @@ public class HandleMainMenuImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
+        MessageAutoDeleteTimerChanged messageAutoDeleteTimerChanged = new MessageAutoDeleteTimerChanged();
+        messageAutoDeleteTimerChanged.setMessageAutoDeleteTime(0);
         return SendMessage.builder()
                 .replyMarkup(createInlineKeyboard())
                 .chatId(update.getMessage().getChatId()
                         .toString())
-                .text("Меню")
+                .text("Кто вы ?")
                 .build();
+
     }
 
     @Override

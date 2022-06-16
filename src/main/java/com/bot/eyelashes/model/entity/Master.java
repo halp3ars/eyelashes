@@ -19,6 +19,8 @@ public class Master {
     private String surname;
     @Column(name = "name")
     private String name;
+    @Column(name = "address")
+    private String address;
     @Column(name = "middlename")
     private String middleName;
     @Column(name = "phonenumber")

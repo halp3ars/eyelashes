@@ -14,7 +14,6 @@ public class CallbackRecordMenuImpl implements Callback {
 
     private final MasterRepository masterRepository;
 
-
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository);

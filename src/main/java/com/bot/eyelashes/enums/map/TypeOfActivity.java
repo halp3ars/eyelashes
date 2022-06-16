@@ -2,7 +2,6 @@ package com.bot.eyelashes.enums.map;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class TypeOfActivity {
 
@@ -18,12 +17,5 @@ public class TypeOfActivity {
     public String getCommand(String keyCommand) {
         return TYPE_OF_ACTIVITY.get(keyCommand);
     }
-
-    public static Set<String> getCommandKeySet() {
-        return TYPE_OF_ACTIVITY.keySet();
-    }
-
-
-
 
 }

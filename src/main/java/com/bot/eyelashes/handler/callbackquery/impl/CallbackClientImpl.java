@@ -23,13 +23,14 @@ public class CallbackClientImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        Long userId = callbackQuery.getMessage().getChatId();
+        Long userId = callbackQuery.getMessage()
+                .getChatId();
         Optional<RecordToMaster> byClientId = record.findByClientId(userId);
         if (byClientId.isPresent()) {
             HandleCheckRecordImpl handleCheckRecord = new HandleCheckRecordImpl(masterRepository, record);
             return handleCheckRecord.getMessageWithCallback(callbackQuery);
 
-        } else{
+        } else {
             HandleClientImpl handleClient = new HandleClientImpl();
             return SendMessage.builder()
                     .chatId(callbackQuery.getMessage()

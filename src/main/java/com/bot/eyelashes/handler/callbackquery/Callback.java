@@ -8,5 +8,4 @@ public interface Callback {
 
     SendMessage getCallbackQuery(CallbackQuery callbackQuery);
 
-
 }
