@@ -94,7 +94,7 @@ public class FillingClientProfile implements HandleRegistration {
             clientDto.setTelegramId(userId);
             clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
             replyToClient = SendMessage.builder()
-                    .text("Введите дату записи в формате ГГГГ-ММ-ДД")
+                    .text("Введите дату записи в формате 2022-06-15 (ГГГГ-ММ-ДД)")
                     .chatId(chatId.toString())
                     .build();
         }

@@ -33,6 +33,7 @@ public class FillingMasterProfile implements HandleRegistration {
     @Override
     public SendMessage getMessage(Update update) {
         Message message;
+//TODO : избавиться от этой заглушки
         if(update.hasCallbackQuery()){
             message = update.getCallbackQuery().getMessage();
         }else {
@@ -120,7 +121,7 @@ public class FillingMasterProfile implements HandleRegistration {
     }
 
     private boolean isValidPhone(String phone) {
-        Pattern pattern = Pattern.compile("^(\\+7|7|8)?[\\s\\-]?\\(?[489][0-9]{2}\\)?[\\s\\-]?[0-9]{3}[\\s\\-]?[0-9]{2}[\\s\\-]?[0-9]{2}$");
+        Pattern pattern = Pattern.compile("^(\\+7|8)?[\\s\\-]?\\(?[489][0-9]{2}\\)?[\\s\\-]?[0-9]{3}[\\s\\-]?[0-9]{2}[\\s\\-]?[0-9]{2}$");
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
     }

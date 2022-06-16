@@ -22,7 +22,6 @@ public class ClientBotStateContext {
 
     public SendMessage processInputClientMessage(ClientBotState clientBotState, Update update) {
         HandleRegistration handleRegistration = findClientMessageHandler(clientBotState);
-
         return handleRegistration.getMessage(update);
     }
 
