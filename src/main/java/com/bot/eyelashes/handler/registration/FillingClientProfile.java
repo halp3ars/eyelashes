@@ -7,6 +7,7 @@ import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
 import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.service.MessageService;
+import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -95,7 +96,7 @@ public class FillingClientProfile implements HandleRegistration {
 
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
             clientDto.setTelegramNick(update.getMessage().getFrom().getUserName());
-            if (FillingMasterProfile.isValidPhone(clientAnswer)) {
+            if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
                 clientDto.setTelegramId(userId);
                 clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
                 replyToClient = SendMessage.builder()

@@ -9,15 +9,17 @@ import javax.persistence.*;
 @Setter
 @Getter
 public class Schedule {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    private Master masterId;
+    private Long masterId;
     private boolean monday;
     private boolean tuesday;
     private boolean wednesday;
     private boolean thursday;
     private boolean friday;
+    private Long telegramId;
+
 }

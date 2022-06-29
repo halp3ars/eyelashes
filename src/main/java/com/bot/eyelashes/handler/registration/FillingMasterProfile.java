@@ -5,6 +5,7 @@ import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.service.MessageService;
+import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -75,7 +76,7 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_ACTIVITY);
         }
         if (botState.equals(BotState.ASK_ACTIVITY)) {
-            if (isValidPhone(usersAnswer)) {
+            if (PhoneNumberValidation.isValidPhone(usersAnswer)) {
                 masterDto.setPhone(usersAnswer);
                 masterDto.setTelegramId(userId);
                 replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
@@ -118,12 +119,6 @@ public class FillingMasterProfile implements HandleRegistration {
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
-    }
-
-    private boolean isValidPhone(String phone) {
-        Pattern pattern = Pattern.compile("^(\\+7|8)?[\\s\\-]?\\(?[489][0-9]{2}\\)?[\\s\\-]?[0-9]{3}[\\s\\-]?[0-9]{2}[\\s\\-]?[0-9]{2}$");
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
     }
 
     @Override

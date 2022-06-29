@@ -23,21 +23,13 @@ public class CallbackClientImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-//        Long userId = callbackQuery.getMessage()
-//                .getChatId();
-//        Optional<RecordToMaster> byClientId = record.findByClientId(userId);
-//        if (byClientId.isPresent()) {
-//            HandleCheckRecordImpl handleCheckRecord = new HandleCheckRecordImpl(masterRepository, record);
-//            return handleCheckRecord.getMessageWithCallback(callbackQuery);
-//        } else {
-            HandleClientImpl handleClient = new HandleClientImpl();
-            return SendMessage.builder()
-                    .chatId(callbackQuery.getMessage()
-                            .getChatId()
-                            .toString())
-                    .replyMarkup(handleClient.createInlineKeyboard())
-                    .text("Виды услуг")
-                    .build();
-//        }
+        HandleClientImpl handleClient = new HandleClientImpl();
+        return SendMessage.builder()
+                .chatId(callbackQuery.getMessage()
+                        .getChatId()
+                        .toString())
+                .replyMarkup(handleClient.createInlineKeyboard())
+                .text("Виды услуг")
+                .build();
     }
 }

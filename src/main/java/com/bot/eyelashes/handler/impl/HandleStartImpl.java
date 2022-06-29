@@ -39,7 +39,7 @@ public class HandleStartImpl implements Handle {
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
                         .text("Начать")
-                        .callbackData("MENU")
+                        .callbackData("SCHEDULE_CLIENT")
                         .build(),
                 InlineKeyboardButton.builder()
                         .text("Список комманд")

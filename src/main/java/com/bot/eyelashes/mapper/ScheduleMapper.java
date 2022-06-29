@@ -7,8 +7,11 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface ScheduleMapper {
-    @Mapping(source = "telegramId", target = "telegramId")
-    @Mapping(source = "date", target = "date")
-    @Mapping(source = "time", target = "time")
+
+    @Mapping(source = "masterId",target = "masterId")
     Schedule toEntity(ScheduleDto scheduleDto);
+
+    @Mapping(source = "masterId",target = "masterId")
+    ScheduleDto toDto(Schedule schedule);
+
 }

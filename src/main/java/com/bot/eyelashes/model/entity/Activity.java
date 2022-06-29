@@ -14,10 +14,8 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     @Column(name = "name")
     private String name;
-
     @ManyToMany(mappedBy = "activities")
     private Set<Master> masters;
 }

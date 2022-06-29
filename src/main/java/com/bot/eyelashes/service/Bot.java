@@ -13,6 +13,7 @@ import com.bot.eyelashes.handler.*;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.schedule.ScheduleStateContext;
 import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ public class Bot extends TelegramLongPollingBot {
     private final BotStateContext botStateContext;
     private final HandleScheduleContext handleScheduleContext;
     private final MasterRepository masterRepository;
+    private final ScheduleRepository scheduleRepository;
 
     private boolean masterRegistration;
     private boolean clientRegistration;

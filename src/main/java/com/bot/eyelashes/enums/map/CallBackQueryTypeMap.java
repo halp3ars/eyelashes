@@ -19,7 +19,8 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackCheckRecordImpl") Callback callbackCheckRecord,
                                 @Qualifier("CallbackDeclineImpl") Callback callbackDecline,
                                 @Qualifier("CallbackClientImpl") Callback callbackClient,
-                                @Qualifier("CallbackService") Callback callbackService) {
+                                @Qualifier("CallbackService") Callback callbackService,
+                                @Qualifier("CallbackScheduleClientImpl") Callback callbackScheduleClient) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
         CALLBACK_MAP.put("CLIENT", callbackClient);
@@ -32,6 +33,7 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("eyebrows", callbackService);
         CALLBACK_MAP.put("eyelashes", callbackService);
         CALLBACK_MAP.put("nails", callbackService);
+        CALLBACK_MAP.put("SCHEDULE_CLIENT", callbackScheduleClient);
     }
 
     public Callback getCallback(String keyCallback) {
