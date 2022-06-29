@@ -64,9 +64,7 @@ public class HandleScheduleImpl implements HandleSchedule {
             String[] dataTime = dataTimeWork.split(" ");
             log.info("array dataTime = " + Arrays.toString(dataTime));
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            scheduleDto.setDate(LocalDate.parse(dataTime[0], dateTimeFormatter));
-            scheduleDto.setTime(dataTime[1]);
-            scheduleDto.setTelegramId(userId);
+
             --countDay;
             if (countDay == 0)
                 replyMessage = SendMessage.builder().text("Ваше расписание записано.").chatId(chatId.toString()).replyMarkup(keyboard()).build();

@@ -46,7 +46,6 @@ public class Bot extends TelegramLongPollingBot {
     private final BotStateContext botStateContext;
     private final HandleScheduleContext handleScheduleContext;
     private final MasterRepository masterRepository;
-    private final MessageService messageService;
 
     private boolean masterRegistration;
     private boolean clientRegistration;
@@ -62,8 +61,7 @@ public class Bot extends TelegramLongPollingBot {
         StateSchedule stateSchedule;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-
-
+            //TODO : вынести callback Master is Bot.java в отдельный класс
             if (update.getCallbackQuery().getData().equals("MASTER")) {
                 if (masterRepository.existsByTelegramId(update.getCallbackQuery().getMessage().getChatId())) {
                     execute(SendMessage.builder()
@@ -71,7 +69,7 @@ public class Bot extends TelegramLongPollingBot {
                             .text("Вы авторизированы")
                             .build());
                 }else {
-                    botState = BotState.ASK_PHONE;
+                    botState = BotState.ASK_FULL_NAME;
                     masterRegistration = true;
                     schedule = false;
                     masterDataCache.setUsersCurrentBotState(update.getCallbackQuery()
@@ -109,8 +107,7 @@ public class Bot extends TelegramLongPollingBot {
                 execute(callback.getCallbackQuery(update.getCallbackQuery()));
             }
 
-        } else if (update.getMessage()
-                .hasText()) {
+        } else if (update.getMessage().hasText()) {
             if ((update.getMessage()
                     .getText()
                     .startsWith("/"))) {

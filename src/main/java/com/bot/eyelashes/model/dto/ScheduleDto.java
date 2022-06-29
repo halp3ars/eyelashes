@@ -6,7 +6,10 @@ import java.time.LocalDate;
 
 @Data
 public class ScheduleDto {
-    private Long telegramId;
-    private LocalDate date;
-    private String time;
+    private Long masterId;
+    private boolean monday;
+    private boolean tuesday;
+    private boolean wednesday;
+    private boolean thursday;
+    private boolean friday;
 }

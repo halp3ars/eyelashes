@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Setter
@@ -14,8 +13,11 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long telegramId;
-    private LocalDate date;
-    private String time;
-
+    @ManyToOne
+    private Master masterId;
+    private boolean monday;
+    private boolean tuesday;
+    private boolean wednesday;
+    private boolean thursday;
+    private boolean friday;
 }

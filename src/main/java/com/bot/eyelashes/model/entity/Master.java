@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -16,6 +18,7 @@ public class Master {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "surname")
+    @NotNull
     private String surname;
     @Column(name = "name")
     private String name;
@@ -29,5 +32,11 @@ public class Master {
     private String activity;
     @Column(name = "telegram_id")
     private Long telegramId;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Activity> activities;
+
+    @OneToMany
+    private Set<Schedule> schedule;
 
 }

@@ -11,10 +11,11 @@ import java.util.Map;
 public class CommandMap {
     private static final Map<String, Handle> COMMAND_MAP = new HashMap<>();
 
+    // TODO : дополнить список команд на /client - список клиентов для мастера, /master - список записей для мастера
     public CommandMap() {
         COMMAND_MAP.put("/info", new HandleInfoImpl());
-        COMMAND_MAP.put("/start", new HandleStartImpl()); // TODO: Переделать информацию на /start сделав ее как информационый текст со списком комманд
-        COMMAND_MAP.put("/menu", new HandleMainMenuImpl()); // TODO: Надпись: Кто по масти или Кто ты такой ЧОРТ ?
+        COMMAND_MAP.put("/start", new HandleStartImpl());
+        COMMAND_MAP.put("/menu", new HandleMainMenuImpl());
 
     }
 
