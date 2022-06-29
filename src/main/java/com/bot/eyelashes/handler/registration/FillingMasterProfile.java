@@ -76,6 +76,7 @@ public class FillingMasterProfile implements HandleRegistration {
         }
         if (botState.equals(BotState.ASK_ACTIVITY)) {
             if (isValidPhone(usersAnswer)) {
+                masterDto.setTelegramNick(inputMsg.getFrom().getUserName());
                 masterDto.setPhone(usersAnswer);
                 masterDto.setTelegramId(userId);
                 replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
@@ -120,7 +121,7 @@ public class FillingMasterProfile implements HandleRegistration {
                 .build();
     }
 
-    private boolean isValidPhone(String phone) {
+    public static boolean isValidPhone(String phone) {
         Pattern pattern = Pattern.compile("^(\\+7|8)?[\\s\\-]?\\(?[489][0-9]{2}\\)?[\\s\\-]?[0-9]{3}[\\s\\-]?[0-9]{2}[\\s\\-]?[0-9]{2}$");
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();

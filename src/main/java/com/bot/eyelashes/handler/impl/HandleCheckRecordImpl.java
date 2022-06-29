@@ -26,11 +26,11 @@ public class HandleCheckRecordImpl implements Handle {
     private final RecordToMasterRepository record;
 
     @Override
-    public SendMessage getMessage(Update update){
+    public SendMessage getMessage(Update update) {
         return null;
     }
 
-    public SendMessage getMessageWithCallback(CallbackQuery callbackQuery){
+    public SendMessage getMessageWithCallback(CallbackQuery callbackQuery) {
         Long userId = callbackQuery.getMessage()
                 .getChatId();
         Optional<RecordToMaster> byClientId = record.findByClientId(userId);
@@ -44,9 +44,12 @@ public class HandleCheckRecordImpl implements Handle {
                 .text("Вы записаны к " + master.get()
                         .getName() + " " + master.get()
                         .getSurname() +
-                        "\nНа " + master.get().getActivity() + " в " + byClientId.get()
+                        "\nНа " + master.get()
+                        .getActivity() + " в " + byClientId.get()
                         .getTime() + " " + byClientId.get()
-                        .getDate() + "\nПо адресу " + master.get().getAddress())
+                        .getDate() + "\nПо адресу " + master.get()
+                        .getAddress() + "\nНомер телефона мастера " + master.get()
+                        .getPhoneNumber())
                 .build();
     }
 
@@ -58,15 +61,27 @@ public class HandleCheckRecordImpl implements Handle {
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        Long userId = callbackQuery.getMessage().getChatId();
+        Long userId = callbackQuery.getMessage()
+                .getChatId();
         Optional<RecordToMaster> recordToMaster = record.findByClientId(userId);
-        Long masterId = recordToMaster.get().getMasterId();
+        Long masterId = recordToMaster.get()
+                .getMasterId();
         Optional<Master> masterByTelegramId = masterRepository.findByTelegramId(masterId);
-        String phoneNumber = masterByTelegramId.get().getPhoneNumber();
+        String telegramNick = masterByTelegramId.get()
+                .getTelegramNick();
         buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder().text("Отменить запись").callbackData("DECLINE_RECORD").build(),
-                InlineKeyboardButton.builder().text("Свзяаться").url("https://t.me/" + phoneNumber ).build()
-//                InlineKeyboardButton.builder().text("Перенести запись").callbackData("CHANGE_DATE").build()
+                InlineKeyboardButton.builder()
+                        .text("Отменить запись")
+                        .callbackData("DECLINE_RECORD")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("Свзяаться")
+                        .url("https://t.me/" + telegramNick)
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("Перенести запись")
+                        .callbackData("CHANGE_DATE")
+                        .build()
         ));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

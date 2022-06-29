@@ -16,13 +16,13 @@ public class Client {
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "middle_name")
-    private String middleName;
     @Column(name = "surname")
     private String surname;
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "telegram_ID")
     private String telegramId;
+    @Column(name = "telegram_nickname")
+    private String telegramNick;
 
 }

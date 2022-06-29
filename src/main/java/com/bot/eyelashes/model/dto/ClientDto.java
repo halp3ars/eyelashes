@@ -8,10 +8,10 @@ import lombok.Setter;
 public class ClientDto {
 
         private String name;
-        private String middleName;
         private String surname;
         private String phoneNumber;
         private Long telegramId;
+        private String telegramNick;
 
 
 }

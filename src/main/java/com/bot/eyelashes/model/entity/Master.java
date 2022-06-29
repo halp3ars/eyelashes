@@ -29,5 +29,7 @@ public class Master {
     private String activity;
     @Column(name = "telegram_id")
     private Long telegramId;
+    @Column(name = "telegram_nickname")
+    private String telegramNick;
 
 }

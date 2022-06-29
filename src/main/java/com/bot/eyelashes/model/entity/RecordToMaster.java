@@ -23,5 +23,7 @@ public class RecordToMaster {
     private LocalDate date;
     @Column(name = "time")
     private String time;
+    @Column(name = "activity")
+    private String activity;
 
 }
