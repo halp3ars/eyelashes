@@ -1,14 +1,11 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.cache.ClientDataCache;
-import com.bot.eyelashes.handler.ClientBotStateContext;
+import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.registration.FillingClientProfile;
-import com.bot.eyelashes.model.dto.RecordToMasterDto;
+import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
-import lombok.Getter;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class HandleRecordMenuImpl implements Handle {
@@ -25,6 +23,7 @@ public class HandleRecordMenuImpl implements Handle {
     private final MasterRepository masterRepository;
 
     public static Long masterId;
+
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -37,15 +36,19 @@ public class HandleRecordMenuImpl implements Handle {
     }
 
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         String callbackData = callbackQuery.getData();
         String callBackMasterId = callbackData.substring(callbackData.lastIndexOf("/") + 1);
-        Long id = masterRepository.findById(Long.parseLong(callBackMasterId)).get()
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        Long id = masterRepository.findById(Long.parseLong(callBackMasterId))
+                .get()
                 .getId();
-        Long clientId = callbackQuery.getMessage().getFrom().getId();
-        String phoneNumber = masterRepository.findById(id).get().getPhoneNumber();
-        masterId = masterRepository.findById(id).get().getTelegramId();
+        String telegramNick = masterRepository.findById(id)
+                .get()
+                .getTelegramNick();
+        masterId = masterRepository.findById(id)
+                .get()
+                .getTelegramId();
         buttons.add(Arrays.asList(
                 InlineKeyboardButton.builder()
                         .text("Записаться")
@@ -53,10 +56,9 @@ public class HandleRecordMenuImpl implements Handle {
                         .build(),
                 InlineKeyboardButton.builder()
                         .text("Свзяаться")
-                        .url("https://t.me/" + phoneNumber)
+                        .url("https://t.me/" + telegramNick)
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 }

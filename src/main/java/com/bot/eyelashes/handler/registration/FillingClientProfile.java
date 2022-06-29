@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +45,7 @@ public class FillingClientProfile implements HandleRegistration {
 
         if (clientDataCache.getClientBotState(message.getChatId())
                 .equals(ClientBotState.FILLING_CLIENT_PROFILE)) {
-            clientDataCache.setClientBotState(message.getChatId(), ClientBotState.ASK_CLIENT_FULL_NAME);
+            clientDataCache.setClientBotState(message.getChatId(), ClientBotState.ASK_CLIENT_NAME);
         }
         return processClientInput(update);
     }
@@ -76,27 +78,33 @@ public class FillingClientProfile implements HandleRegistration {
         ClientBotState clientBotState = clientDataCache.getClientBotState(userId);
         RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(userId);
         SendMessage replyToClient = null;
-        if (clientBotState.equals(ClientBotState.ASK_CLIENT_FULL_NAME)) {
-            replyToClient = messageService.getReplyMessage(chatId, "Введите ФИО через пробел");
-            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_PHONE);
+        if (clientBotState.equals(ClientBotState.ASK_CLIENT_NAME)) {
+            replyToClient = messageService.getReplyMessage(chatId, "Введите Имя");
+            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_SURNAME);
         }
-        if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
+        if (clientBotState.equals(ClientBotState.ASK_CLIENT_SURNAME)) {
+            clientDto.setName(clientAnswer);
+            replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
+            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_PHONE);
 
-            String[] fullClientName = clientAnswer.split(" ");
-            clientDto.setName(fullClientName[1]);
-            clientDto.setMiddleName(fullClientName[2]);
-            clientDto.setSurname(fullClientName[0]);
+        } if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
+            clientDto.setSurname(clientAnswer);
             replyToClient = messageService.getReplyMessage(chatId, "Введите телефон начиная с +7");
             clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_DATE);
         }
+
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
-            clientDto.setPhoneNumber(clientAnswer);
-            clientDto.setTelegramId(userId);
-            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
-            replyToClient = SendMessage.builder()
-                    .text("Введите дату записи в формате 2022-06-15 (ГГГГ-ММ-ДД)")
-                    .chatId(chatId.toString())
-                    .build();
+            clientDto.setTelegramNick(update.getMessage().getFrom().getUserName());
+            if (FillingMasterProfile.isValidPhone(clientAnswer)) {
+                clientDto.setTelegramId(userId);
+                clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
+                replyToClient = SendMessage.builder()
+                        .text("Введите дату записи в формате 2022-06-15 (ГГГГ-ММ-ДД)")
+                        .chatId(chatId.toString())
+                        .build();
+            }else {
+                replyToClient = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
+            }
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             recordToMasterDto.setDate(LocalDate.parse(clientAnswer));
@@ -146,7 +154,6 @@ public class FillingClientProfile implements HandleRegistration {
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 
     @Override
     public BotState getHandleName() {

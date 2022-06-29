@@ -1,8 +1,7 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.enums.map.TypeOfActivity;
-import com.bot.eyelashes.model.entity.Master;
+import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +23,7 @@ public class HandleTypeOfActivityImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
-        return SendMessage.builder()
-                .chatId(update.getMessage()
-                        .getChatId()
-                        .toString())
-                .replyMarkup(createInlineKeyboardWithCallback(update.getCallbackQuery()))
-                .text("Мастера")
-                .build();
+        return null;
     }
 
     @Override
@@ -39,6 +32,7 @@ public class HandleTypeOfActivityImpl implements Handle {
     }
 
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
+
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();

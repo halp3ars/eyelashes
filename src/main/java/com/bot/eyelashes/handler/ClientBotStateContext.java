@@ -1,6 +1,5 @@
 package com.bot.eyelashes.handler;
 
-import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.registration.HandleRegistration;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,7 @@ public class ClientBotStateContext {
 
     private boolean isFillingClientProfile(ClientBotState currentState) {
         return switch (currentState) {
-            case ASK_CLIENT_FULL_NAME, ASK_CLIENT_PHONE, FILLING_CLIENT_PROFILE, PROFILE_CLIENT_FIELD, CLIENT_REGISTRED, ASK_CLIENT_DATE, ASK_CLIENT_TIME ->
+            case ASK_CLIENT_NAME, ASK_CLIENT_SURNAME, ASK_CLIENT_PHONE, FILLING_CLIENT_PROFILE, PROFILE_CLIENT_FIELD, CLIENT_REGISTRED, ASK_CLIENT_DATE, ASK_CLIENT_TIME ->
                     true;
             default -> false;
         };

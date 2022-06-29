@@ -3,7 +3,6 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
-import com.bot.eyelashes.handler.callbackquery.CallbackServiceImpl;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,12 +29,11 @@ import java.util.regex.Pattern;
 public class FillingMasterProfile implements HandleRegistration {
     private final MasterDataCache masterDataCache;
     private final MessageService messageService;
-    private final CallbackServiceImpl callbackService;
 
     @Override
     public SendMessage getMessage(Update update) {
         Message message;
-
+//TODO : избавиться от этой заглушки
         if(update.hasCallbackQuery()){
             message = update.getCallbackQuery().getMessage();
         }else {
@@ -38,7 +44,7 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDataCache.setUsersCurrentBotState(message.getFrom()
                     .getId(), BotState.ASK_FULL_NAME);
         }
-        return processUsersInput(update);
+        return processUsersInput(message);
     }
 
     @Override
@@ -46,28 +52,11 @@ public class FillingMasterProfile implements HandleRegistration {
         return BotState.FILLING_PROFILE;
     }
 
-    private SendMessage processUsersInput(Update update) {
-        Message message = update.getMessage();
-        String masterAnswer;
-        Long userId;
-        Long chatId;
-        if (update.hasCallbackQuery()) {
-            masterAnswer = update.getCallbackQuery()
-                    .getMessage()
-                    .getText();
-            chatId = update.getCallbackQuery()
-                    .getMessage()
-                    .getChatId();
-            userId = update.getCallbackQuery()
-                    .getMessage()
-                    .getChatId();
-        } else {
-            masterAnswer = message.getText();
-            userId = message.getFrom()
-                    .getId();
-            chatId = message.getChatId();
-            log.info(userId + " " + chatId);
-        }
+    private SendMessage processUsersInput(Message inputMsg) {
+        String usersAnswer = inputMsg.getText();
+        Long userId = inputMsg.getFrom()
+                .getId();
+        Long chatId = inputMsg.getChatId();
 
         MasterDto masterDto = masterDataCache.getUserProfileData(userId);
         BotState botState = masterDataCache.getUsersCurrentBotState(userId);
@@ -77,42 +66,58 @@ public class FillingMasterProfile implements HandleRegistration {
             replyToUser = messageService.getReplyMessage(chatId, "Введите ФИО");
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE);
         }
-
         if (botState.equals(BotState.ASK_PHONE)) {
-            String[] fullName = masterAnswer.split(" ");
-            masterDto.setSurname(fullName[0]);
+            String[] fullName = usersAnswer.split(" ");
             masterDto.setName(fullName[1]);
+            masterDto.setSurname(fullName[0]);
             masterDto.setMiddleName(fullName[2]);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона начиная с +7(): ");
+            replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона начиная с +7: ");
             masterDataCache.setUsersCurrentBotState(userId, BotState.ASK_ACTIVITY);
         }
-
         if (botState.equals(BotState.ASK_ACTIVITY)) {
-            if (isValidPhone(masterAnswer)) {
-                masterDto.setPhone(masterAnswer);
+            if (isValidPhone(usersAnswer)) {
+                masterDto.setPhone(usersAnswer);
                 masterDto.setTelegramId(userId);
-                replyToUser = messageService.getReplyMessageForService(chatId, "Выберите вид услуг: ");
+                replyToUser = messageService.getReplyMessage(chatId, "Введите услуги: ");
                 masterDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FIELD);
             } else
                 replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
-        }
 
+        }
         if (botState.equals(BotState.PROFILE_FIELD)) {
-            if (update.hasCallbackQuery()) {
-                masterDto.setActivity(masterAnswer);
-                masterDataCache.setMasterInDb(masterDto);
-                replyToUser = messageService.getReplyMessageForSchedule(chatId, "Составьте свое расписание: ");
-            }
+            masterDto.setActivity(usersAnswer);
+            masterDataCache.setMasterInDb(masterDto);
+            replyToUser = SendMessage.builder()
+                    .text("Запишите график работы")
+                    .replyMarkup(keyboardForRegistration())
+                    .chatId(userId.toString())
+                    .build();
+        }
+        if (botState.equals(BotState.REGISTREDET)) {
+            masterDataCache.setMasterInDb(masterDto);
+            replyToUser = SendMessage.builder()
+                    .text("Запишите график работы")
+                    .replyMarkup(keyboardForRegistration())
+                    .chatId(userId.toString())
+                    .build();
         }
 
-        if (botState.equals(BotState.REGISTREDET)) {
-            masterDto.setActivity(callbackService.getCallbackQuery(update.getCallbackQuery()).getText());
-            masterDataCache.setMasterInDb(masterDto);
-            replyToUser = messageService.getReplyMessageForSchedule(chatId, "Составьте свое расписание1: ");
-        }
 
         masterDataCache.saveUserProfileData(userId, masterDto);
         return replyToUser;
+    }
+
+    private InlineKeyboardMarkup keyboardForRegistration() {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        buttons.add(Arrays.asList(
+                InlineKeyboardButton.builder()
+                        .callbackData("SCHEDULE")
+                        .text("Расписание")
+                        .build()
+        ));
+        return InlineKeyboardMarkup.builder()
+                .keyboard(buttons)
+                .build();
     }
 
     private boolean isValidPhone(String phone) {
@@ -120,6 +125,7 @@ public class FillingMasterProfile implements HandleRegistration {
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
     }
+
     @Override
     public ClientBotState getHandleClientName() {
         return null;
