@@ -22,7 +22,7 @@ public class RecordToMaster {
     @Column(name = "date")
     private LocalDate date;
     @Column(name = "time")
-    private String time;
+    private Integer time;
     @Column(name = "activity")
     private String activity;
 

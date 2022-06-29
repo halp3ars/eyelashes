@@ -3,9 +3,14 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
+import com.bot.eyelashes.handler.impl.HandleClientTimeImpl;
 import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
+import com.bot.eyelashes.handler.impl.HandleScheduleClientImpl;
+import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
+import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.MessageService;
 import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @Component
 @RequiredArgsConstructor
@@ -30,9 +34,12 @@ import java.util.regex.Pattern;
 public class FillingClientProfile implements HandleRegistration {
 
 
-    private final ClientDataCache clientDataCache;
 
+    private final ClientDataCache clientDataCache;
     private final MessageService messageService;
+    private final ScheduleMapper scheduleMapper;
+    private final ScheduleRepository scheduleRepository;
+    private final RecordToMasterRepository recordToMasterRepository;
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -72,9 +79,8 @@ public class FillingClientProfile implements HandleRegistration {
             userId = message.getFrom()
                     .getId();
             chatId = message.getChatId();
-            log.info(userId + " " + chatId);
+            log.info(userId + " " + update.getMessage().getFrom().getUserName());
         }
-
         ClientDto clientDto = clientDataCache.getClientProfileData(userId);
         ClientBotState clientBotState = clientDataCache.getClientBotState(userId);
         RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(userId);
@@ -99,8 +105,10 @@ public class FillingClientProfile implements HandleRegistration {
             if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
                 clientDto.setTelegramId(userId);
                 clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
+                HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper,scheduleRepository);
                 replyToClient = SendMessage.builder()
-                        .text("Введите дату записи в формате 2022-06-15 (ГГГГ-ММ-ДД)")
+                        .text("Выберите день на неделе")
+                        .replyMarkup(handleScheduleClient.createInlineKeyboardWithCallback(update.getCallbackQuery()))
                         .chatId(chatId.toString())
                         .build();
             }else {
@@ -110,8 +118,10 @@ public class FillingClientProfile implements HandleRegistration {
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             recordToMasterDto.setDate(LocalDate.parse(clientAnswer));
             clientDataCache.setClientBotState(userId, ClientBotState.PROFILE_CLIENT_FIELD);
+            HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository,scheduleRepository);
             replyToClient = SendMessage.builder()
-                    .text("Введите время в формате 00:00")
+                    .text("Выберите время")
+                    .replyMarkup(handleClientTime.createInlineKeyboard())
                     .chatId(chatId.toString())
                     .build();
         }

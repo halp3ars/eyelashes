@@ -14,12 +14,21 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long masterId;
+    @Column(name = "monday")
     private boolean monday;
+    @Column(name = "tuesday")
     private boolean tuesday;
+    @Column(name = "wednesday")
     private boolean wednesday;
+    @Column(name = "thursday")
     private boolean thursday;
+    @Column(name = "friday")
     private boolean friday;
+    @Column(name = "telegramId")
     private Long telegramId;
+    @Column(name = "time_from")
+    private int timeFrom;
+    @Column(name = "time_to")
+    private int timeTo;
 
 }
