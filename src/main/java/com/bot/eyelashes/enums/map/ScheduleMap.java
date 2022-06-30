@@ -10,13 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleMap {
 
-    private static final Map<String, Boolean> SCHEDULE_MAP = new HashMap<>();
+    private static final Map<String, Boolean> SCHEDULE_MAP = new ConcurrentHashMap<>();
     public ScheduleMap(ScheduleDto scheduleDto) {
         SCHEDULE_MAP.put("Понедельник", scheduleDto.isMonday());
         SCHEDULE_MAP.put("Вторник", scheduleDto.isTuesday());

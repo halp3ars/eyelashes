@@ -33,8 +33,8 @@ public class HandleCheckRecordImpl implements Handle {
     public SendMessage getMessageWithCallback(CallbackQuery callbackQuery) {
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> byClientId = record.findByClientId(userId);
-        Optional<Master> master = masterRepository.findByTelegramId(byClientId.get()
+        Optional<RecordToMaster> recordByClientId = record.findRecordToMasterByActivityAndClientId("Брови",userId);
+        Optional<Master> master = masterRepository.findMasterByTelegramId(recordByClientId.get()
                 .getMasterId());
         return SendMessage.builder()
                 .chatId(callbackQuery.getMessage()
@@ -45,8 +45,8 @@ public class HandleCheckRecordImpl implements Handle {
                         .getName() + " " + master.get()
                         .getSurname() +
                         "\nНа " + master.get()
-                        .getActivity() + " в " + byClientId.get()
-                        .getTime() + " " + byClientId.get()
+                        .getActivity() + " в " + recordByClientId.get()
+                        .getTime() + " " + recordByClientId.get()
                         .getDay() + "\nПо адресу " + master.get()
                         .getAddress() + "\nНомер телефона мастера " + master.get()
                         .getPhoneNumber())
@@ -63,10 +63,10 @@ public class HandleCheckRecordImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> recordToMaster = record.findByClientId(userId);
+        Optional<RecordToMaster> recordToMaster = record.findRecordToMasterByActivityAndClientId("Брови", userId);
         Long masterId = recordToMaster.get()
                 .getMasterId();
-        Optional<Master> masterByTelegramId = masterRepository.findByTelegramId(masterId);
+        Optional<Master> masterByTelegramId = masterRepository.findMasterByTelegramId(masterId);
         String telegramNick = masterByTelegramId.get()
                 .getTelegramNick();
         buttons.add(Arrays.asList(

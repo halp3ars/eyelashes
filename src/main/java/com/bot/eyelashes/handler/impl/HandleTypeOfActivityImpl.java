@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class HandleTypeOfActivityImpl implements Handle {
 
     private final MasterRepository masterRepository;
+
 
     @Override
     public SendMessage getMessage(Update update) {
