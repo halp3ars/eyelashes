@@ -22,6 +22,6 @@ public class CallbackScheduleClientImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper,scheduleRepository);
-        return SendMessage.builder().replyMarkup(handleScheduleClient.createInlineKeyboardWithCallback(callbackQuery)).text("Выберите день недели на который вы хотите записаться").chatId(callbackQuery.getMessage().getChatId().toString()).build();
+        return SendMessage.builder().replyMarkup(handleScheduleClient.createInlineKeyboard()).text("Выберите день недели на который вы хотите записаться").chatId(callbackQuery.getMessage().getChatId().toString()).build();
     }
 }

@@ -35,7 +35,6 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("eyelashes", callbackService);
         CALLBACK_MAP.put("nails", callbackService);
         CALLBACK_MAP.put("SCHEDULE_CLIENT", callbackScheduleClient);
-        CALLBACK_MAP.put("TIME", callbackTimeClient);
     }
 
 

@@ -9,9 +9,7 @@ import com.bot.eyelashes.model.dto.ScheduleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 public class ScheduleMap {
 
     private static final Map<String, Boolean> SCHEDULE_MAP = new HashMap<>();
-
     public ScheduleMap(ScheduleDto scheduleDto) {
         SCHEDULE_MAP.put("Понедельник", scheduleDto.isMonday());
         SCHEDULE_MAP.put("Вторник", scheduleDto.isTuesday());
@@ -35,6 +32,4 @@ public class ScheduleMap {
                 .collect(Collectors.toSet());
         return daySet;
     }
-
-
 }

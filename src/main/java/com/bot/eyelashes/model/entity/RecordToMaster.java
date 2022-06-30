@@ -19,8 +19,8 @@ public class RecordToMaster {
     private Long masterId;
     @Column(name = "client_id")
     private Long clientId;
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "day")
+    private String day;
     @Column(name = "time")
     private Integer time;
     @Column(name = "activity")

@@ -35,14 +35,9 @@ public class Bot extends TelegramLongPollingBot {
     private final ClientDataCache clientDataCache;
     private final CallBackQueryTypeMap callBackQueryTypeMap;
     private final MasterDataCache masterDataCache;
-    private final ScheduleDataCacheImpl scheduleDataCache;
     private final ClientBotStateContext clientBotStateContext;
-
     private final BotStateContext botStateContext;
-    private final HandleScheduleContext handleScheduleContext;
     private final MasterRepository masterRepository;
-    private final ScheduleRepository scheduleRepository;
-
     private boolean masterRegistration;
     private boolean clientRegistration;
     private boolean schedule;
@@ -85,24 +80,32 @@ public class Bot extends TelegramLongPollingBot {
                         .getChatId(), clientBotState);
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            } else if (update.getCallbackQuery()
+            }else if (update.getCallbackQuery()
                     .getData()
-                    .equals("SCHEDULE")) {
-                stateSchedule = StateSchedule.ASK_DATA_TIME;
-                scheduleDataCache.setUsersCurrentBotState(update.getCallbackQuery()
+                    .split("/")[0].equals("TIME")) {
+                clientBotState = ClientBotState.ASK_CLIENT_TIME;
+                clientRegistration = true;
+                clientDataCache.setClientBotState(update.getCallbackQuery()
                         .getMessage()
-                        .getChatId(), stateSchedule);
-                replyMessage = scheduleStateContext.processCallback(stateSchedule, update.getCallbackQuery());
-                schedule = true;
-                masterRegistration = false;
+                        .getChatId(), clientBotState);
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            } else {
+            }else if (update.getCallbackQuery()
+                    .getData()
+                    .split("/")[0].equals("FILLED")) {
+                clientBotState = ClientBotState.PROFILE_CLIENT_FIELD;
+                clientRegistration = true;
+                clientDataCache.setClientBotState(update.getCallbackQuery()
+                        .getMessage()
+                        .getChatId(), clientBotState);
+                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
+                execute(replyMessage);
+            }  else {
                 Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
                         .getData()
                         .split("/")[0]);
                 execute(callback.getCallbackQuery(update.getCallbackQuery()));
             }
-
         } else if (update.getMessage().hasText()) {
             if ((update.getMessage()
                     .getText()
@@ -121,12 +124,6 @@ public class Bot extends TelegramLongPollingBot {
                         .getFrom()
                         .getId());
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
-                execute(replyMessage);
-            } else if (schedule) {
-                stateSchedule = scheduleDataCache.getMessageCurrentState(update.getMessage()
-                        .getFrom()
-                        .getId());
-                replyMessage = handleScheduleContext.processInputMessage(stateSchedule, update.getMessage());
                 execute(replyMessage);
             }
         }

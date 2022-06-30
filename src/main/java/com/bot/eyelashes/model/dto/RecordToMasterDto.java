@@ -12,8 +12,7 @@ public class RecordToMasterDto {
 
     private Long masterId;
     private Long clientId;
-    private LocalDate date;
+    private String day;
     private String time;
-
 
 }

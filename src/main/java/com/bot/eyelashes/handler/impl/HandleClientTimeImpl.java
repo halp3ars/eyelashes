@@ -36,7 +36,7 @@ public class HandleClientTimeImpl implements Handle {
         TimeForClient timeForClient = new TimeForClient(recordToMasterRepository,scheduleRepository);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        timeForClient.getWorkTime(HandleRecordMenuImpl.masterId).forEach(time -> buttons.add(List.of(InlineKeyboardButton.builder().text(time.toString()).callbackData("DAY").build())));
+        timeForClient.getWorkTime(HandleRecordMenuImpl.masterId).forEach(time -> buttons.add(List.of(InlineKeyboardButton.builder().text(time.toString() + ":00").callbackData("FILLED/" + time).build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
 

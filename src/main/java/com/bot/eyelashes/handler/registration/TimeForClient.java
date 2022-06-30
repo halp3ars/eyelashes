@@ -23,7 +23,6 @@ public class TimeForClient {
     public Set getWorkTime(Long telegramId){
         Schedule scheduleByTelegramId = scheduleRepository.findByTelegramId(telegramId);
         List<RecordToMaster> scheduleByMasterId = recordToMasterRepository.findByMasterId(telegramId);
-        int amountHours = scheduleByTelegramId.getTimeTo() - scheduleByTelegramId.getTimeFrom();
         Set<Integer> workHours = new HashSet<>();
         IntStream.range(scheduleByTelegramId.getTimeFrom(), scheduleByTelegramId.getTimeTo()).forEach(workHours::add);
         scheduleByMasterId.forEach(time -> workHours.remove(time.getTime()));

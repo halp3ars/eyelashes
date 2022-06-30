@@ -47,7 +47,7 @@ public class HandleCheckRecordImpl implements Handle {
                         "\nНа " + master.get()
                         .getActivity() + " в " + byClientId.get()
                         .getTime() + " " + byClientId.get()
-                        .getDate() + "\nПо адресу " + master.get()
+                        .getDay() + "\nПо адресу " + master.get()
                         .getAddress() + "\nНомер телефона мастера " + master.get()
                         .getPhoneNumber())
                 .build();
