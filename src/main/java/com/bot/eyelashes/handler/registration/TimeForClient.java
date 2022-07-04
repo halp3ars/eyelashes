@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-@Service
 @RequiredArgsConstructor
 public class TimeForClient {
 

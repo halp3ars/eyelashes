@@ -21,7 +21,7 @@ public class BotStateContext {
 
     public SendMessage processInputMessage(BotState currentState, Update update) {
         HandleRegistration currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.getMessage(update);
+        return currentMessageHandler.getMessage(update.getMessage());
     }
 
     private HandleRegistration findMessageHandler(BotState currentState) {
@@ -33,7 +33,7 @@ public class BotStateContext {
 
     private boolean isFillingProfileState(BotState currentState) {
         return switch (currentState) {
-            case ASK_READY, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_FULL_NAME, FILLING_PROFILE, REGISTREDET->
+            case ASK_READY, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_FULL_NAME, FILLING_PROFILE, REGISTREDET ->
                     true;
             default -> false;
         };

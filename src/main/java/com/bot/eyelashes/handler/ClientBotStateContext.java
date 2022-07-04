@@ -4,6 +4,8 @@ import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.registration.HandleRegistration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
@@ -19,9 +21,9 @@ public class ClientBotStateContext {
         messageClientHandlers.forEach(handler -> this.messageClientHandlers.put(handler.getHandleClientName(), handler));
     }
 
-    public SendMessage processInputClientMessage(ClientBotState clientBotState, Update update) {
+    public SendMessage processInputClientMessage(ClientBotState clientBotState, Message message) {
         HandleRegistration handleRegistration = findClientMessageHandler(clientBotState);
-        return handleRegistration.getMessage(update);
+        return handleRegistration.getMessage(message);
     }
 
     private HandleRegistration findClientMessageHandler(ClientBotState clientBotState) {

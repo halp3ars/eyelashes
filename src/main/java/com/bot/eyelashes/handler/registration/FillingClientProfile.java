@@ -19,11 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,75 +40,45 @@ public class FillingClientProfile implements HandleRegistration {
     private final RecordToMasterRepository recordToMasterRepository;
 
     @Override
-    public SendMessage getMessage(Update update) {
-        Message message;
-        if (update.hasCallbackQuery()) {
-            message = update.getCallbackQuery()
-                    .getMessage();
-        } else {
-            message = update.getMessage();
-        }
-
+    public SendMessage getMessage(Message message) {
         if (clientDataCache.getClientBotState(message.getChatId())
                 .equals(ClientBotState.FILLING_CLIENT_PROFILE)) {
             clientDataCache.setClientBotState(message.getChatId(), ClientBotState.ASK_CLIENT_NAME);
         }
-        return processClientInput(update);
+        return processClientInput(message);
     }
 
 
-    private SendMessage processClientInput(Update update) {
-        Message message = update.getMessage();
-        String clientAnswer;
-        Long userId;
-        Long chatId;
-        if (update.hasCallbackQuery()) {
-            clientAnswer = update.getCallbackQuery()
-                    .getMessage()
-                    .getText();
-            chatId = update.getCallbackQuery()
-                    .getMessage()
-                    .getChatId();
-            userId = update.getCallbackQuery()
-                    .getMessage()
-                    .getChatId();
-        } else {
-            clientAnswer = message.getText();
-            userId = message.getFrom()
-                    .getId();
-            chatId = message.getChatId();
-            log.info(userId + " " + update.getMessage()
-                    .getFrom()
-                    .getUserName());
-        }
-        ClientDto clientDto = clientDataCache.getClientProfileData(userId);
-        ClientBotState clientBotState = clientDataCache.getClientBotState(userId);
-        RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(userId);
+    private SendMessage processClientInput(Message message) {
+        String clientAnswer = message.getText();
+        Long chatId = message.getChatId();
+        ClientDto clientDto = clientDataCache.getClientProfileData(chatId);
+        ClientBotState clientBotState = clientDataCache.getClientBotState(chatId);
+        RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(chatId);
         SendMessage replyToClient = null;
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_NAME)) {
             replyToClient = messageService.getReplyMessage(chatId, "Введите Имя");
-            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_SURNAME);
+            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_SURNAME);
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_SURNAME)) {
             clientDto.setName(clientAnswer);
             recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity);
             replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
-            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_PHONE);
+            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_PHONE);
 
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
             clientDto.setSurname(clientAnswer);
             replyToClient = messageService.getReplyMessage(chatId, "Введите телефон начиная с +7");
-            clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_DATE);
+            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
-            clientDto.setTelegramNick(update.getMessage()
-                    .getFrom()
-                    .getUserName());
             if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
-                clientDto.setTelegramId(userId);
+                clientDto.setTelegramNick(message.getFrom()
+                        .getUserName());
+                clientDto.setTelegramId(chatId);
                 clientDto.setPhoneNumber(clientAnswer);
-                clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
+                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
                 HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper, scheduleRepository);
                 replyToClient = SendMessage.builder()
                         .text("Выберите день на неделе")
@@ -120,9 +88,9 @@ public class FillingClientProfile implements HandleRegistration {
             } else {
                 replyToClient = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
             }
-        } if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
-            recordToMasterDto.setDay(update.getCallbackQuery().getData().split("/")[1]);
-            clientDataCache.setClientBotState(userId, ClientBotState.PROFILE_CLIENT_FIELD);
+        }
+        if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
+            clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
             HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository);
             replyToClient = SendMessage.builder()
                     .text("Выберите время")
@@ -131,9 +99,8 @@ public class FillingClientProfile implements HandleRegistration {
                     .build();
         }
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
-            recordToMasterDto.setTime(update.getCallbackQuery().getData().split("/")[1]);
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
-            recordToMasterDto.setClientId(userId);
+            recordToMasterDto.setClientId(chatId);
             clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()
@@ -141,10 +108,10 @@ public class FillingClientProfile implements HandleRegistration {
                     .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();
-            clientDataCache.setClientBotState(userId, ClientBotState.NONE);
+            clientDataCache.setClientBotState(chatId, ClientBotState.NONE);
         }
-        clientDataCache.saveRecordData(userId, recordToMasterDto);
-        clientDataCache.saveClientProfileData(userId, clientDto);
+        clientDataCache.saveRecordData(chatId, recordToMasterDto);
+        clientDataCache.saveClientProfileData(chatId, clientDto);
         return replyToClient;
     }
 

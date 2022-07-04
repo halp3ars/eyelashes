@@ -35,7 +35,7 @@ public class HandleScheduleClientImpl implements Handle {
         ScheduleMap scheduleMap = new ScheduleMap(scheduleDto);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        scheduleMap.getScheduleDayMap().forEach(days -> buttons.add(List.of(InlineKeyboardButton.builder().text(days.toString()).callbackData("TIME/" + days).build())));
+        scheduleMap.getScheduleDayMap().forEach(days -> buttons.add(List.of(InlineKeyboardButton.builder().text(days.toString()).callbackData("DATE/" + days).build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

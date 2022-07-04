@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-@Component
 @RequiredArgsConstructor
 public class CallbackScheduleImpl implements CallbackSchedule {
     private final ScheduleDataCacheImpl scheduleDataCache;

@@ -32,15 +32,7 @@ public class FillingMasterProfile implements HandleRegistration {
     private final MessageService messageService;
 
     @Override
-    public SendMessage getMessage(Update update) {
-        Message message;
-//TODO : избавиться от этой заглушки
-        if(update.hasCallbackQuery()){
-            message = update.getCallbackQuery().getMessage();
-        }else {
-            message = update.getMessage();
-        }
-
+    public SendMessage getMessage(Message message) {
         if (masterDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
             masterDataCache.setUsersCurrentBotState(message.getFrom()
                     .getId(), BotState.ASK_FULL_NAME);
