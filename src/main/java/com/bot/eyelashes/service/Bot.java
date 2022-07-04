@@ -29,8 +29,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class Bot extends TelegramLongPollingBot {
 
     private final TelegramProperties telegramProperties;
-
-    private final ScheduleStateContext scheduleStateContext;
     private SendMessage replyMessage;
     private final ClientDataCache clientDataCache;
     private final CallBackQueryTypeMap callBackQueryTypeMap;
@@ -40,7 +38,6 @@ public class Bot extends TelegramLongPollingBot {
     private final MasterRepository masterRepository;
     private boolean masterRegistration;
     private boolean clientRegistration;
-    private boolean schedule;
 
 
     @SneakyThrows
@@ -53,16 +50,22 @@ public class Bot extends TelegramLongPollingBot {
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
             //TODO : вынести callback Master is Bot.java в отдельный класс
-            if (update.getCallbackQuery().getData().equals("MASTER")) {
-                if (masterRepository.existsByTelegramId(update.getCallbackQuery().getMessage().getChatId())) {
+            if (update.getCallbackQuery()
+                    .getData()
+                    .equals("MASTER")) {
+                if (masterRepository.existsByTelegramId(update.getCallbackQuery()
+                        .getMessage()
+                        .getChatId())) {
                     execute(SendMessage.builder()
-                            .chatId(update.getCallbackQuery().getMessage().getChatId().toString())
+                            .chatId(update.getCallbackQuery()
+                                    .getMessage()
+                                    .getChatId()
+                                    .toString())
                             .text("Вы авторизированы")
                             .build());
-                }else {
+                } else {
                     botState = BotState.ASK_FULL_NAME;
                     masterRegistration = true;
-                    schedule = false;
                     masterDataCache.setUsersCurrentBotState(update.getCallbackQuery()
                             .getMessage()
                             .getChatId(), botState);
@@ -80,7 +83,7 @@ public class Bot extends TelegramLongPollingBot {
                         .getChatId(), clientBotState);
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            }else if (update.getCallbackQuery()
+            } else if (update.getCallbackQuery()
                     .getData()
                     .split("/")[0].equals("TIME")) {
                 clientBotState = ClientBotState.ASK_CLIENT_TIME;
@@ -90,7 +93,7 @@ public class Bot extends TelegramLongPollingBot {
                         .getChatId(), clientBotState);
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            }else if (update.getCallbackQuery()
+            } else if (update.getCallbackQuery()
                     .getData()
                     .split("/")[0].equals("FILLED")) {
                 clientBotState = ClientBotState.PROFILE_CLIENT_FIELD;
@@ -100,13 +103,14 @@ public class Bot extends TelegramLongPollingBot {
                         .getChatId(), clientBotState);
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update);
                 execute(replyMessage);
-            }  else {
+            } else {
                 Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
                         .getData()
                         .split("/")[0]);
                 execute(callback.getCallbackQuery(update.getCallbackQuery()));
             }
-        } else if (update.getMessage().hasText()) {
+        } else if (update.getMessage()
+                .hasText()) {
             if ((update.getMessage()
                     .getText()
                     .startsWith("/"))) {
@@ -134,7 +138,6 @@ public class Bot extends TelegramLongPollingBot {
     public String getBotUsername() {
         return telegramProperties.getNameBot();
     }
-
 
     @Override
     public String getBotToken() {

@@ -15,20 +15,14 @@ import java.util.Map;
 public class BotStateContext {
     private final Map<BotState, HandleRegistration> messageHandlers = new HashMap<>();
 
-
-
     public BotStateContext(List<HandleRegistration> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandleName(), handler));
     }
-
-
 
     public SendMessage processInputMessage(BotState currentState, Update update) {
         HandleRegistration currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.getMessage(update);
     }
-
-
 
     private HandleRegistration findMessageHandler(BotState currentState) {
         if (isFillingProfileState(currentState)) {
@@ -36,8 +30,6 @@ public class BotStateContext {
         }
         return messageHandlers.get(currentState);
     }
-
-
 
     private boolean isFillingProfileState(BotState currentState) {
         return switch (currentState) {

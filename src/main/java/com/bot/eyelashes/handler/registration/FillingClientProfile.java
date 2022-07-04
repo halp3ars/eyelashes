@@ -3,6 +3,7 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackTypeOfActivityImpl;
 import com.bot.eyelashes.handler.impl.HandleClientTimeImpl;
 import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
 import com.bot.eyelashes.handler.impl.HandleScheduleClientImpl;
@@ -92,6 +93,7 @@ public class FillingClientProfile implements HandleRegistration {
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_SURNAME)) {
             clientDto.setName(clientAnswer);
+            recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity);
             replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
             clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_PHONE);
 
@@ -107,6 +109,7 @@ public class FillingClientProfile implements HandleRegistration {
                     .getUserName());
             if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
                 clientDto.setTelegramId(userId);
+                clientDto.setPhoneNumber(clientAnswer);
                 clientDataCache.setClientBotState(userId, ClientBotState.ASK_CLIENT_TIME);
                 HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper, scheduleRepository);
                 replyToClient = SendMessage.builder()

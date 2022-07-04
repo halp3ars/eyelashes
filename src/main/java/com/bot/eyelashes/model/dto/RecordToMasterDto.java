@@ -14,5 +14,6 @@ public class RecordToMasterDto {
     private Long clientId;
     private String day;
     private String time;
+    private String activity;
 
 }

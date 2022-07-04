@@ -15,9 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 public class CallbackScheduleClientImpl implements Callback {
 
     private final ScheduleRepository scheduleRepository;
-
     private final ScheduleMapper scheduleMapper;
-
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {

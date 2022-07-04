@@ -15,12 +15,7 @@ public class HandleClientImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
-        return SendMessage.builder()
-                .chatId(update.getMessage().getChatId()
-                        .toString())
-                .text("Выберите вид деятельности")
-                .replyMarkup(createInlineKeyboard())
-                .build();
+        return null;
     }
 
 

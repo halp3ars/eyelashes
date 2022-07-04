@@ -31,10 +31,6 @@ public class ClientBotStateContext {
         return messageClientHandlers.get(clientBotState);
     }
 
-
-
-
-
     private boolean isFillingClientProfile(ClientBotState currentState) {
         return switch (currentState) {
             case ASK_CLIENT_NAME, ASK_CLIENT_SURNAME, ASK_CLIENT_PHONE, FILLING_CLIENT_PROFILE, PROFILE_CLIENT_FIELD, CLIENT_REGISTRED, ASK_CLIENT_DATE, ASK_CLIENT_TIME ->

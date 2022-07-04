@@ -18,7 +18,7 @@ public class CallbackDeclineImpl implements Callback {
     @Transactional
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        record.deleteByClientId(callbackQuery.getMessage().getChatId());
+        record.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity);
         return SendMessage.builder()
                 .text("Вы успешно сняты с записи")
                 .chatId(callbackQuery.getMessage().getChatId().toString())

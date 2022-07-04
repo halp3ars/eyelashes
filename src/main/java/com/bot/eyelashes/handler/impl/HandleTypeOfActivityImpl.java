@@ -2,7 +2,10 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackCheckRecordImpl;
+import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,8 +15,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -21,7 +24,6 @@ import java.util.List;
 public class HandleTypeOfActivityImpl implements Handle {
 
     private final MasterRepository masterRepository;
-
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -34,9 +36,9 @@ public class HandleTypeOfActivityImpl implements Handle {
     }
 
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
+        TypeOfActivity typeOfActivity = new TypeOfActivity();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        TypeOfActivity typeOfActivity = new TypeOfActivity();
         masterRepository.findByActivity(typeOfActivity.getCommand(callbackQuery.getData()))
                 .forEach(master -> buttons.add(List.of(InlineKeyboardButton.builder()
                         .text(master.getName() + " " + master.getSurname() + " Адрес " + master.getAddress())

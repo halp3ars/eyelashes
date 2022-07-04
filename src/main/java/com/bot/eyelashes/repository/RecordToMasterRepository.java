@@ -10,12 +10,9 @@ import java.util.Optional;
 public interface RecordToMasterRepository extends JpaRepository<RecordToMaster, Long> {
 
 
-    List<RecordToMaster> findByClientId(Long id);
-
-    Optional<RecordToMaster> findRecordToMasterByActivityAndClientId(String activity,Long clientId);
-
+    Optional<RecordToMaster> findByClientIdAndActivity(Long clientId,String activity);
     List<RecordToMaster> findByMasterId(Long masterId);
-    void deleteByClientId(Long clientId);
+    void deleteByClientIdAndActivity(Long clientId,String activity);
 
 
 }

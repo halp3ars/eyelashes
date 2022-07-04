@@ -1,6 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackCheckRecordImpl;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackTypeOfActivityImpl;
 import com.bot.eyelashes.model.entity.Master;
 import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
@@ -22,7 +24,6 @@ public class HandleCheckRecordImpl implements Handle {
 
 
     private final MasterRepository masterRepository;
-
     private final RecordToMasterRepository record;
 
     @Override
@@ -33,7 +34,7 @@ public class HandleCheckRecordImpl implements Handle {
     public SendMessage getMessageWithCallback(CallbackQuery callbackQuery) {
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> recordByClientId = record.findRecordToMasterByActivityAndClientId("Брови",userId);
+        Optional<RecordToMaster> recordByClientId = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity);
         Optional<Master> master = masterRepository.findMasterByTelegramId(recordByClientId.get()
                 .getMasterId());
         return SendMessage.builder()
@@ -63,7 +64,7 @@ public class HandleCheckRecordImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> recordToMaster = record.findRecordToMasterByActivityAndClientId("Брови", userId);
+        Optional<RecordToMaster> recordToMaster = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity );
         Long masterId = recordToMaster.get()
                 .getMasterId();
         Optional<Master> masterByTelegramId = masterRepository.findMasterByTelegramId(masterId);

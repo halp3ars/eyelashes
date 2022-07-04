@@ -1,11 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
 
-import com.bot.eyelashes.enums.map.ScheduleMap;
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.registration.ScheduleForClient;
 import com.bot.eyelashes.handler.registration.TimeForClient;
-import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @RequiredArgsConstructor
