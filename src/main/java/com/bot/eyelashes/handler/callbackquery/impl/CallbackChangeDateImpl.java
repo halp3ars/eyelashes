@@ -8,10 +8,12 @@ import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.service.Bot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
-import javax.transaction.Transactional;
+import javax.persistence.Entity;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service("CallbackChangeDateImpl")
@@ -22,6 +24,7 @@ public class CallbackChangeDateImpl implements Callback {
     private final RecordToMasterRepository recordToMasterRepository ;
 
     @Override
+    @Transactional
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         recordToMasterRepository.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity);
         Bot.clientRegistration = true;

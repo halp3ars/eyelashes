@@ -18,11 +18,10 @@ public class CallbackRecordImpl implements Callback {
     private final ClientDataCache clientDataCache;
     private final ClientBotStateContext clientBotStateContext;
 
-
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        Bot.clientRegistration = true;
         ClientBotState clientBotState = ClientBotState.ASK_CLIENT_NAME;
+        Bot.clientRegistration = true;
         clientDataCache.setClientBotState(callbackQuery.getMessage()
                 .getChatId(), clientBotState);
         return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());

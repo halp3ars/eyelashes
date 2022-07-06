@@ -5,7 +5,6 @@ import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
-import com.bot.eyelashes.model.entity.RecordToMaster;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @Service("CallbackDateClientImpl")
 @RequiredArgsConstructor
 public class CallbackDateClientImpl implements Callback {
+
 
     private final ClientDataCache clientDataCache;
     private final ClientBotStateContext clientBotStateContext;

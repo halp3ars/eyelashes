@@ -14,8 +14,6 @@ import java.util.Map;
 public class HandleScheduleContext {
     private final Map<StateSchedule, HandleSchedule> messageHandlers = new HashMap<>();
 
-
-
     public HandleScheduleContext(List<HandleSchedule> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getStateSchedule(), handler));
     }
@@ -24,7 +22,6 @@ public class HandleScheduleContext {
         HandleSchedule currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.getMessage(message);
     }
-
 
 
     private HandleSchedule findMessageHandler(StateSchedule currentState) {

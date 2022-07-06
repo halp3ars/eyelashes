@@ -5,7 +5,6 @@ import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 public class ScheduleForClient {

@@ -2,10 +2,7 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackCheckRecordImpl;
-import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.MasterRepository;
-import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor

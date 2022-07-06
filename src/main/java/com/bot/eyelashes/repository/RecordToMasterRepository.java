@@ -1,6 +1,5 @@
 package com.bot.eyelashes.repository;
 
-import com.bot.eyelashes.model.entity.Master;
 import com.bot.eyelashes.model.entity.RecordToMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
 

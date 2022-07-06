@@ -1,10 +1,6 @@
 package com.bot.eyelashes.enums.map;
 
 
-import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.impl.HandleInfoImpl;
-import com.bot.eyelashes.handler.impl.HandleMainMenuImpl;
-import com.bot.eyelashes.handler.impl.HandleStartImpl;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +11,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ScheduleMap {
+public class ScheduleClientMap {
 
     private static final Map<String, Boolean> SCHEDULE_MAP = new ConcurrentHashMap<>();
-    public ScheduleMap(ScheduleDto scheduleDto) {
+
+    public ScheduleClientMap(ScheduleDto scheduleDto) {
         SCHEDULE_MAP.put("Понедельник", scheduleDto.isMonday());
         SCHEDULE_MAP.put("Вторник", scheduleDto.isTuesday());
         SCHEDULE_MAP.put("Среда", scheduleDto.isWednesday());
@@ -26,11 +23,16 @@ public class ScheduleMap {
         SCHEDULE_MAP.put("Пятница", scheduleDto.isFriday());
     }
 
-    public Set getScheduleDayMap() {
-        SCHEDULE_MAP.values().stream().allMatch(t -> t);
-        Set<String> daySet = SCHEDULE_MAP.entrySet().stream()
-                .filter(Map.Entry::getValue).map(Map.Entry::getKey)
+    public Set getTrueDays() {
+        SCHEDULE_MAP.values()
+                .stream()
+                .allMatch(t -> t);
+        Set<String> daySet = SCHEDULE_MAP.entrySet()
+                .stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
         return daySet;
     }
+
 }

@@ -1,9 +1,7 @@
 package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackInfoImpl;
-import com.bot.eyelashes.handler.callbackquery.impl.CallbackMenuImpl;
+import com.bot.eyelashes.handler.callbackquery.impl.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +11,7 @@ import java.util.Map;
 @Service
 public class CallBackQueryTypeMap {
 
-    private final Map<String, Callback> callbackMap = new HashMap<>();
+    private static final Map<String, Callback> CALLBACK_MAP = new HashMap<>();
 
     public CallBackQueryTypeMap(@Qualifier("CallbackTypeOfActivity") Callback callbackActivity,
                                 @Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,
@@ -24,27 +22,38 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackTimeClientImpl") Callback callbackTimeClient,
                                 @Qualifier("CallbackDateClientImpl") Callback callbackDateClient,
                                 @Qualifier("CallbackRecordImpl") Callback callbackRecord,
-                                @Qualifier("CallbackChangeDateImpl") Callback callbackChangeDate) {
-        callbackMap.put("INFO", new CallbackInfoImpl());
-        callbackMap.put("MENU", new CallbackMenuImpl());
-        callbackMap.put("CLIENT", new CallbackClientImpl());
-        callbackMap.put("NAILS", callbackActivity);
-        callbackMap.put("EYEBROWS", callbackActivity);
-        callbackMap.put("EYELASHES", callbackActivity);
-        callbackMap.put("SET_MASTER", callbackRecordMenu);
-        callbackMap.put("CHECK_RECORD", callbackCheckRecord);
-        callbackMap.put("DECLINE_RECORD", callbackDecline);
-        callbackMap.put("eyebrows", callbackService);
-        callbackMap.put("eyelashes", callbackService);
-        callbackMap.put("nails", callbackService);
-        callbackMap.put("SCHEDULE_CLIENT", callbackScheduleClient);
-        callbackMap.put("DATE", callbackDateClient);
-        callbackMap.put("TIME", callbackTimeClient);
-        callbackMap.put("RECORD",callbackRecord);
-        callbackMap.put("CHANGE_DATE",callbackChangeDate);
+                                @Qualifier("CallbackChangeDateImpl") Callback callbackChangeDate,
+                                @Qualifier("CallbackMasterRegistrationImpl") Callback callbackMasterRegistration,
+                                @Qualifier("CallbackMasterScheduleImpl") Callback callbackMasterScheduleImpl,
+                                @Qualifier("CallbackMasterTimeToImpl") Callback callbackMasterTimeToImpl,
+                                @Qualifier("CallbackAddressMasterImpl") Callback callbackAddressMasterImpl
+    ) {
+        CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
+        CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
+        CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
+        CALLBACK_MAP.put("NAILS", callbackActivity);
+        CALLBACK_MAP.put("EYEBROWS", callbackActivity);
+        CALLBACK_MAP.put("EYELASHES", callbackActivity);
+        CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
+        CALLBACK_MAP.put("CHECK_RECORD", callbackCheckRecord);
+        CALLBACK_MAP.put("DECLINE_RECORD", callbackDecline);
+        CALLBACK_MAP.put("eyebrows", callbackService);
+        CALLBACK_MAP.put("eyelashes", callbackService);
+        CALLBACK_MAP.put("nails", callbackService);
+        CALLBACK_MAP.put("SCHEDULE_CLIENT", callbackScheduleClient);
+        CALLBACK_MAP.put("DATE", callbackDateClient);
+        CALLBACK_MAP.put("TIME", callbackTimeClient);
+        CALLBACK_MAP.put("RECORD", callbackRecord);
+        CALLBACK_MAP.put("CHANGE_DATE", callbackChangeDate);
+        CALLBACK_MAP.put("MASTER", callbackMasterRegistration);
+        CALLBACK_MAP.put("MASTER_SCHEDULE", new CallbackMasterTimeFromImpl());
+        CALLBACK_MAP.put("MASTER_ACTIVITY", callbackMasterScheduleImpl);
+        CALLBACK_MAP.put("MASTER_TIME", new CallbackMasterTimeFromImpl());
+        CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
+        CALLBACK_MAP.put("REGISTERED", callbackAddressMasterImpl);
     }
 
     public Callback getCallback(String keyCallback) {
-        return callbackMap.get(keyCallback);
+        return CALLBACK_MAP.get(keyCallback);
     }
 }

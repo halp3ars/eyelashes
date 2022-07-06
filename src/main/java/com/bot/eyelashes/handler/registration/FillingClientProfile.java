@@ -69,23 +69,24 @@ public class FillingClientProfile implements HandleRegistration {
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
             clientDto.setSurname(clientAnswer);
-            replyToClient = messageService.getReplyMessage(chatId, "Введите телефон начиная с +7");
+            replyToClient = messageService.getReplyMessage(chatId, "Введите телефон");
             clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
-            if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
-                clientDto.setTelegramNick(message.getFrom()
-                        .getUserName());
-                clientDto.setTelegramId(chatId);
-                clientDto.setPhoneNumber(clientAnswer);
-                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
-                HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper, scheduleRepository);
-                replyToClient = SendMessage.builder()
-                        .text("Выберите день на неделе")
-                        .replyMarkup(handleScheduleClient.createInlineKeyboard())
-                        .chatId(chatId.toString())
-                        .build();
-            } else {
+                if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
+                    clientDto.setTelegramNick(message.getFrom()
+                            .getUserName());
+                    clientDto.setTelegramId(chatId);
+                    clientDto.setPhoneNumber(clientAnswer);
+                    clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
+                    HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper, scheduleRepository);
+                    replyToClient = SendMessage.builder()
+                            .text("Выберите день на неделе")
+                            .replyMarkup(handleScheduleClient.createInlineKeyboard())
+                            .chatId(chatId.toString())
+                            .build();
+                }
+                else {
                 replyToClient = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
             }
         }

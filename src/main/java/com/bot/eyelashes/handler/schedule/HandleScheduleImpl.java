@@ -9,31 +9,31 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class HandleScheduleImpl implements HandleSchedule {
-    private Map<LocalDate, String> workingHours = new HashMap<>();
     private final ScheduleDataCacheImpl scheduleDataCache;
     private final MessageService messageService;
     private int countDay;
 
     @Override
     public SendMessage getMessage(Message message) {
-        if (scheduleDataCache.getMessageCurrentState(message.getFrom().getId()).equals(StateSchedule.COUNT_DAY)) {
-            scheduleDataCache.setUsersCurrentBotState(message.getFrom().getId(), StateSchedule.ASK_DATA_TIME);
+        if (scheduleDataCache.getMessageCurrentState(message.getFrom()
+                        .getId())
+                .equals(StateSchedule.COUNT_DAY)) {
+            scheduleDataCache.setUsersCurrentBotState(message.getFrom()
+                    .getId(), StateSchedule.ASK_DATA_TIME);
         }
         return processInputMessage(message);
     }
-
 
 
     @Override
@@ -42,8 +42,8 @@ public class HandleScheduleImpl implements HandleSchedule {
     }
 
     private SendMessage processInputMessage(Message message) {
-        String answer = message.getText();
-        Long userId = message.getFrom().getId();
+        Long userId = message.getFrom()
+                .getId();
         Long chatId = message.getChatId();
         StateSchedule stateSchedule = scheduleDataCache.getUsersCurrentBotState(userId);
         SendMessage replyMessage = null;
@@ -63,11 +63,14 @@ public class HandleScheduleImpl implements HandleSchedule {
             log.info("dataTimeWork " + dataTimeWork);
             String[] dataTime = dataTimeWork.split(" ");
             log.info("array dataTime = " + Arrays.toString(dataTime));
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
             --countDay;
             if (countDay == 0)
-                replyMessage = SendMessage.builder().text("Ваше расписание записано.").chatId(chatId.toString()).replyMarkup(keyboard()).build();
+                replyMessage = SendMessage.builder()
+                        .text("Ваше расписание записано.")
+                        .chatId(chatId.toString())
+                        .replyMarkup(keyboard())
+                        .build();
 
             if (countDay != 0)
                 replyMessage = messageService.getReplyMessage(chatId, "записан");

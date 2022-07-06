@@ -1,6 +1,6 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.enums.map.ScheduleMap;
+import com.bot.eyelashes.enums.map.ScheduleClientMap;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.registration.ScheduleForClient;
 import com.bot.eyelashes.mapper.ScheduleMapper;
@@ -32,10 +32,10 @@ public class HandleScheduleClientImpl implements Handle {
     public InlineKeyboardMarkup createInlineKeyboard() {
         ScheduleForClient scheduleForClient = new ScheduleForClient(scheduleRepository, scheduleMapper);
         ScheduleDto scheduleDto = scheduleForClient.getMasterDays(HandleRecordMenuImpl.masterId);
-        ScheduleMap scheduleMap = new ScheduleMap(scheduleDto);
+        ScheduleClientMap scheduleClientMap = new ScheduleClientMap(scheduleDto);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        scheduleMap.getScheduleDayMap().forEach(days -> buttons.add(List.of(InlineKeyboardButton.builder().text(days.toString()).callbackData("DATE/" + days).build())));
+        scheduleClientMap.getTrueDays().forEach(days -> buttons.add(List.of(InlineKeyboardButton.builder().text(days.toString()).callbackData("DATE/" + days).build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
