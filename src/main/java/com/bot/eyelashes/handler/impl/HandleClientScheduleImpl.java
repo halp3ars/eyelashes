@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class HandleScheduleClientImpl implements Handle {
+public class HandleClientScheduleImpl implements Handle {
 
 
     private final ScheduleMapper scheduleMapper;

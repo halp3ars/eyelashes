@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 @Service("CallbackTimeClientImpl")
 @RequiredArgsConstructor
-public class CallbackTimeClientImpl implements Callback {
+public class CallbackClientTimeImpl implements Callback {
 
     private final ClientDataCache clientDataCache;
     private final ClientBotStateContext clientBotStateContext;

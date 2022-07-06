@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 @Service("CallbackDateClientImpl")
 @RequiredArgsConstructor
-public class CallbackDateClientImpl implements Callback {
+public class CallbackClientDateImpl implements Callback {
 
 
     private final ClientDataCache clientDataCache;
@@ -27,8 +27,7 @@ public class CallbackDateClientImpl implements Callback {
         recordToMasterDto.setDay(callbackQuery.getData()
                 .split("/")[1]);
         ClientBotState clientBotState = ClientBotState.ASK_CLIENT_TIME;
-        clientDataCache.setClientBotState(callbackQuery.getMessage()
-                .getChatId(), clientBotState);
+        clientDataCache.setClientBotState(chatId, clientBotState);
         clientDataCache.saveRecordData(chatId, recordToMasterDto);
         return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
     }

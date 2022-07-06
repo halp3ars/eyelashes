@@ -3,9 +3,10 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
-import com.bot.eyelashes.handler.impl.HandleActivityMaster;
-import com.bot.eyelashes.handler.impl.HandleTypeOfActivityImpl;
+import com.bot.eyelashes.handler.impl.*;
 import com.bot.eyelashes.model.dto.MasterDto;
+import com.bot.eyelashes.model.dto.ScheduleDto;
+import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
 import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -45,21 +45,27 @@ public class FillingMasterProfile implements HandleRegistration {
     private SendMessage processUsersInput(Message inputMsg) {
         String usersAnswer = inputMsg.getText();
         Long chatId = inputMsg.getChatId();
-
         MasterDto masterDto = masterDataCache.getUserProfileData(chatId);
         BotState botState = masterDataCache.getUsersCurrentBotState(chatId);
-
+        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(inputMsg.getChatId());
         SendMessage replyToUser = null;
         if (botState.equals(BotState.ASK_NAME)) {
             replyToUser = messageService.getReplyMessage(chatId, "Введите Ваше имя");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_SURNAME);
-        }if(botState.equals(BotState.ASK_SURNAME)){
+        }
+        if (botState.equals(BotState.ASK_SURNAME)) {
             masterDto.setName(usersAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ADDRESS);
+        }
+        if (botState.equals(BotState.ASK_ADDRESS)) {
+            masterDto.setTelegramNick(inputMsg.getFrom().getUserName());
+            masterDto.setSurname(usersAnswer);
+            replyToUser = messageService.getReplyMessage(chatId, "Введите адрес");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_PHONE);
         }
         if (botState.equals(BotState.ASK_PHONE)) {
-            masterDto.setSurname(usersAnswer);
+            masterDto.setAddress(usersAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона начиная с +7: ");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
         }
@@ -67,8 +73,8 @@ public class FillingMasterProfile implements HandleRegistration {
             if (PhoneNumberValidation.isValidPhone(usersAnswer)) {
                 masterDto.setPhone(usersAnswer);
                 masterDto.setTelegramId(chatId);
-                HandleActivityMaster handleTypeOfActivity = new HandleActivityMaster();
-                masterDataCache.setUsersCurrentBotState(chatId, BotState.PROFILE_FIELD);
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DATE);
+                HandleMasterActivityImpl handleTypeOfActivity = new HandleMasterActivityImpl();
                 replyToUser = SendMessage.builder()
                         .text("Выберите вид деятельности")
                         .replyMarkup(handleTypeOfActivity.createInlineKeyboard())
@@ -78,40 +84,57 @@ public class FillingMasterProfile implements HandleRegistration {
                 replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
 
         }
-        if (botState.equals(BotState.PROFILE_FIELD)) {
-            masterDto.setActivity(usersAnswer);
-            masterDataCache.setMasterInDb(masterDto);
+        if(botState.equals(BotState.ASK_DATE)){
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
+            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(masterDataCache);
             replyToUser = SendMessage.builder()
-                    .text("Запишите график работы")
-                    .replyMarkup(keyboardForRegistration())
+                    .text("Выберите дни")
+                    .replyMarkup(handleMasterSchedule.createInlineKeyboard())
                     .chatId(chatId.toString())
                     .build();
         }
-        if (botState.equals(BotState.REGISTREDET)) {
-            masterDataCache.setMasterInDb(masterDto);
+        if (botState.equals(BotState.ASK_TIME_FROM)) {
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_TO);
+            HandleMasterTimeFromImpl handleMasterTimeFrom = new HandleMasterTimeFromImpl();
             replyToUser = SendMessage.builder()
-                    .text("Запишите график работы")
-                    .replyMarkup(keyboardForRegistration())
+                    .text("Выберите время с")
+                    .replyMarkup(handleMasterTimeFrom.createInlineKeyboard())
                     .chatId(chatId.toString())
                     .build();
         }
-
+        if (botState.equals(BotState.ASK_TIME_TO)) {
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
+            HandleMasterTimeToImpl handleMasterTimeTo = new HandleMasterTimeToImpl(masterDataCache);
+            replyToUser = SendMessage.builder()
+                    .text("Выберите время по")
+                    .replyMarkup(handleMasterTimeTo.createInlineKeyboard())
+                    .chatId(chatId.toString())
+                    .build();
+        }
+        if (botState.equals(BotState.REGISTERED)) {
+            masterDataCache.setMasterInDb(masterDto);
+            userScheduleData.setTelegramId(inputMsg.getChatId());
+            replyToUser = SendMessage.builder()
+                    .text("Запишите график работы")
+                    .chatId(chatId.toString())
+                    .replyMarkup(createFinalButton())
+                    .build();
+            Bot.masterRegistration = false;
+            masterDataCache.setScheduleInDb(userScheduleData);
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.NONE);
+        }
 
         masterDataCache.saveUserProfileData(chatId, masterDto);
         return replyToUser;
+
     }
 
-    private InlineKeyboardMarkup keyboardForRegistration() {
+    private InlineKeyboardMarkup createFinalButton(){
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .callbackData("SCHEDULE")
-                        .text("Расписание")
-                        .build()
-        ));
-        return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
-                .build();
+        buttons.add(List.of(InlineKeyboardButton.builder().text("Меню").callbackData("MENU").build()));
+        inlineKeyboardMarkup.setKeyboard(buttons);
+        return inlineKeyboardMarkup;
     }
 
     @Override

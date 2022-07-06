@@ -22,7 +22,7 @@ public class CallbackServiceImpl implements Callback {
         MasterActivityDto masterActivityDto = new MasterActivityDto();
         ActivityId activityId = new ActivityId();
         masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage()
-                .getChatId(), BotState.REGISTREDET);
+                .getChatId(), BotState.REGISTERED);
         MasterDto userProfileData = masterDataCache.getUserProfileData(callbackQuery.getMessage()
                 .getChatId());
         userProfileData.setActivity(callbackQuery.getData());

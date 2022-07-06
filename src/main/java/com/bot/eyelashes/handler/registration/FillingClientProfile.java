@@ -6,12 +6,13 @@ import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackTypeOfActivityImpl;
 import com.bot.eyelashes.handler.impl.HandleClientTimeImpl;
 import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
-import com.bot.eyelashes.handler.impl.HandleScheduleClientImpl;
+import com.bot.eyelashes.handler.impl.HandleClientScheduleImpl;
 import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
+import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
 import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +80,7 @@ public class FillingClientProfile implements HandleRegistration {
                     clientDto.setTelegramId(chatId);
                     clientDto.setPhoneNumber(clientAnswer);
                     clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
-                    HandleScheduleClientImpl handleScheduleClient = new HandleScheduleClientImpl(scheduleMapper, scheduleRepository);
+                    HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
                     replyToClient = SendMessage.builder()
                             .text("Выберите день на неделе")
                             .replyMarkup(handleScheduleClient.createInlineKeyboard())
@@ -109,6 +110,7 @@ public class FillingClientProfile implements HandleRegistration {
                     .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();
+            Bot.clientRegistration = false;
             clientDataCache.setClientBotState(chatId, ClientBotState.NONE);
         }
         clientDataCache.saveRecordData(chatId, recordToMasterDto);

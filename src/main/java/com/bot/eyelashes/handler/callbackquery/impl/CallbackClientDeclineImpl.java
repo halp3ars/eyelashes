@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service("CallbackDeclineImpl")
-public class CallbackDeclineImpl implements Callback {
+public class CallbackClientDeclineImpl implements Callback {
 
     private final RecordToMasterRepository record;
 

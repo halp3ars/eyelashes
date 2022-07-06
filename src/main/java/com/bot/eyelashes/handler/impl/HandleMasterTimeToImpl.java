@@ -2,6 +2,7 @@ package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterTimeToImpl;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,20 +27,10 @@ public class HandleMasterTimeToImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        return null;
-    }
-
-    public InlineKeyboardMarkup createInlineKeyboard(CallbackQuery callbackQuery){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<Integer> workHours = new ArrayList<>();
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
-        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
-        int timeFrom = Integer.parseInt(callbackQuery.getData().split("/")[1]);
-        userScheduleData.setTimeFrom(timeFrom);
-        masterDataCache.saveUserScheduleData(chatId, userScheduleData);
-        IntStream.range(timeFrom + 1, 22)
+        IntStream.range(CallbackMasterTimeToImpl.time + 1, 22)
                 .forEach(workHours::add);
         workHours.forEach(timeText -> buttons.add(List.of(InlineKeyboardButton.builder()
                 .text(timeText.toString())

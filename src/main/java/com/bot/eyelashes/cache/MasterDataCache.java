@@ -3,11 +3,13 @@ package com.bot.eyelashes.cache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.mapper.MasterMapper;
+import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.model.entity.Master;
 import com.bot.eyelashes.model.entity.Schedule;
 import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ public class MasterDataCache implements DataCache {
     private Map<Long, ScheduleDto> scheduleData = new ConcurrentHashMap<>();
     private final MasterRepository masterRepository;
     private final MasterMapper masterMapper;
+    private final ScheduleMapper scheduleMapper;
+    private final ScheduleRepository scheduleRepository;
 
     @Override
     public void setUsersCurrentBotState(Long userId, BotState botState) {
@@ -71,5 +75,9 @@ public class MasterDataCache implements DataCache {
     public void setMasterInDb(MasterDto masterDto) {
         Master master = masterMapper.toEntity(masterDto);
         masterRepository.save(master);
+    }
+    public void setScheduleInDb(ScheduleDto scheduleDto) {
+        Schedule schedule = scheduleMapper.toEntity(scheduleDto);
+        scheduleRepository.save(schedule);
     }
 }

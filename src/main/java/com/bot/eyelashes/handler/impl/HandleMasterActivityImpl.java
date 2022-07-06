@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HandleActivityMaster implements Handle {
+public class HandleMasterActivityImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {

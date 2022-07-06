@@ -19,8 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class ClientDataCache{
 
-
-
     private Map<Long,ClientBotState> clientState = new ConcurrentHashMap<>();
     private Map<Long, ClientDto> clientData = new ConcurrentHashMap<>();
     private Map<Long, RecordToMasterDto> recordData = new ConcurrentHashMap<>();
