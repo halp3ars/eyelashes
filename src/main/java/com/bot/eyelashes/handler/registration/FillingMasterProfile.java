@@ -115,7 +115,7 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDataCache.setMasterInDb(masterDto);
             userScheduleData.setTelegramId(inputMsg.getChatId());
             replyToUser = SendMessage.builder()
-                    .text("Вы зарегистрированы как мастер")
+                    .text("Вернуться на главное меню")
                     .chatId(chatId.toString())
                     .replyMarkup(createFinalButton())
                     .build();
