@@ -31,10 +31,6 @@ public class CallbackServiceImpl implements Callback {
 
         masterDataCache.setMasterInDb(userProfileData);
         return messageService.getReplyMessageForSchedule(callbackQuery.getMessage()
-                .getChatId(), "Составьте свое расписание");
-    }
-
-    private void setMasterAcitivity(MasterActivityDto masterActivityDto) {
-
+                .getChatId(), "Вернуться в главное меню");
     }
 }

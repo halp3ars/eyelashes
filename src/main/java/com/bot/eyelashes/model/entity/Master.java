@@ -34,7 +34,4 @@ public class Master {
     private Long telegramId;
     @Column(name = "telegram_nickname")
     private String telegramNick;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Activity> activities;
-
 }

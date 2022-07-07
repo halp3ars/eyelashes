@@ -50,7 +50,7 @@ public class MessageService {
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
                         .callbackData("SCHEDULE")
-                        .text("Расписание")
+                        .text("Главное меню")
                         .build()
         ));
 
