@@ -1,6 +1,9 @@
 package com.bot.eyelashes.handler.impl;
 
+import com.bot.eyelashes.cache.ClientDataCache;
+import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.repository.ClientRepository;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,7 +21,6 @@ import java.util.List;
 public class HandleRecordMenuImpl implements Handle {
 
     private final MasterRepository masterRepository;
-
     public static Long masterId;
 
     @Override
@@ -45,16 +47,18 @@ public class HandleRecordMenuImpl implements Handle {
         masterId = masterRepository.findById(id)
                 .get()
                 .getTelegramId();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .text("Записаться")
-                        .callbackData("RECORD")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text("Свзяаться")
-                        .url("https://t.me/" + telegramNick)
-                        .build()));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+
+
+            buttons.add(Arrays.asList(
+                    InlineKeyboardButton.builder()
+                            .text("Записаться")
+                            .callbackData("RECORD")
+                            .build(),
+                    InlineKeyboardButton.builder()
+                            .text("Свзяаться")
+                            .url("https://t.me/" + telegramNick)
+                            .build()));
+            inlineKeyboardMarkup.setKeyboard(buttons);
+            return inlineKeyboardMarkup;
     }
 }

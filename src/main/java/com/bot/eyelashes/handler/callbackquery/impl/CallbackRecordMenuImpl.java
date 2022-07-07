@@ -1,7 +1,9 @@
 package com.bot.eyelashes.handler.callbackquery.impl;
 
+import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
+import com.bot.eyelashes.repository.ClientRepository;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 public class CallbackRecordMenuImpl implements Callback {
 
     private final MasterRepository masterRepository;
+    private final ClientDataCache clientDataCache;
+    private final ClientRepository clientRepository;
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {

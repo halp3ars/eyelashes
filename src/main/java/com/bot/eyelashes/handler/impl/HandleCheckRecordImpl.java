@@ -13,10 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class HandleCheckRecordImpl implements Handle {
@@ -33,26 +30,25 @@ public class HandleCheckRecordImpl implements Handle {
     public SendMessage getMessageWithCallback(CallbackQuery callbackQuery) {
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> recordByClientId = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity);
+        Optional<RecordToMaster> recordByClientId = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage()
+                .getChatId()));
         Optional<Master> master = masterRepository.findMasterByTelegramId(recordByClientId.get()
                 .getMasterId());
-            return SendMessage.builder()
-                    .chatId(callbackQuery.getMessage()
-                            .getChatId()
-                            .toString())
-                    .replyMarkup(createInlineKeyboardWithCallback(callbackQuery))
-                    .text("Вы записаны к " + master.get()
-                            .getName() + " " + master.get()
-                            .getSurname() +
-                            "\nНа " + master.get()
-                            .getActivity() + " в " + recordByClientId.get()
-                            .getTime() + ":00 " + recordByClientId.get()
-                            .getDay() + "\nПо адресу " + master.get()
-                            .getAddress() + "\nНомер телефона мастера " + master.get()
-                            .getPhoneNumber())
-                    .build();
+        return SendMessage.builder()
+                .chatId(callbackQuery.getMessage()
+                        .getChatId()
+                        .toString())
+                .replyMarkup(createInlineKeyboardWithCallback(callbackQuery))
+                .text("Вы записаны на " + master.get()
+                        .getActivity()
+                        .toLowerCase(Locale.ROOT) + "\nМастер - " + master.get()
+                        .getName() + " " + master.get()
+                        .getSurname() + "\nВремя - " + recordByClientId.get()
+                        .getTime() + ":00" + "\nДень недели - " + recordByClientId.get().getDay() + "\nАдерс - "  + master.get()
+                        .getAddress() + "\nНомер телефон мастера  " + master.get()
+                        .getPhoneNumber() )
+                .build();
     }
-
 
 
     @Override
@@ -65,7 +61,8 @@ public class HandleCheckRecordImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         Long userId = callbackQuery.getMessage()
                 .getChatId();
-        Optional<RecordToMaster> recordToMaster = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity);
+        Optional<RecordToMaster> recordToMaster = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage()
+                .getChatId()));
         Long masterId = recordToMaster.get()
                 .getMasterId();
         Optional<Master> masterByTelegramId = masterRepository.findMasterByTelegramId(masterId);

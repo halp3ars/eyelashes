@@ -26,9 +26,10 @@ public class CallbackChangeDateImpl implements Callback {
     @Override
     @Transactional
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        recordToMasterRepository.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity);
+        recordToMasterRepository.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage().getChatId()));
         Bot.clientRegistration = true;
-        ClientBotState clientBotState = ClientBotState.ASK_CLIENT_NAME;
+        Bot.masterRegistration = false;
+        ClientBotState clientBotState = ClientBotState.ASK_CLIENT_DATE;
         clientDataCache.setClientBotState(callbackQuery.getMessage()
                 .getChatId(), clientBotState);
         return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());

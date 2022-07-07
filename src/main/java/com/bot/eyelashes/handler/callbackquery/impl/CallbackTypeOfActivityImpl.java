@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Service("CallbackTypeOfActivity")
@@ -20,13 +21,13 @@ public class CallbackTypeOfActivityImpl implements Callback {
 
     private final MasterRepository masterRepository;
     private final RecordToMasterRepository recordToMasterRepository;
-    public static String activity;
+    public static HashMap<Long, String> activity = new HashMap<>();
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         TypeOfActivity typeOfActivity = new TypeOfActivity();
         String typeOfActivityCommand = typeOfActivity.getCommand(callbackQuery.getData());
-        activity = typeOfActivityCommand;
+        activity.put(callbackQuery.getMessage().getChatId(), typeOfActivityCommand);
         Optional<RecordToMaster> recordToMaster = recordToMasterRepository.findByClientIdAndActivity(callbackQuery.getMessage()
                 .getChatId(), typeOfActivityCommand);
         if (recordToMaster.isPresent()) {

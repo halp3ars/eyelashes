@@ -30,11 +30,11 @@ public class HandleClientScheduleImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         ScheduleForClient scheduleForClient = new ScheduleForClient(scheduleRepository, scheduleMapper);
         ScheduleDto scheduleDto = scheduleForClient.getMasterDays(HandleRecordMenuImpl.masterId);
         ScheduleClientMap scheduleClientMap = new ScheduleClientMap(scheduleDto);
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         scheduleClientMap.getTrueDays().forEach(days -> buttons.add(List.of(InlineKeyboardButton.builder().text(days.toString()).callbackData("DATE/" + days).build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

@@ -10,6 +10,7 @@ import com.bot.eyelashes.handler.impl.HandleClientScheduleImpl;
 import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
+import com.bot.eyelashes.repository.ClientRepository;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.Bot;
@@ -39,6 +40,7 @@ public class FillingClientProfile implements HandleRegistration {
     private final ScheduleMapper scheduleMapper;
     private final ScheduleRepository scheduleRepository;
     private final RecordToMasterRepository recordToMasterRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public SendMessage getMessage(Message message) {
@@ -63,33 +65,28 @@ public class FillingClientProfile implements HandleRegistration {
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_SURNAME)) {
             clientDto.setName(clientAnswer);
-            recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity);
             replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
             clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_PHONE);
 
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
+            clientDto.setTelegramNick(message.getFrom()
+                    .getUserName());
             clientDto.setSurname(clientAnswer);
             replyToClient = messageService.getReplyMessage(chatId, "Введите телефон");
             clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
-                if (PhoneNumberValidation.isValidPhone(clientAnswer)) {
-                    clientDto.setTelegramNick(message.getFrom()
-                            .getUserName());
-                    clientDto.setTelegramId(chatId);
-                    clientDto.setPhoneNumber(clientAnswer);
-                    clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
-                    HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
-                    replyToClient = SendMessage.builder()
-                            .text("Выберите день на неделе")
-                            .replyMarkup(handleScheduleClient.createInlineKeyboard())
-                            .chatId(chatId.toString())
-                            .build();
-                }
-                else {
-                replyToClient = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
-            }
+            clientDto.setTelegramId(chatId);
+            recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
+            clientDto.setPhoneNumber(clientAnswer);
+            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
+            HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
+            replyToClient = SendMessage.builder()
+                    .text("Выберите день на неделе")
+                    .replyMarkup(handleScheduleClient.createInlineKeyboard())
+                    .chatId(chatId.toString())
+                    .build();
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
@@ -103,7 +100,8 @@ public class FillingClientProfile implements HandleRegistration {
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setClientId(chatId);
-            clientDataCache.setClientIntoDb(clientDto);
+            if(clientRepository.findByTelegramId(chatId).isEmpty())
+                clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()
                     .text("Вы записаны на " + recordToMasterDto.getDay() + " " + recordToMasterDto.getTime() + "\nНажмите какую-либо кнопку для продолжение")
@@ -113,8 +111,8 @@ public class FillingClientProfile implements HandleRegistration {
             Bot.clientRegistration = false;
             clientDataCache.setClientBotState(chatId, ClientBotState.NONE);
         }
-        clientDataCache.saveRecordData(chatId, recordToMasterDto);
         clientDataCache.saveClientProfileData(chatId, clientDto);
+        clientDataCache.saveRecordData(chatId, recordToMasterDto);
         return replyToClient;
     }
 

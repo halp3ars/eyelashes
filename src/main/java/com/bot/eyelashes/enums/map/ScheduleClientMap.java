@@ -23,16 +23,16 @@ public class ScheduleClientMap {
         SCHEDULE_MAP.put("Пятница", scheduleDto.isFriday());
     }
 
-    public Set getTrueDays() {
+    public List<String> getTrueDays() {
         SCHEDULE_MAP.values()
                 .stream()
                 .allMatch(t -> t);
-        Set<String> daySet = SCHEDULE_MAP.entrySet()
+        List<String> dayList = SCHEDULE_MAP.entrySet()
                 .stream()
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-        return daySet;
+                .collect(Collectors.toList());
+        return dayList;
     }
 
 }

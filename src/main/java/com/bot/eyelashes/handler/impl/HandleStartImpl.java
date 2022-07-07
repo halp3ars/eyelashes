@@ -1,6 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.handler.callbackquery.Callback;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackMasterScheduleImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
