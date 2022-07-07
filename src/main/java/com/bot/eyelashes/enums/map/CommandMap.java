@@ -13,7 +13,6 @@ import java.util.Map;
 public class CommandMap {
     private static final Map<String, Handle> COMMAND_MAP = new HashMap<>();
 
-    // TODO : дополнить список команд на /client - список клиентов для мастера, /master - список записей для мастера
     public CommandMap() {
         COMMAND_MAP.put("/info", new HandleInfoImpl());
         COMMAND_MAP.put("/start", new HandleStartImpl());

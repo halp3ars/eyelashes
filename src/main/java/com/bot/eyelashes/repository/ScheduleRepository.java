@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long>{
 
-    Schedule findByMasterId(Long masterId);
-
     Schedule findByTelegramId(Long telegramId);
-
 
 }

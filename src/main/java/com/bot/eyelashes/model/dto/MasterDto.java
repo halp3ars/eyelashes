@@ -9,6 +9,7 @@ import lombok.Setter;
 public class MasterDto {
     private String phone;
     private String activity;
+    private String address;
     private Long telegramId;
     private String name;
     private String surname;

@@ -4,7 +4,6 @@ import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.impl.HandleInfoImpl;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 public class CallbackInfoImpl implements Callback {
 

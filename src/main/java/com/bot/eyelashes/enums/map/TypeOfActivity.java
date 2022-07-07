@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class TypeOfActivity {
 
-
     private static final Map<String, String> TYPE_OF_ACTIVITY = new HashMap<>();
 
     public TypeOfActivity() {

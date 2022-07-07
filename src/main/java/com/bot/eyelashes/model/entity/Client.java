@@ -21,7 +21,7 @@ public class Client {
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "telegram_ID")
-    private String telegramId;
+    private Long telegramId;
     @Column(name = "telegram_nickname")
     private String telegramNick;
 

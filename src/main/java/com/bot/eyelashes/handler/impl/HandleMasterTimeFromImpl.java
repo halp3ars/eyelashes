@@ -1,42 +1,36 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.enums.map.TypeOfActivity;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class HandleClientImpl implements Handle {
+public class HandleMasterTimeFromImpl implements Handle {
+
 
     @Override
     public SendMessage getMessage(Update update) {
         return null;
-    }
 
+    }
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        TypeOfActivity typeOfActivity = new TypeOfActivity();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
-                        .text(typeOfActivity.getCommand("EYEBROWS"))
-                        .callbackData("EYEBROWS")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text(typeOfActivity.getCommand("EYELASHES"))
-                        .callbackData("EYELASHES")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text(typeOfActivity.getCommand("NAILS"))
-                        .callbackData("NAILS")
-                        .build()));
+        List<Integer> workHours = new ArrayList<>();
+        IntStream.range(8, 22)
+                .forEach(workHours::add);
+        workHours.forEach(timeText -> buttons.add(List.of(InlineKeyboardButton.builder()
+                .text(timeText.toString())
+                .callbackData("TIME_TO/" + timeText)
+                .build())));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

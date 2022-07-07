@@ -5,11 +5,7 @@ import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.map.ActivityId;
 import com.bot.eyelashes.model.dto.MasterActivityDto;
 import com.bot.eyelashes.model.dto.MasterDto;
-import com.bot.eyelashes.model.entity.Master;
-import com.bot.eyelashes.repository.MasterActivityRepository;
 import com.bot.eyelashes.service.MessageService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,7 +22,7 @@ public class CallbackServiceImpl implements Callback {
         MasterActivityDto masterActivityDto = new MasterActivityDto();
         ActivityId activityId = new ActivityId();
         masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage()
-                .getChatId(), BotState.REGISTREDET);
+                .getChatId(), BotState.REGISTERED);
         MasterDto userProfileData = masterDataCache.getUserProfileData(callbackQuery.getMessage()
                 .getChatId());
         userProfileData.setActivity(callbackQuery.getData());

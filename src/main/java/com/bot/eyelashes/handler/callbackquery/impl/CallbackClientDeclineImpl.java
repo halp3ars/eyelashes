@@ -11,14 +11,14 @@ import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service("CallbackDeclineImpl")
-public class CallbackDeclineImpl implements Callback {
+public class CallbackClientDeclineImpl implements Callback {
 
     private final RecordToMasterRepository record;
 
     @Transactional
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        record.deleteByClientId(callbackQuery.getMessage().getChatId());
+        record.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity);
         return SendMessage.builder()
                 .text("Вы успешно сняты с записи")
                 .chatId(callbackQuery.getMessage().getChatId().toString())

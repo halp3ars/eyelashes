@@ -5,7 +5,6 @@ import com.bot.eyelashes.handler.registration.HandleRegistration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,37 +12,35 @@ import java.util.Map;
 
 @Component
 public class BotStateContext {
+
     private final Map<BotState, HandleRegistration> messageHandlers = new HashMap<>();
-
-
 
     public BotStateContext(List<HandleRegistration> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandleName(), handler));
     }
 
 
-
-    public SendMessage processInputMessage(BotState currentState, Update update) {
-        HandleRegistration currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.getMessage(update);
+    public SendMessage processInputMessage(BotState botState, Message message) {
+        HandleRegistration handleRegistration = findMessageHandler(botState);
+        return handleRegistration.getMessage(message);
     }
 
-
-
-    private HandleRegistration findMessageHandler(BotState currentState) {
-        if (isFillingProfileState(currentState)) {
+    private HandleRegistration findMessageHandler(BotState botState) {
+        if (isFillingProfileState(botState)) {
             return messageHandlers.get(BotState.FILLING_PROFILE);
         }
-        return messageHandlers.get(currentState);
+        return messageHandlers.get(botState);
     }
 
-
-
-    private boolean isFillingProfileState(BotState currentState) {
-        return switch (currentState) {
-            case ASK_READY, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_FULL_NAME, FILLING_PROFILE, REGISTREDET->
+    private boolean isFillingProfileState(BotState botState) {
+        return switch (botState) {
+            case ASK_TIME_FROM,ASK_ADDRESS, ASK_TIME_TO,ASK_DATE, ASK_READY, ASK_SURNAME, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_NAME, FILLING_PROFILE, REGISTERED ->
                     true;
             default -> false;
         };
     }
+
+
+
+
 }

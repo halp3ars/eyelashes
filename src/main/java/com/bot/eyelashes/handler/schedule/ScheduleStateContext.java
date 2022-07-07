@@ -5,7 +5,6 @@ import com.bot.eyelashes.handler.callbackquery.CallbackSchedule;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.HashMap;
 import java.util.List;
