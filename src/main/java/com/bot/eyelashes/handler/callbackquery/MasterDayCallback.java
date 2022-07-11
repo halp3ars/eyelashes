@@ -4,6 +4,7 @@ import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.DayOfWeek;
 import com.bot.eyelashes.handler.BotStateContext;
+import com.bot.eyelashes.handler.impl.HandleMasterScheduleImpl;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.service.HashMapDayOfWeekModeService;
 import lombok.RequiredArgsConstructor;
@@ -26,20 +27,23 @@ public class MasterDayCallback implements Callback {
     private final MasterDataCache masterDataCache;
     private final BotStateContext botStateContext;
     private final HashMapDayOfWeekModeService dayOfWeekModeService;
+    private final HandleMasterScheduleImpl handleMasterSchedule;
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
+        BotState botState = BotState.ASK_DAY;
         ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
         String day = callbackQuery.getData().split("/")[1];
         DayOfWeek newDayOfWeek = DayOfWeek.valueOf(callbackQuery.getData().split("/")[1]);
         dayOfWeekModeService.setTargetDay(callbackQuery.getMessage().getChatId(), newDayOfWeek);
         setCurrentDay(day, userScheduleData);
-        userScheduleData.setTelegramId(chatId);
-        log.info("master id set in schedule = " + userScheduleData.getTelegramId());
+        handleMasterSchedule.generateKeyboardWithText(callbackQuery.getMessage().getChatId());
+
         masterDataCache.saveUserScheduleData(chatId, userScheduleData);
-        BotState botState = BotState.ASK_DAY;
-        generateKeyboardChooseButton(callbackQuery.getMessage().getChatId(), callbackQuery);
+        if (day.equals("MASTER_TIME")) {
+            botState = BotState.ASK_TIME_FROM;
+        }
         masterDataCache.setUsersCurrentBotState(chatId, botState);
 
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());
@@ -51,32 +55,8 @@ public class MasterDayCallback implements Callback {
         if (day.equals("WEDNESDAY")) userScheduleData.setWednesday(true);
         if (day.equals("THURSDAY")) userScheduleData.setThursday(true);
         if (day.equals("FRIDAY")) userScheduleData.setFriday(true);
-    }
-
-    private EditMessageReplyMarkup generateKeyboardChooseButton(long chatId, CallbackQuery callbackQuery) {
-        Message message = callbackQuery.getMessage();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        DayOfWeek originalDay = dayOfWeekModeService.getOriginalDay(chatId);
-        DayOfWeek targetDay = dayOfWeekModeService.getTargetDay(chatId);
-
-
-        for (DayOfWeek day : DayOfWeek.values()) {
-            buttons.add(List.of(
-                    InlineKeyboardButton.builder()
-                                        .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
-                                        .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
-                                        .build()
-            ));
-        }
-
-        return EditMessageReplyMarkup.builder()
-                                     .chatId(String.valueOf(chatId))
-                                     .messageId(message.getMessageId())
-                                     .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                                     .build();
-    }
-
-    private String getDayButton(String saved, String current) {
-        return saved.equals(current) ? current + "✅" : current;
+        if (day.equals("FRIDAY")) userScheduleData.setFriday(true);
+        if (day.equals("SATURDAY")) userScheduleData.setSaturday(true);
+        if (day.equals("SUNDAY")) userScheduleData.setSunday(true);
     }
 }

@@ -15,8 +15,6 @@ import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 public class HandleMasterTimeToImpl implements Handle {
-
-
     @Override
     public SendMessage getMessage(Update update) {
         return null;
@@ -44,7 +42,6 @@ public class HandleMasterTimeToImpl implements Handle {
                         .callbackData("REGISTERED/" + i)
                         .build());
             }
-
         }
 
         return InlineKeyboardMarkup.builder()
@@ -53,5 +50,4 @@ public class HandleMasterTimeToImpl implements Handle {
                 .keyboardRow(rowThird)
                 .build();
     }
-
 }

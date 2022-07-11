@@ -24,6 +24,10 @@ public class Schedule {
     private boolean thursday;
     @Column(name = "friday")
     private boolean friday;
+    @Column(name = "saturday")
+    private boolean saturday;
+    @Column(name = "sunday")
+    private boolean sunday;
     @Column(name = "telegramId")
     private Long telegramId;
     @Column(name = "time_from")

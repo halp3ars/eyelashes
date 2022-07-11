@@ -22,12 +22,15 @@ public class CallbackMasterTimeToImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        BotState botState = BotState.ASK_TIME_TO;
-        Long chatId = callbackQuery.getMessage().getChatId();
-        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
+        long chatId = callbackQuery.getMessage().getChatId();
         int timeFrom = Integer.parseInt(callbackQuery.getData().split("/")[1]);
         time = timeFrom;
+        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
+
+        userScheduleData.setTelegramId(chatId);
         userScheduleData.setTimeFrom(timeFrom);
+
+        BotState botState = BotState.ASK_TIME_TO;
         masterDataCache.saveUserScheduleData(chatId,userScheduleData);
         masterDataCache.setUsersCurrentBotState(chatId, botState);
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());

@@ -12,11 +12,11 @@ public class HashMapDayOfWeekModeService {
     private final Map<Long, DayOfWeek> targetDay = new HashMap<>();
 
     public DayOfWeek getOriginalDay(long chatId) {
-        return originalDay.getOrDefault(chatId, DayOfWeek.MONDAY);
+        return originalDay.getOrDefault(chatId, DayOfWeek.NONE);
     }
 
     public DayOfWeek getTargetDay(long chatId) {
-        return targetDay.getOrDefault(chatId, DayOfWeek.MONDAY);
+        return targetDay.getOrDefault(chatId, DayOfWeek.NONE);
     }
 
     public void setOriginalDay(long chatId, DayOfWeek dayOfWeek) {

@@ -1,6 +1,5 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class HandleMasterTimeFromImpl implements Handle {
     @Override
@@ -22,27 +20,22 @@ public class HandleMasterTimeFromImpl implements Handle {
         List<InlineKeyboardButton> rowMain = new ArrayList<>();
         List<InlineKeyboardButton> rowSecond = new ArrayList<>();
         List<InlineKeyboardButton> rowThird = new ArrayList<>();
-        List<InlineKeyboardButton> rowFourth = new ArrayList<>();
 
-        for (int hours = 8; hours < 20; hours++) {
+        final int MAX_WORK_TIME = 20;
+        for (int hours = 8; hours < MAX_WORK_TIME; hours++) {
             if (hours <= 11) {
                 rowMain.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
+                        .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
-            } else if (hours > 11 && hours <= 15) {
+            } else if (hours <= 15) {
                 rowSecond.add(InlineKeyboardButton.builder()
                         .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
-            } else if (hours > 15 && hours <= 19) {
+            } else {
                 rowThird.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
-                        .callbackData("TIME_TO/" + hours)
-                        .build());
-            } else if (hours > 19) {
-                rowFourth.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
+                        .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
             }
@@ -52,7 +45,10 @@ public class HandleMasterTimeFromImpl implements Handle {
                 .keyboardRow(rowMain)
                 .keyboardRow(rowSecond)
                 .keyboardRow(rowThird)
-                .keyboardRow(rowFourth)
                 .build();
+    }
+
+    private String getDayButton(String saved, String current) {
+        return saved.equals(current) ? current + "✅" : current;
     }
 }

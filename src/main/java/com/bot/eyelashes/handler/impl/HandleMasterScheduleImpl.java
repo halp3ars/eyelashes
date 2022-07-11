@@ -4,6 +4,7 @@ import com.bot.eyelashes.enums.DayOfWeek;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.service.HashMapDayOfWeekModeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class HandleMasterScheduleImpl implements Handle {
     private final HashMapDayOfWeekModeService dayOfWeekModeService;
@@ -70,22 +72,23 @@ public class HandleMasterScheduleImpl implements Handle {
 
     public InlineKeyboardMarkup generateKeyboardWithText(long chatId) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        DayOfWeek originalDay = dayOfWeekModeService.getOriginalDay(chatId);
         DayOfWeek targetDay = dayOfWeekModeService.getTargetDay(chatId);
 
         for (DayOfWeek day : DayOfWeek.values()) {
-            buttons.add(List.of(
-                    InlineKeyboardButton.builder()
-                                        .text(getDayButton(targetDay.name(),day.name()))
-                                        .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
-                                        .build()
-            ));
+            if (!day.equals(DayOfWeek.NONE)) {
+                buttons.add(List.of(
+                        InlineKeyboardButton.builder()
+                                            .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
+                                            .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
+                                            .build()
+                ));
+            }
         }
 
         return InlineKeyboardMarkup.builder().keyboard(buttons).build();
     }
 
     private String getDayButton(String saved, String current) {
-        return saved == current ? current + "✅" : current;
+        return saved.equals(current) ? current + "✅" : current;
     }
 }

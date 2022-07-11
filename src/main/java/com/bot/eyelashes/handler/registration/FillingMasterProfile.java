@@ -33,10 +33,6 @@ public class FillingMasterProfile implements HandleRegistration {
 
     @Override
     public SendMessage getMessage(Message message) {
-//        if (masterDataCache.getUsersCurrentBotState(message.getChatId()).equals(BotState.FILLING_PROFILE)) {
-//            masterDataCache.setUsersCurrentBotState(message.getFrom()
-//                    .getId(), BotState.ASK_NAME);
-//        }
         return processUsersInput(message);
     }
 
@@ -116,7 +112,7 @@ public class FillingMasterProfile implements HandleRegistration {
         if (botState.equals(BotState.REGISTERED)) {
             masterDataCache.setMasterInDb(masterDto);
             log.info("data master save in db");
-            userScheduleData.setTelegramId(inputMessage.getChatId());
+//            userScheduleData.setTelegramId(inputMessage.getChatId());
             replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Вернуться на главное меню",
                     createFinalButton());
             Bot.masterRegistration = false;
