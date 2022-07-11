@@ -40,15 +40,15 @@ public class Bot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-         Message message = update.getMessage();
+        Message message = update.getMessage();
         CommandMap commandMap = new CommandMap();
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-                Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                        .getData()
-                        .split("/")[0]);
-                execute(callback.getCallbackQuery(update.getCallbackQuery()));
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
+                    .getData()
+                    .split("/")[0]);
+            execute(callback.getCallbackQuery(update.getCallbackQuery()));
         } else if (update.getMessage()
                 .hasText()) {
             if ((update.getMessage()
@@ -57,19 +57,24 @@ public class Bot extends TelegramLongPollingBot {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));
             }
-            if (masterRegistration) {
-                botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
-                        .getFrom()
-                        .getId());
-                replyMessage = botStateContext.processInputMessage(botState, message);
-                execute(replyMessage);
-            } else if (clientRegistration) {
-                clientBotState = clientDataCache.getClientBotState(update.getMessage()
-                        .getFrom()
-                        .getId());
-                replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
-                execute(replyMessage);
-            }
+        } else if (update.getMessage()
+                .hasContact()) {
+            clientBotState = ClientBotState.ASK_CLIENT_DATE;
+            clientDataCache.setClientBotState(update.getMessage()
+                    .getChatId(), clientBotState);
+        }
+        if (masterRegistration) {
+            botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
+                    .getFrom()
+                    .getId());
+            replyMessage = botStateContext.processInputMessage(botState, message);
+            execute(replyMessage);
+        } else if (clientRegistration) {
+            clientBotState = clientDataCache.getClientBotState(update.getMessage()
+                    .getFrom()
+                    .getId());
+            replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
+            execute(replyMessage);
         }
     }
 

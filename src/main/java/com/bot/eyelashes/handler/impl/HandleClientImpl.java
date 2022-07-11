@@ -36,6 +36,10 @@ public class HandleClientImpl implements Handle {
                 InlineKeyboardButton.builder()
                         .text(typeOfActivity.getCommand("NAILS"))
                         .callbackData("NAILS")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("Мои записи")
+                        .callbackData("ALL_RECORDS")
                         .build()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;

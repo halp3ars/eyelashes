@@ -26,7 +26,8 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackMasterTimeFromImpl") Callback callbackMasterTimeFromImpl,
                                 @Qualifier("CallbackMasterScheduleImpl") Callback callbackMasterScheduleImpl,
                                 @Qualifier("CallbackMasterTimeToImpl") Callback callbackMasterTimeToImpl,
-                                @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl
+                                @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl,
+                                @Qualifier("CallbackClientAllRecordsImpl") Callback callbackClientAllRecordsImpl
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
@@ -44,12 +45,12 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("TIME", callbackTimeClient);
         CALLBACK_MAP.put("RECORD", callbackRecord);
         CALLBACK_MAP.put("CHANGE_DATE", callbackChangeDate);
-        CALLBACK_MAP.put("MASTER_ACTIVITY",callbackMasterScheduleImpl);
+        CALLBACK_MAP.put("MASTER_ACTIVITY", callbackMasterScheduleImpl);
         CALLBACK_MAP.put("MASTER", callbackMasterRegistration);
         CALLBACK_MAP.put("MASTER_TIME", callbackMasterTimeFromImpl);
         CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
-        CALLBACK_MAP.put("REGISTERED",callbackMasterRegisteredImpl);
-
+        CALLBACK_MAP.put("REGISTERED", callbackMasterRegisteredImpl);
+        CALLBACK_MAP.put("ALL_RECORDS", callbackClientAllRecordsImpl);
     }
 
     public Callback getCallback(String keyCallback) {
