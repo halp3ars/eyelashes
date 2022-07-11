@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface MasterRepository extends JpaRepository<Master, Long> {
 
     Optional<Master> findMasterByTelegramId(Long telegramId);
-    List<Master> findAllByTelegramId(Long telegramId);
     List<Master> findByActivity(String activity);
     Boolean existsByTelegramId(Long id);
 }

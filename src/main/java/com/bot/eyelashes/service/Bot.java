@@ -64,17 +64,15 @@ public class Bot extends TelegramLongPollingBot {
                     .getChatId(), clientBotState);
         }
         if (masterRegistration) {
-            botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
-                    .getFrom()
-                    .getId());
+            botState = masterDataCache.getUsersCurrentBotState(update.getMessage().getChatId());
             replyMessage = botStateContext.processInputMessage(botState, message);
             execute(replyMessage);
         } else if (clientRegistration) {
-            clientBotState = clientDataCache.getClientBotState(update.getMessage()
-                    .getFrom()
-                    .getId());
+            if(update.hasMessage()){
+            clientBotState = clientDataCache.getClientBotState(update.getMessage().getChatId());
             replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
             execute(replyMessage);
+            }
         }
     }
 

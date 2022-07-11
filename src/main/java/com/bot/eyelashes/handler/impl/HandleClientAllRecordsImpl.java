@@ -24,10 +24,6 @@ public class HandleClientAllRecordsImpl implements Handle {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .callbackData("DECLINE_FROM_ALL_RECORD")
-                        .text("Отменить запись")
-                        .build(),
-                InlineKeyboardButton.builder()
                         .text("Вернуться в меню")
                         .callbackData("MENU")
                         .build()));
@@ -39,7 +35,7 @@ public class HandleClientAllRecordsImpl implements Handle {
     public List<String> allRecordText(List<Master> master, List<RecordToMaster> records) {
         List<String> message = new ArrayList<>();
         for (int numberOfRecord = 0; numberOfRecord < records.size(); numberOfRecord++) {
-            message.add("Вы записаны на - " + records.get(numberOfRecord)
+            message.add("\n\nВы записаны на - " + records.get(numberOfRecord)
                     .getActivity() +
                     "\nМастер - " + master.get(numberOfRecord)
                     .getName() + " " + master.get(numberOfRecord)
@@ -49,7 +45,7 @@ public class HandleClientAllRecordsImpl implements Handle {
                     "\nДень недели - " + records.get(numberOfRecord)
                     .getDay() +
                     "\nНомер телефон мастера " + master.get(numberOfRecord)
-                    .getPhoneNumber() + "\n"    );
+                    .getPhoneNumber());
         }
         return message;
     }

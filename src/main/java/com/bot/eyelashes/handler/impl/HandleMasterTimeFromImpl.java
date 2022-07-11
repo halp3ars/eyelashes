@@ -26,7 +26,7 @@ public class HandleMasterTimeFromImpl implements Handle {
         for (int hours = 8; hours < 21; hours++) {
             if (hours <= 11) {
                 rowMain.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
+                        .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
             } else if (hours > 11 && hours <= 15) {
@@ -36,12 +36,12 @@ public class HandleMasterTimeFromImpl implements Handle {
                         .build());
             } else if (hours > 15 && hours <= 19) {
                 rowThird.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
+                        .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
             } else if (hours > 19) {
                 rowFourth.add(InlineKeyboardButton.builder()
-                        .text(hours+ " : 00")
+                        .text(hours + " : 00")
                         .callbackData("TIME_TO/" + hours)
                         .build());
             }

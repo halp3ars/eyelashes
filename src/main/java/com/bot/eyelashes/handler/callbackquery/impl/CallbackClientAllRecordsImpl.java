@@ -2,6 +2,7 @@ package com.bot.eyelashes.handler.callbackquery.impl;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.impl.HandleClientAllRecordsImpl;
+import com.bot.eyelashes.model.entity.Master;
 import com.bot.eyelashes.repository.MasterRepository;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,25 @@ public class CallbackClientAllRecordsImpl implements Callback {
         HandleClientAllRecordsImpl handleClientAllRecords = new HandleClientAllRecordsImpl();
         Long chatId = callbackQuery.getMessage()
                 .getChatId();
-        List<Long> mastersId = new ArrayList<>();
+        List<Master> masters = new ArrayList<>();
         for (int i = 0; i < record.findAllByClientId(chatId)
                 .size(); i++) {
-            mastersId.add(record.findAllByClientId(chatId)
+            Master master = masterRepository.findMasterByTelegramId(record.findAllByClientId(chatId)
                     .get(i)
-                    .getMasterId());
+                    .getMasterId()).get();
+            masters.add(master);
         }
-        List<String> allRecordText = handleClientAllRecords.allRecordText(masterRepository.findMasterByTelegramId(), record.findAllByClientId(chatId));
+        List<String> allRecordText = handleClientAllRecords.allRecordText(masters, record.findAllByClientId(chatId));
+        if(allRecordText.isEmpty()){
+            return SendMessage.builder()
+                    .replyMarkup(handleClientAllRecords.createInlineKeyboard())
+                    .text("У вас нет записей")
+                    .chatId(chatId.toString())
+                    .build();
+        }
         return SendMessage.builder()
                 .replyMarkup(handleClientAllRecords.createInlineKeyboard())
-                .text(allRecordText.toString())
+                .text(allRecordText.toString().substring(1, allRecordText.toString().length() - 1))
                 .chatId(chatId.toString())
                 .build();
     }
