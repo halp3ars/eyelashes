@@ -71,21 +71,41 @@ public class HandleMasterScheduleImpl implements Handle {
     }
 
     public InlineKeyboardMarkup generateKeyboardWithText(long chatId) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        List<InlineKeyboardButton> rowMain = new ArrayList<>();
+        List<InlineKeyboardButton> rowSecond = new ArrayList<>();
+        List<InlineKeyboardButton> rowThird = new ArrayList<>();
+
         DayOfWeek targetDay = dayOfWeekModeService.getTargetDay(chatId);
 
         for (DayOfWeek day : DayOfWeek.values()) {
             if (!day.equals(DayOfWeek.NONE)) {
-                buttons.add(List.of(
-                        InlineKeyboardButton.builder()
-                                            .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
-                                            .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
-                                            .build()
-                ));
+                if (day.equals(DayOfWeek.MONDAY) || day.equals(DayOfWeek.TUESDAY) || day.equals(DayOfWeek.WEDNESDAY)) {
+                    rowMain.add(
+                            InlineKeyboardButton.builder()
+                                                .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
+                                                .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
+                                                .build()
+                    );
+                } else if (day.equals(DayOfWeek.THURSDAY) || day.equals(DayOfWeek.FRIDAY) ||
+                        day.equals(DayOfWeek.SATURDAY)) {
+                    rowSecond.add(
+                            InlineKeyboardButton.builder()
+                                                .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
+                                                .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
+                                                .build()
+                    );
+                } else {
+                    rowThird.add(
+                            InlineKeyboardButton.builder()
+                                                .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
+                                                .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
+                                                .build()
+                    );
+                }
             }
         }
 
-        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
+        return InlineKeyboardMarkup.builder().keyboardRow(rowMain).keyboardRow(rowSecond).keyboardRow(rowThird).build();
     }
 
     private String getDayButton(String saved, String current) {

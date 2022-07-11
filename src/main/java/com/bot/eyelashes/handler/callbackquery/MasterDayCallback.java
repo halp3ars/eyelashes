@@ -7,18 +7,12 @@ import com.bot.eyelashes.handler.BotStateContext;
 import com.bot.eyelashes.handler.impl.HandleMasterScheduleImpl;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.service.HashMapDayOfWeekModeService;
+import com.bot.eyelashes.validation.DayMasterValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service("MasterDayCallback")
 @RequiredArgsConstructor
@@ -36,13 +30,18 @@ public class MasterDayCallback implements Callback {
         ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
         String day = callbackQuery.getData().split("/")[1];
         DayOfWeek newDayOfWeek = DayOfWeek.valueOf(callbackQuery.getData().split("/")[1]);
-        dayOfWeekModeService.setTargetDay(callbackQuery.getMessage().getChatId(), newDayOfWeek);
+        dayOfWeekModeService.setTargetDay(chatId, newDayOfWeek);
         setCurrentDay(day, userScheduleData);
         handleMasterSchedule.generateKeyboardWithText(callbackQuery.getMessage().getChatId());
 
         masterDataCache.saveUserScheduleData(chatId, userScheduleData);
         if (day.equals("MASTER_TIME")) {
-            botState = BotState.ASK_TIME_FROM;
+            if (DayMasterValidation.isEmptyDaysForMasterRegistration(userScheduleData)) {
+                botState = BotState.ASK_DAY;
+            } else {
+                botState = BotState.ASK_TIME_FROM;
+            }
+
         }
         masterDataCache.setUsersCurrentBotState(chatId, botState);
 
@@ -55,8 +54,16 @@ public class MasterDayCallback implements Callback {
         if (day.equals("WEDNESDAY")) userScheduleData.setWednesday(true);
         if (day.equals("THURSDAY")) userScheduleData.setThursday(true);
         if (day.equals("FRIDAY")) userScheduleData.setFriday(true);
-        if (day.equals("FRIDAY")) userScheduleData.setFriday(true);
         if (day.equals("SATURDAY")) userScheduleData.setSaturday(true);
         if (day.equals("SUNDAY")) userScheduleData.setSunday(true);
+    }
+
+    private boolean checkDay(ScheduleDto scheduleDto) {
+        if (!scheduleDto.isMonday() && !scheduleDto.isFriday() && !scheduleDto.isThursday() &&
+                !scheduleDto.isWednesday() && !scheduleDto.isTuesday() && !scheduleDto.isSaturday() &&
+                !scheduleDto.isSunday())
+            return false;
+
+        return true;
     }
 }
