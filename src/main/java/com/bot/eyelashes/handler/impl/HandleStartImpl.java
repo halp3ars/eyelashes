@@ -20,8 +20,6 @@ public class HandleStartImpl implements Handle {
 
     private final String START_MESSAGE = "Здравствуйте это бот для записи на процедуры в салоне красоты";
 
-    public static Integer messageId;
-
     @Override
     public SendMessage getMessage(Update update) {
         return SendMessage.builder()

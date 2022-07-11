@@ -100,7 +100,8 @@ public class FillingClientProfile implements HandleRegistration {
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setClientId(chatId);
-            if(clientRepository.findByTelegramId(chatId).isEmpty())
+            if (clientRepository.findByTelegramId(chatId)
+                    .isEmpty())
                 clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()

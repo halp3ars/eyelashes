@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @RequiredArgsConstructor
@@ -29,12 +30,51 @@ public class HandleClientTimeImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        TimeForClient timeForClient = new TimeForClient(recordToMasterRepository,scheduleRepository);
+        TimeForClient timeForClient = new TimeForClient(recordToMasterRepository, scheduleRepository);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        timeForClient.getWorkTime(HandleRecordMenuImpl.masterId).forEach(time -> buttons.add(List.of(InlineKeyboardButton.builder().text(time.toString() + ":00").callbackData("TIME/" + time).build())));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
+        List<InlineKeyboardButton> row4 = new ArrayList<>();
+        List<Integer> workTime = timeForClient.getWorkTime(HandleRecordMenuImpl.masterId);
+        for (int i = 0; i < workTime.size(); i++) {
+            if (workTime.get(i) >= 8 & workTime.get(i) <= 10) {
+                String timeString = workTime.get(i)
+                        .toString();
+                row1.add(InlineKeyboardButton.builder()
+                        .text(timeString + ":00")
+                        .callbackData("TIME/" + timeString)
+                        .build());
+            } else if (workTime.get(i) >= 11 & workTime.get(i) <= 13) {
+                String timeString = workTime.get(i)
+                        .toString();
+                row2.add(InlineKeyboardButton.builder()
+                        .text(timeString + ":00")
+                        .callbackData("TIME/" + timeString)
+                        .build());
+            } else if (workTime.get(i) >= 14 & workTime.get(i) <= 16) {
+                String timeString = workTime.get(i)
+                        .toString();
+                row3.add(InlineKeyboardButton.builder()
+                        .text(timeString + ":00")
+                        .callbackData("TIME/" + timeString)
+                        .build());
+            } else if (workTime.get(i) >= 17 & workTime.get(i) <= 20) {
+                String timeString = workTime.get(i)
+                        .toString();
+                row4.add(InlineKeyboardButton.builder()
+                        .text(timeString + ":00")
+                        .callbackData("TIME/" + timeString)
+                        .build());
+            }
+        }
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(row1)
+                .keyboardRow(row2)
+                .keyboardRow(row3)
+                .keyboardRow(row4)
+                .build();
 
     }
 }

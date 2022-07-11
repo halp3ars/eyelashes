@@ -6,6 +6,7 @@ import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,10 +18,10 @@ public class TimeForClient {
     private final RecordToMasterRepository recordToMasterRepository;
     private final ScheduleRepository scheduleRepository;
 
-    public Set getWorkTime(Long telegramId) {
+    public List getWorkTime(Long telegramId) {
         Schedule scheduleByTelegramId = scheduleRepository.findByTelegramId(telegramId);
         List<RecordToMaster> scheduleByMasterId = recordToMasterRepository.findByMasterId(telegramId);
-        Set<Integer> workHours = new HashSet<>();
+        List<Integer> workHours = new ArrayList<>();
         IntStream.range(scheduleByTelegramId.getTimeFrom(), scheduleByTelegramId.getTimeTo())
                 .forEach(workHours::add);
         scheduleByMasterId.forEach(time -> workHours.remove(time.getTime()));
