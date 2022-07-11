@@ -3,12 +3,15 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
-import com.bot.eyelashes.handler.impl.*;
+import com.bot.eyelashes.handler.impl.HandleMasterActivityImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterScheduleImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterTimeFromImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterTimeToImpl;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.service.Bot;
+import com.bot.eyelashes.service.HashMapDayOfWeekModeService;
 import com.bot.eyelashes.service.MessageService;
-import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,15 +28,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FillingMasterProfile implements HandleRegistration {
     private final MasterDataCache masterDataCache;
-
     private final MessageService messageService;
+    private final HashMapDayOfWeekModeService dayOfWeekModeService;
 
     @Override
     public SendMessage getMessage(Message message) {
-        if (masterDataCache.getUsersCurrentBotState(message.getChatId()).equals(BotState.FILLING_PROFILE)) {
-            masterDataCache.setUsersCurrentBotState(message.getFrom()
-                    .getId(), BotState.ASK_NAME);
-        }
+//        if (masterDataCache.getUsersCurrentBotState(message.getChatId()).equals(BotState.FILLING_PROFILE)) {
+//            masterDataCache.setUsersCurrentBotState(message.getFrom()
+//                    .getId(), BotState.ASK_NAME);
+//        }
         return processUsersInput(message);
     }
 
@@ -42,83 +45,80 @@ public class FillingMasterProfile implements HandleRegistration {
         return BotState.FILLING_PROFILE;
     }
 
-    private SendMessage processUsersInput(Message inputMsg) {
-        String usersAnswer = inputMsg.getText();
-        Long chatId = inputMsg.getChatId();
+    private SendMessage processUsersInput(Message inputMessage) {
+        String usersAnswer = inputMessage.getText();
+        Long chatId = inputMessage.getChatId();
         MasterDto masterDto = masterDataCache.getUserProfileData(chatId);
         BotState botState = masterDataCache.getUsersCurrentBotState(chatId);
-        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(inputMsg.getChatId());
+        ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(inputMessage.getChatId());
         SendMessage replyToUser = null;
+
         if (botState.equals(BotState.ASK_NAME)) {
-            replyToUser = messageService.getReplyMessage(chatId, "Введите Ваше имя");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_SURNAME);
+            masterDto.setTelegramId(chatId);
+            replyToUser = messageService.getReplyMessage(chatId, "Введите Ваше имя");
         }
+
         if (botState.equals(BotState.ASK_SURNAME)) {
             masterDto.setName(usersAnswer);
+            log.info("master set name = " + usersAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ADDRESS);
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
         }
-        if (botState.equals(BotState.ASK_ADDRESS)) {
-            masterDto.setTelegramNick(inputMsg.getFrom().getUserName());
+
+        if (botState.equals(BotState.ASK_ACTIVITY)) {
             masterDto.setSurname(usersAnswer);
+            log.info("master set surname = " + usersAnswer);
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ADDRESS);
+            HandleMasterActivityImpl handleTypeOfActivity = new HandleMasterActivityImpl();
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите вид деятельности",
+                    handleTypeOfActivity.createInlineKeyboard());
+        }
+
+        if (botState.equals(BotState.ASK_ADDRESS)) {
+            masterDto.setTelegramNick(inputMessage.getChat().getUserName());
+            log.info("master set telegramNickName = " + inputMessage.getChat().getUserName());
             replyToUser = messageService.getReplyMessage(chatId, "Введите адрес");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_PHONE);
         }
         if (botState.equals(BotState.ASK_PHONE)) {
             masterDto.setAddress(usersAnswer);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите номер телефона начиная с +7: ");
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
+            log.info("master set address = " + usersAnswer);
+            replyToUser = messageService.getReplyMessageForContact(chatId, "Отправьте свой номер телефона: ");
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
         }
-        if (botState.equals(BotState.ASK_ACTIVITY)) {
-            if (PhoneNumberValidation.isValidPhone(usersAnswer)) {
-                masterDto.setPhone(usersAnswer);
-                masterDto.setTelegramId(chatId);
-                masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DATE);
-                HandleMasterActivityImpl handleTypeOfActivity = new HandleMasterActivityImpl();
-                replyToUser = SendMessage.builder()
-                        .text("Выберите вид деятельности")
-                        .replyMarkup(handleTypeOfActivity.createInlineKeyboard())
-                        .chatId(chatId.toString())
-                        .build();
-            } else
-                replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
 
-        }
-        if(botState.equals(BotState.ASK_DATE)){
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
-            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(masterDataCache);
-            replyToUser = SendMessage.builder()
-                    .text("Выберите дни")
-                    .replyMarkup(handleMasterSchedule.createInlineKeyboard())
-                    .chatId(chatId.toString())
-                    .build();
+        if (botState.equals(BotState.ASK_DAY)) {
+            if (inputMessage.getContact() == null) {
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
+            } else {
+                log.info("master set phoneNumber = " + inputMessage.getContact().getPhoneNumber());
+                masterDto.setPhone(inputMessage.getContact().getPhoneNumber());
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
+            }
+
+            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите дни",
+                    handleMasterSchedule.generateKeyboardWithText(chatId));
         }
         if (botState.equals(BotState.ASK_TIME_FROM)) {
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_TO);
             HandleMasterTimeFromImpl handleMasterTimeFrom = new HandleMasterTimeFromImpl();
-            replyToUser = SendMessage.builder()
-                    .text("Выберите время с")
-                    .replyMarkup(handleMasterTimeFrom.createInlineKeyboard())
-                    .chatId(chatId.toString())
-                    .build();
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите время с",
+                    handleMasterTimeFrom.createInlineKeyboard());
         }
         if (botState.equals(BotState.ASK_TIME_TO)) {
+            HandleMasterTimeToImpl handleMasterTimeTo = new HandleMasterTimeToImpl();
             masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
-            HandleMasterTimeToImpl handleMasterTimeTo = new HandleMasterTimeToImpl(masterDataCache);
-            replyToUser = SendMessage.builder()
-                    .text("Выберите время по")
-                    .replyMarkup(handleMasterTimeTo.createInlineKeyboard())
-                    .chatId(chatId.toString())
-                    .build();
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите время по",
+                    handleMasterTimeTo.createInlineKeyboard());
         }
         if (botState.equals(BotState.REGISTERED)) {
             masterDataCache.setMasterInDb(masterDto);
-            userScheduleData.setTelegramId(inputMsg.getChatId());
-            replyToUser = SendMessage.builder()
-                    .text("Вернуться на главное меню")
-                    .chatId(chatId.toString())
-                    .replyMarkup(createFinalButton())
-                    .build();
+            log.info("data master save in db");
+            userScheduleData.setTelegramId(inputMessage.getChatId());
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Вернуться на главное меню",
+                    createFinalButton());
             Bot.masterRegistration = false;
             masterDataCache.setScheduleInDb(userScheduleData);
             masterDataCache.setUsersCurrentBotState(chatId, BotState.NONE);
@@ -126,15 +126,12 @@ public class FillingMasterProfile implements HandleRegistration {
 
         masterDataCache.saveUserProfileData(chatId, masterDto);
         return replyToUser;
-
     }
 
-    private InlineKeyboardMarkup createFinalButton(){
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    private InlineKeyboardMarkup createFinalButton() {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(InlineKeyboardButton.builder().text("Меню").callbackData("MENU").build()));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
     }
 
     @Override

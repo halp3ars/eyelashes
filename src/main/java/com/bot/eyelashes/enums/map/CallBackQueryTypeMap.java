@@ -1,7 +1,9 @@
 package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.callbackquery.impl.*;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackInfoImpl;
+import com.bot.eyelashes.handler.callbackquery.impl.CallbackMenuImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,6 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackRecordMenuImpl") Callback callbackRecordMenu,
                                 @Qualifier("CallbackCheckRecordImpl") Callback callbackCheckRecord,
                                 @Qualifier("CallbackDeclineImpl") Callback callbackDecline,
-                                @Qualifier("CallbackService") Callback callbackService,
                                 @Qualifier("CallbackTimeClientImpl") Callback callbackTimeClient,
                                 @Qualifier("CallbackDateClientImpl") Callback callbackDateClient,
                                 @Qualifier("CallbackRecordImpl") Callback callbackRecord,
@@ -26,7 +27,8 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackMasterTimeFromImpl") Callback callbackMasterTimeFromImpl,
                                 @Qualifier("CallbackMasterScheduleImpl") Callback callbackMasterScheduleImpl,
                                 @Qualifier("CallbackMasterTimeToImpl") Callback callbackMasterTimeToImpl,
-                                @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl
+                                @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl,
+                                @Qualifier("MasterDayCallback") Callback callbackMasterDay
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
@@ -37,9 +39,6 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("SET_MASTER", callbackRecordMenu);
         CALLBACK_MAP.put("CHECK_RECORD", callbackCheckRecord);
         CALLBACK_MAP.put("DECLINE_RECORD", callbackDecline);
-        CALLBACK_MAP.put("eyebrows", callbackService);
-        CALLBACK_MAP.put("eyelashes", callbackService);
-        CALLBACK_MAP.put("nails", callbackService);
         CALLBACK_MAP.put("DATE", callbackDateClient);
         CALLBACK_MAP.put("TIME", callbackTimeClient);
         CALLBACK_MAP.put("RECORD", callbackRecord);
@@ -49,7 +48,7 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("MASTER_TIME", callbackMasterTimeFromImpl);
         CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
         CALLBACK_MAP.put("REGISTERED",callbackMasterRegisteredImpl);
-
+        CALLBACK_MAP.put("MASTER_DAY",callbackMasterDay);
     }
 
     public Callback getCallback(String keyCallback) {

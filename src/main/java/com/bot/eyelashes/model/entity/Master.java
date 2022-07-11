@@ -24,8 +24,6 @@ public class Master {
     private String name;
     @Column(name = "address")
     private String address;
-    @Column(name = "middlename")
-    private String middleName;
     @Column(name = "phonenumber")
     private String phoneNumber;
     @Column(name = "activity")

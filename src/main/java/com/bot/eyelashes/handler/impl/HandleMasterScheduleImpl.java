@@ -1,8 +1,8 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.cache.MasterDataCache;
-import com.bot.eyelashes.enums.map.ScheduleMasterMap;
+import com.bot.eyelashes.enums.DayOfWeek;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.service.HashMapDayOfWeekModeService;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,11 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class HandleMasterScheduleImpl implements Handle {
-    private final MasterDataCache masterDataCache;
+    private final HashMapDayOfWeekModeService dayOfWeekModeService;
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -24,51 +23,69 @@ public class HandleMasterScheduleImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        ScheduleMasterMap scheduleMasterMap = new ScheduleMasterMap();
-        Map map = scheduleMasterMap.getMap();
 
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Понедельник")
-                        .callbackData("MASTER_ACTIVITY/MONDAY")
-                        .build(),
+                                    .text(DayOfWeek.MONDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.MONDAY)
+                                    .build(),
                 InlineKeyboardButton.builder()
-                        .text("Вторник")
-                        .callbackData("MASTER_ACTIVITY/TUESDAY")
-                        .build(),
+                                    .text(DayOfWeek.TUESDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.TUESDAY)
+                                    .build(),
                 InlineKeyboardButton.builder()
-                        .text("Среда")
-                        .callbackData("MASTER_ACTIVITY/WEDNESDAY")
-                        .build()
+                                    .text(DayOfWeek.WEDNESDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.WEDNESDAY)
+                                    .build()
         ));
 
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Четверг")
-                        .callbackData("MASTER_ACTIVITY/THURSDAY")
-                        .build(),
+                                    .text(DayOfWeek.THURSDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.THURSDAY)
+                                    .build(),
                 InlineKeyboardButton.builder()
-                        .text("Пятница")
-                        .callbackData("MASTER_ACTIVITY/FRIDAY")
-                        .build(),
+                                    .text(DayOfWeek.FRIDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.FRIDAY)
+                                    .build(),
                 InlineKeyboardButton.builder()
-                        .text("Суббота")
-                        .callbackData("MASTER_ACTIVITY/SATURDAY")
-                        .build()
+                                    .text(DayOfWeek.SATURDAY.name())
+                                    .callbackData("MASTER_DAY/" + DayOfWeek.SATURDAY)
+                                    .build()
         ));
 
         buttons.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Воскресенье")
-                        .callbackData("MASTER_ACTIVITY/SUNDAY")
-                        .build(),
+                                    .text(DayOfWeek.SUNDAY.name())
+                                    .callbackData("MASTER_ACTIVITY/" + DayOfWeek.SUNDAY)
+                                    .build(),
                 InlineKeyboardButton.builder()
-                        .text("Готов")
-                        .callbackData("MASTER_TIME")
-                        .build()));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+                                    .text("Готов")
+                                    .callbackData("MASTER_TIME")
+                                    .build()));
+
+        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
+    }
+
+    public InlineKeyboardMarkup generateKeyboardWithText(long chatId) {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        DayOfWeek originalDay = dayOfWeekModeService.getOriginalDay(chatId);
+        DayOfWeek targetDay = dayOfWeekModeService.getTargetDay(chatId);
+
+        for (DayOfWeek day : DayOfWeek.values()) {
+            buttons.add(List.of(
+                    InlineKeyboardButton.builder()
+                                        .text(getDayButton(targetDay.name(),day.name()))
+                                        .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
+                                        .build()
+            ));
+        }
+
+        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
+    }
+
+    private String getDayButton(String saved, String current) {
+        return saved == current ? current + "✅" : current;
     }
 }

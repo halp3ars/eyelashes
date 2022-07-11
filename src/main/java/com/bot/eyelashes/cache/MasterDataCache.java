@@ -35,20 +35,12 @@ public class MasterDataCache implements DataCache {
 
     @Override
     public BotState getUsersCurrentBotState(Long userId) {
-        BotState botState = mastersBotStates.get(userId);
-        if (botState == null) {
-            botState = BotState.FILLING_PROFILE;
-        }
-        return botState;
+        return mastersBotStates.getOrDefault(userId, BotState.FILLING_PROFILE);
     }
 
     @Override
     public MasterDto getUserProfileData(Long userId) {
-        MasterDto masterDto = mastersData.get(userId);
-        if (masterDto == null) {
-            masterDto = new MasterDto();
-        }
-        return masterDto;
+        return mastersData.getOrDefault(userId, new MasterDto());
     }
 
 
@@ -60,11 +52,7 @@ public class MasterDataCache implements DataCache {
 
 
     public ScheduleDto getUserScheduleData(Long userId){
-        ScheduleDto scheduleDto = scheduleData.get(userId);
-        if (scheduleDto == null) {
-            scheduleDto = new ScheduleDto();
-        }
-        return scheduleDto;
+        return scheduleData.getOrDefault(userId, new ScheduleDto());
     }
 
     public void saveUserScheduleData(Long userId, ScheduleDto scheduleDto) {

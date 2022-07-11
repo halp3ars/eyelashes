@@ -15,12 +15,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @RequiredArgsConstructor
 @Service("CallbackMasterRegistrationImpl")
 public class CallbackMasterRegistrationImpl implements Callback {
-
     private final BotStateContext botStateContext;
-
     private final MasterDataCache masterDataCache;
     private final MasterRepository masterRepository;
-
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
@@ -36,8 +33,8 @@ public class CallbackMasterRegistrationImpl implements Callback {
         BotState botState = BotState.ASK_NAME;
         Bot.masterRegistration = true;
         Bot.clientRegistration = false;
-        masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage()
-                .getChatId(), botState);
+        masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage().getChatId(), botState);
+
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());
     }
 }

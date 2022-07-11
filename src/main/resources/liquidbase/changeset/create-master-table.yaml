@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-master
+      author: Igor
+      changes:
+        - createTable:
+            tableName: master
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: surname
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phonenumber
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telegram_id
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telegram_nickname
+                  type: varchar(200)
+                  constraints:
+                    nullable: false

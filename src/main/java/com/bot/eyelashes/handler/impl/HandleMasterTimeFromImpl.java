@@ -1,5 +1,6 @@
 package com.bot.eyelashes.handler.impl;
 
+import com.bot.eyelashes.enums.map.TypeOfActivity;
 import com.bot.eyelashes.handler.Handle;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -23,7 +24,7 @@ public class HandleMasterTimeFromImpl implements Handle {
         List<InlineKeyboardButton> rowThird = new ArrayList<>();
         List<InlineKeyboardButton> rowFourth = new ArrayList<>();
 
-        for (int hours = 8; hours < 21; hours++) {
+        for (int hours = 8; hours < 20; hours++) {
             if (hours <= 11) {
                 rowMain.add(InlineKeyboardButton.builder()
                         .text(hours+ " : 00")
@@ -53,17 +54,5 @@ public class HandleMasterTimeFromImpl implements Handle {
                 .keyboardRow(rowThird)
                 .keyboardRow(rowFourth)
                 .build();
-    }
-
-    private List<List<InlineKeyboardButton>> keyboardMarkup(String text) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(List.of(
-                InlineKeyboardButton.builder()
-                        .text(text)
-                        .callbackData("TIME_TO/" + text)
-                        .build()
-        ));
-
-        return buttons;
     }
 }

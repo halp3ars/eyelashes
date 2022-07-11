@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-client
+      author: Igor
+      changes:
+        - columns:
+            - column:
+                name: id
+                type: bigint
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false

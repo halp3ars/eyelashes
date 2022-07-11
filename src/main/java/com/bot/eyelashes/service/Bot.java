@@ -11,7 +11,6 @@ import com.bot.eyelashes.handler.BotStateContext;
 import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -40,33 +39,28 @@ public class Bot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-         Message message = update.getMessage();
+        Message message = update.getMessage();
         CommandMap commandMap = new CommandMap();
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-                Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                        .getData()
-                        .split("/")[0]);
-                execute(callback.getCallbackQuery(update.getCallbackQuery()));
-        } else if (update.getMessage()
-                .hasText()) {
-            if ((update.getMessage()
-                    .getText()
-                    .startsWith("/"))) {
+            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData().split("/")[0]);
+            execute(callback.getCallbackQuery(update.getCallbackQuery()));
+        } else if (update.hasMessage()) {
+            if (update.getMessage().hasContact()) {
+                botState = BotState.ASK_DAY;
+                masterDataCache.setUsersCurrentBotState(update.getMessage().getChatId(), botState);
+            } else if ((update.getMessage().getText().startsWith("/"))) {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));
             }
+
             if (masterRegistration) {
-                botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
-                        .getFrom()
-                        .getId());
+                botState = masterDataCache.getUsersCurrentBotState(update.getMessage().getFrom().getId());
                 replyMessage = botStateContext.processInputMessage(botState, message);
                 execute(replyMessage);
             } else if (clientRegistration) {
-                clientBotState = clientDataCache.getClientBotState(update.getMessage()
-                        .getFrom()
-                        .getId());
+                clientBotState = clientDataCache.getClientBotState(update.getMessage().getFrom().getId());
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
                 execute(replyMessage);
             }
