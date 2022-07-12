@@ -44,9 +44,10 @@ public class HandleCheckRecordImpl implements Handle {
                         .toLowerCase(Locale.ROOT) + "\nМастер - " + master.get()
                         .getName() + " " + master.get()
                         .getSurname() + "\nВремя - " + recordByClientId.get()
-                        .getTime() + ":00" + "\nДень недели - " + recordByClientId.get().getDay() + "\nАдерс - "  + master.get()
+                        .getTime() + ":00" + "\nДень недели - " + recordByClientId.get()
+                        .getDay() + "\nАдерс - " + master.get()
                         .getAddress() + "\nНомер телефон мастера  " + master.get()
-                        .getPhoneNumber() )
+                        .getPhoneNumber())
                 .build();
     }
 
@@ -57,8 +58,6 @@ public class HandleCheckRecordImpl implements Handle {
     }
 
     public InlineKeyboardMarkup createInlineKeyboardWithCallback(CallbackQuery callbackQuery) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         Long userId = callbackQuery.getMessage()
                 .getChatId();
         Optional<RecordToMaster> recordToMaster = record.findByClientIdAndActivity(userId, CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage()
@@ -68,7 +67,8 @@ public class HandleCheckRecordImpl implements Handle {
         Optional<Master> masterByTelegramId = masterRepository.findMasterByTelegramId(masterId);
         String telegramNick = masterByTelegramId.get()
                 .getTelegramNick();
-        buttons.add(Arrays.asList(
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.addAll(List.of(
                 InlineKeyboardButton.builder()
                         .text("Отменить запись")
                         .callbackData("DECLINE_RECORD")
@@ -82,7 +82,14 @@ public class HandleCheckRecordImpl implements Handle {
                         .callbackData("CHANGE_DATE")
                         .build()
         ));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(InlineKeyboardButton.builder()
+                .text("Меню")
+                .callbackData("MENU")
+                .build());
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(row1)
+                .keyboardRow(row2)
+                .build();
     }
 }

@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,6 @@ public class HandleClientPhoneImpl implements Handle {
     }
 
     public ReplyKeyboardMarkup keyboardContact(Message message) {
-        clientDataCache.setClientBotState(message.getChatId(), ClientBotState.ASK_CLIENT_DATE);
         ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
         List<KeyboardRow> row = new ArrayList<>();
         KeyboardRow rowAddress = new KeyboardRow();
