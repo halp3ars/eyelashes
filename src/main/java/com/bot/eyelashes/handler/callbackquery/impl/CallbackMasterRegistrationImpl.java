@@ -6,10 +6,16 @@ import com.bot.eyelashes.handler.BotStateContext;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.repository.MasterRepository;
 import com.bot.eyelashes.service.Bot;
+import com.bot.eyelashes.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -18,23 +24,36 @@ public class CallbackMasterRegistrationImpl implements Callback {
     private final BotStateContext botStateContext;
     private final MasterDataCache masterDataCache;
     private final MasterRepository masterRepository;
+    private final MessageService messageService;
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         if (masterRepository.existsByTelegramId(callbackQuery.getMessage().getChatId())) {
-            return SendMessage.builder()
-                    .chatId(callbackQuery.getMessage()
-                            .getChatId()
-                            .toString())
-                    .text("Вы авторизированы")
-                    .build();
+            return messageService.getReplyMessageWithKeyboard(callbackQuery.getMessage().getChatId(),
+                    "Выберите действие",
+                    keyboardForAuthMaster());
         }
 
         BotState botState = BotState.ASK_NAME;
         Bot.masterRegistration = true;
         Bot.clientRegistration = false;
-        masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage().getChatId(), botState);
+        masterDataCache.setUsersCurrentBotState(callbackQuery.getMessage()
+                .getChatId(), botState);
 
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());
+    }
+
+    private InlineKeyboardMarkup keyboardForAuthMaster() {
+        List<List<InlineKeyboardButton>> buttonsAuthMaster = new ArrayList<>();
+        buttonsAuthMaster.add(List.of(
+                InlineKeyboardButton.builder()
+                        .text("Список клиентов")
+                        .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
+                        .build()
+        ));
+
+        return InlineKeyboardMarkup.builder()
+                .keyboard(buttonsAuthMaster)
+                .build();
     }
 }

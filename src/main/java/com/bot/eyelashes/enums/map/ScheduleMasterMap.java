@@ -17,4 +17,8 @@ public class ScheduleMasterMap {
     public Map getMap(){
         return SCHEDULE_MASTER_MAP;
     }
+
+    public String getDay(String keyDay) {
+        return SCHEDULE_MASTER_MAP.get(keyDay);
+    }
 }

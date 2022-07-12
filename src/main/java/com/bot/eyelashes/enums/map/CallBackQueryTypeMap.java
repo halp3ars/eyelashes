@@ -1,6 +1,7 @@
 package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
+import com.bot.eyelashes.handler.callbackquery.ListClientRecordToMasterCallback;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackInfoImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMenuImpl;
@@ -28,7 +29,8 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackMasterScheduleImpl") Callback callbackMasterScheduleImpl,
                                 @Qualifier("CallbackMasterTimeToImpl") Callback callbackMasterTimeToImpl,
                                 @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl,
-                                @Qualifier("MasterDayCallback") Callback callbackMasterDay
+                                @Qualifier("MasterDayCallback") Callback callbackMasterDay,
+                                @Qualifier("ListClientByDayCallback") Callback callbackListClientByDay
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
@@ -49,6 +51,8 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
         CALLBACK_MAP.put("REGISTERED",callbackMasterRegisteredImpl);
         CALLBACK_MAP.put("MASTER_DAY",callbackMasterDay);
+        CALLBACK_MAP.put("LIST_CLIENT_RECORD_TO_MASTER", new ListClientRecordToMasterCallback());
+        CALLBACK_MAP.put("DAY_CLIENT_RECORD_TO_MASTER", callbackListClientByDay);
     }
 
     public Callback getCallback(String keyCallback) {
