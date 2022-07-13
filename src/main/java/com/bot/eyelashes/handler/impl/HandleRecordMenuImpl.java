@@ -53,7 +53,7 @@ public class HandleRecordMenuImpl implements Handle {
                             .callbackData("RECORD")
                             .build(),
                     InlineKeyboardButton.builder()
-                            .text("Свзяаться")
+                            .text("Связаться")
                             .url("https://t.me/" + telegramNick)
                             .build()));
             inlineKeyboardMarkup.setKeyboard(buttons);

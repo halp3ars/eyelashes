@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.*;
 
 @RequiredArgsConstructor
-public class HandleCheckRecordImpl implements Handle {
+public class  HandleCheckRecordImpl implements Handle {
 
 
     private final MasterRepository masterRepository;
@@ -45,7 +45,7 @@ public class HandleCheckRecordImpl implements Handle {
                         .getName() + " " + master.get()
                         .getSurname() + "\nВремя - " + recordByClientId.get()
                         .getTime() + ":00" + "\nДень недели - " + recordByClientId.get()
-                        .getDay() + "\nАдерс - " + master.get()
+                        .getDay() + "\nАдрес - " + master.get()
                         .getAddress() + "\nНомер телефон мастера  " + master.get()
                         .getPhoneNumber())
                 .build();
@@ -71,7 +71,7 @@ public class HandleCheckRecordImpl implements Handle {
         row1.addAll(List.of(
                 InlineKeyboardButton.builder()
                         .text("Отменить запись")
-                        .callbackData("DECLINE_RECORD")
+                        .callbackData("DECLINE_RECORD/" + "ONE_RECORD")
                         .build(),
                 InlineKeyboardButton.builder()
                         .text("Свзяаться")
@@ -79,7 +79,7 @@ public class HandleCheckRecordImpl implements Handle {
                         .build(),
                 InlineKeyboardButton.builder()
                         .text("Перенести запись")
-                        .callbackData("CHANGE_DATE")
+                        .callbackData("CHANGE_DATE/" + "ONE_RECORD")
                         .build()
         ));
         List<InlineKeyboardButton> row2 = new ArrayList<>();

@@ -15,9 +15,14 @@ public class HandleClientImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
-        return null;
+        return SendMessage.builder()
+                .chatId(update.getMessage()
+                        .getChatId()
+                        .toString())
+                .replyMarkup(createInlineKeyboard())
+                .text("Выберите вид деятельности")
+                .build();
     }
-
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {

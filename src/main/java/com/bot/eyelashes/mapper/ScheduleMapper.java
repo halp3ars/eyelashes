@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ScheduleMapper {
 
-    @Mapping(source = "telegramId",target = "telegramId")
+    @Mapping(source = "saturday",target = "saturday")
     Schedule toEntity(ScheduleDto scheduleDto);
 
-    @Mapping(source = "telegramId",target = "telegramId")
+    @Mapping(source = "saturday",target = "saturday")
     ScheduleDto toDto(Schedule schedule);
 
 }

@@ -30,8 +30,6 @@ public class HandleClientTimeImpl implements Handle {
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
         TimeForClient timeForClient = new TimeForClient(recordToMasterRepository, scheduleRepository);
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row3 = new ArrayList<>();

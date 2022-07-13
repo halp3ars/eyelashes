@@ -19,16 +19,38 @@ public class HandleClientAllRecordsImpl implements Handle {
         return null;
     }
 
+    public InlineKeyboardMarkup getMenuButton() {
+        List<InlineKeyboardButton> firstRow = new ArrayList<>();
+        firstRow.add(
+                InlineKeyboardButton.builder()
+                        .text("Вернуться в меню")
+                        .callbackData("CLIENT")
+                        .build());
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(firstRow)
+                .build();
+    }
+
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(List.of(
+        List<InlineKeyboardButton> actionRecord = new ArrayList<>();
+        List<InlineKeyboardButton> back = new ArrayList<>();
+        back.add(
                 InlineKeyboardButton.builder()
                         .text("Вернуться в меню")
                         .callbackData("MENU")
+                        .build());
+        actionRecord.addAll(List.of(InlineKeyboardButton.builder()
+                        .callbackData("DECLINE_ALL_RECORD")
+                        .text("Отменить запись")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .callbackData("CHANGE_RECORD_ALL")
+                        .text("Перенести запись")
                         .build()));
         return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
+                .keyboardRow(actionRecord)
+                .keyboardRow(back)
                 .build();
     }
 
@@ -39,9 +61,11 @@ public class HandleClientAllRecordsImpl implements Handle {
                     .getActivity() +
                     "\nМастер - " + master.get(numberOfRecord)
                     .getName() + " " + master.get(numberOfRecord)
-                    .getName() +
+                    .getSurname() +
                     "\nВремя - " + records.get(numberOfRecord)
                     .getTime() + ":00" +
+                    "\nАдрес - " + master.get(numberOfRecord)
+                    .getAddress() +
                     "\nДень недели - " + records.get(numberOfRecord)
                     .getDay() +
                     "\nНомер телефон мастера " + master.get(numberOfRecord)

@@ -18,10 +18,23 @@ public class CallbackClientDeclineImpl implements Callback {
     @Transactional
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        record.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage().getChatId()));
+        if (callbackQuery.getData()
+                .split("/")[1].equals("ONE_RECORD")) {
+            deleteRecord(callbackQuery.getMessage()
+                    .getChatId(), CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage()
+                    .getChatId()));
+        } else {
+            deleteRecord(callbackQuery.getMessage().getChatId(),callbackQuery.getData().split("/")[1]);
+        }
         return SendMessage.builder()
                 .text("Вы успешно сняты с записи")
-                .chatId(callbackQuery.getMessage().getChatId().toString())
+                .chatId(callbackQuery.getMessage()
+                        .getChatId()
+                        .toString())
                 .build();
+    }
+
+    public void deleteRecord(Long chatId, String activity) {
+        record.deleteByClientIdAndActivity(chatId, activity);
     }
 }

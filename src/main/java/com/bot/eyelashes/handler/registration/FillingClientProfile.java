@@ -72,7 +72,7 @@ public class FillingClientProfile implements HandleRegistration {
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
             clientDto.setSurname(clientAnswer);
             clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
-            HandleClientPhoneImpl handleClientPhone = new HandleClientPhoneImpl(clientDataCache);
+            HandleClientPhoneImpl handleClientPhone = new HandleClientPhoneImpl();
             replyToClient = SendMessage.builder()
                     .text("Отправьте номер телефона")
                     .replyMarkup(handleClientPhone.keyboardContact(message))
@@ -115,7 +115,7 @@ public class FillingClientProfile implements HandleRegistration {
                     .isEmpty()) clientDataCache.setClientIntoDb(clientDto);
             clientDataCache.setClientRecord(recordToMasterDto);
             replyToClient = SendMessage.builder()
-                    .text("Вы записаны на " + recordToMasterDto.getDay() + " " + recordToMasterDto.getTime() + "\nНажмите какую-либо кнопку для продолжение")
+                    .text("Вы записаны на " + recordToMasterDto.getDay() + " " + recordToMasterDto.getTime() + ":00" + "\nНажмите какую-либо кнопку для продолжение")
                     .replyMarkup(createInlineMarkupLastMessage())
                     .chatId(chatId.toString())
                     .build();

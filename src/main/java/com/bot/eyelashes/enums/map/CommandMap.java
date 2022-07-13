@@ -2,6 +2,7 @@ package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
+import com.bot.eyelashes.handler.impl.HandleClientImpl;
 import com.bot.eyelashes.handler.impl.HandleInfoImpl;
 import com.bot.eyelashes.handler.impl.HandleMainMenuImpl;
 import com.bot.eyelashes.handler.impl.HandleStartImpl;
@@ -17,6 +18,7 @@ public class CommandMap {
         COMMAND_MAP.put("/info", new HandleInfoImpl());
         COMMAND_MAP.put("/start", new HandleStartImpl());
         COMMAND_MAP.put("/menu", new HandleMainMenuImpl());
+        COMMAND_MAP.put("/client", new HandleClientImpl());
     }
 
     public Handle getCommand(String keyCommand) {

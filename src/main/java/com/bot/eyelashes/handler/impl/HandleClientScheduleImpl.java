@@ -37,30 +37,41 @@ public class HandleClientScheduleImpl implements Handle {
         ScheduleForClient scheduleForClient = new ScheduleForClient(scheduleRepository, scheduleMapper);
         ScheduleDto scheduleDto = scheduleForClient.getMasterDays(HandleRecordMenuImpl.masterId);
         ScheduleClientMap scheduleClientMap = new ScheduleClientMap(scheduleDto);
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row1 = new ArrayList<>();
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
         List<String> trueDays = scheduleClientMap.getTrueDays();
-        for (int days = 0 ; days < trueDays.size(); days++) {
-            if (days % 2 == 0) {
+        trueDays.sort(Comparator.comparing(day -> List.of("Понедельник","Вторник","Среда", "Четверг","Пятница","Суббота","Воскресенье").indexOf(day)));
+        for (int days = 0; days < trueDays.size(); days++) {
+            if (days < 3) {
                 row1.add(InlineKeyboardButton.builder()
-                        .text(scheduleClientMap.getTrueDays()
-                                .get(days))
-                        .callbackData("DATE/" + scheduleClientMap.getTrueDays()
+                        .text(trueDays.get(days))
+                        .callbackData("DATE/" + trueDays
                                 .get(days))
                         .build());
             }
-            if (days % 2 != 0) {
+            if (days > 2 & days < 5 ) {
                 row2.add(InlineKeyboardButton.builder()
-                        .text(scheduleClientMap.getTrueDays()
+                        .text(trueDays.get(days))
+                        .callbackData("DATE/" + trueDays
                                 .get(days))
-                        .callbackData("DATE/" + scheduleClientMap.getTrueDays()
+                        .build());
+            }
+            if (days > 4 & days < 7) {
+                row3.add(InlineKeyboardButton.builder()
+                        .text(trueDays.get(days))
+                        .callbackData("DATE/" + trueDays
                                 .get(days))
                         .build());
             }
         }
+//        Collections.reverse(row1);
+//        Collections.reverse(row2);
+//        Collections.reverse(row3);
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(row1)
                 .keyboardRow(row2)
+                .keyboardRow(row3)
                 .build();
     }
 

@@ -15,10 +15,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class HandleClientPhoneImpl implements Handle {
 
-    private final ClientDataCache clientDataCache;
 
     @Override
     public SendMessage getMessage(Update update) {
