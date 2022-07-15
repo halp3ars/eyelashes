@@ -16,8 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 public class CallbackRecordMenuImpl implements Callback {
 
     private final MasterRepository masterRepository;
-    private final ClientDataCache clientDataCache;
-    private final ClientRepository clientRepository;
+
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {

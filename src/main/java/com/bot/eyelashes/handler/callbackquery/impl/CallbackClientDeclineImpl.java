@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service("CallbackDeclineImpl")
@@ -31,10 +35,18 @@ public class CallbackClientDeclineImpl implements Callback {
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
+                .replyMarkup(getInlineKeyboard())
                 .build();
     }
 
     public void deleteRecord(Long chatId, String activity) {
         record.deleteByClientIdAndActivity(chatId, activity);
     }
+
+    private InlineKeyboardMarkup getInlineKeyboard(){
+        List<InlineKeyboardButton> inlineKeyboardButtonList = new ArrayList<>();
+        inlineKeyboardButtonList.add(InlineKeyboardButton.builder().callbackData("MENU").text("Меню").build());
+        return InlineKeyboardMarkup.builder().keyboardRow(inlineKeyboardButtonList).build();
+    }
+
 }

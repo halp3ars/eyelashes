@@ -2,10 +2,7 @@ package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.impl.HandleClientImpl;
-import com.bot.eyelashes.handler.impl.HandleInfoImpl;
-import com.bot.eyelashes.handler.impl.HandleMainMenuImpl;
-import com.bot.eyelashes.handler.impl.HandleStartImpl;
+import com.bot.eyelashes.handler.impl.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashMap;

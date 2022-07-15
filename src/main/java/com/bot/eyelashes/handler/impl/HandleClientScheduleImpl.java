@@ -65,9 +65,6 @@ public class HandleClientScheduleImpl implements Handle {
                         .build());
             }
         }
-//        Collections.reverse(row1);
-//        Collections.reverse(row2);
-//        Collections.reverse(row3);
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(row1)
                 .keyboardRow(row2)

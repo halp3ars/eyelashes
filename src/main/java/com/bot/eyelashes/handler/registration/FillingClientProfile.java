@@ -5,9 +5,9 @@ import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackTypeOfActivityImpl;
 import com.bot.eyelashes.handler.impl.HandleClientPhoneImpl;
+import com.bot.eyelashes.handler.impl.HandleClientScheduleImpl;
 import com.bot.eyelashes.handler.impl.HandleClientTimeImpl;
 import com.bot.eyelashes.handler.impl.HandleRecordMenuImpl;
-import com.bot.eyelashes.handler.impl.HandleClientScheduleImpl;
 import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
@@ -16,7 +16,6 @@ import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
-import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -83,8 +82,10 @@ public class FillingClientProfile implements HandleRegistration {
             if (message.getContact() == null) {
                 clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
             } else {
-                log.info("master set phoneNumber = " + message.getContact().getPhoneNumber());
-                clientDto.setPhoneNumber(message.getContact().getPhoneNumber());
+                log.info("master set phoneNumber = " + message.getContact()
+                        .getPhoneNumber());
+                clientDto.setPhoneNumber(message.getContact()
+                        .getPhoneNumber());
                 clientDto.setTelegramId(chatId);
                 clientDto.setTelegramNick(message.getFrom()
                         .getUserName());
@@ -100,10 +101,10 @@ public class FillingClientProfile implements HandleRegistration {
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
-            HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository);
+            HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
             replyToClient = SendMessage.builder()
                     .text("Выберите время")
-                    .replyMarkup(handleClientTime.createInlineKeyboard())
+                    .replyMarkup(handleClientTime.createInlineKeyboard(message))
                     .chatId(chatId.toString())
                     .build();
         }
