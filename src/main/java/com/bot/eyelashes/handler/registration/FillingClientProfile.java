@@ -16,6 +16,7 @@ import com.bot.eyelashes.repository.RecordToMasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
+import com.bot.eyelashes.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -64,19 +65,27 @@ public class FillingClientProfile implements HandleRegistration {
             replyToClient = messageService.getReplyMessage(chatId, "Введите Имя");
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_SURNAME)) {
-            clientDto.setName(clientAnswer);
-            replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
-            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_PHONE);
+            if (Validation.isValidText(clientAnswer)) {
+                clientDto.setName(clientAnswer);
+                replyToClient = messageService.getReplyMessage(chatId, "Введите Фамилию");
+                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_PHONE);
+            } else {
+                replyToClient = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита");
+            }
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_PHONE)) {
-            clientDto.setSurname(clientAnswer);
-            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
-            HandleClientPhoneImpl handleClientPhone = new HandleClientPhoneImpl();
-            replyToClient = SendMessage.builder()
-                    .text("Отправьте номер телефона")
-                    .replyMarkup(handleClientPhone.keyboardContact(message))
-                    .chatId(chatId.toString())
-                    .build();
+            if (Validation.isValidText(clientAnswer)) {
+                clientDto.setSurname(clientAnswer);
+                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
+                HandleClientPhoneImpl handleClientPhone = new HandleClientPhoneImpl();
+                replyToClient = SendMessage.builder()
+                        .text("Отправьте номер телефона")
+                        .replyMarkup(handleClientPhone.keyboardContact(message))
+                        .chatId(chatId.toString())
+                        .build();
+            } else {
+                replyToClient = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита");
+            }
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
             if (message.getContact() == null) {
@@ -90,7 +99,6 @@ public class FillingClientProfile implements HandleRegistration {
                 clientDto.setTelegramNick(message.getFrom()
                         .getUserName());
                 recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
-                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
             }
             HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
             replyToClient = SendMessage.builder()
@@ -100,7 +108,6 @@ public class FillingClientProfile implements HandleRegistration {
                     .build();
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
-            clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
             HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
             replyToClient = SendMessage.builder()
                     .text("Выберите время")

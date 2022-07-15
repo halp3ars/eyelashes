@@ -8,7 +8,6 @@ import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
-import com.bot.eyelashes.validation.PhoneNumberValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -70,7 +69,6 @@ public class FillingMasterProfile implements HandleRegistration {
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
         }
         if (botState.equals(BotState.ASK_ACTIVITY)) {
-            if (PhoneNumberValidation.isValidPhone(usersAnswer)) {
                 masterDto.setPhone(usersAnswer);
                 masterDto.setTelegramId(chatId);
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DATE);
@@ -80,9 +78,6 @@ public class FillingMasterProfile implements HandleRegistration {
                         .replyMarkup(handleTypeOfActivity.createInlineKeyboard())
                         .chatId(chatId.toString())
                         .build();
-            } else
-                replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер телефона");
-
         }
         if(botState.equals(BotState.ASK_DATE)){
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
