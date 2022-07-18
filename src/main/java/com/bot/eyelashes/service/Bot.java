@@ -34,13 +34,12 @@ public class Bot extends TelegramLongPollingBot {
     private final BotStateContext botStateContext;
     public static boolean masterRegistration;
     public static boolean clientRegistration;
-
+    private final CommandMap commandMap;
 
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        CommandMap commandMap = new CommandMap();
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {

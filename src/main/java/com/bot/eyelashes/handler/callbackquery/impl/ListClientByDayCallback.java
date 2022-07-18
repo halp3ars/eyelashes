@@ -1,6 +1,7 @@
-package com.bot.eyelashes.handler.callbackquery;
+package com.bot.eyelashes.handler.callbackquery.impl;
 
 import com.bot.eyelashes.enums.map.ScheduleMasterMap;
+import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.model.entity.Client;
 import com.bot.eyelashes.model.entity.RecordToMaster;
 import com.bot.eyelashes.repository.ClientRepository;

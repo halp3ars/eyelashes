@@ -57,20 +57,20 @@ public class FillingMasterProfile implements HandleRegistration {
         BotState botState = masterDataCache.getUsersCurrentBotState(chatId);
         ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(inputMessage.getChatId());
         SendMessage replyToUser = null;
-        EditMessageReplyMarkup message = null;
-
 
         if (botState.equals(BotState.ASK_NAME)) {
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_SURNAME);
-            masterDto.setTelegramId(chatId);
             replyToUser = messageService.getReplyMessage(chatId, "Введите Ваше имя");
+            masterDto.setTelegramId(chatId);
+
         }
 
         if (botState.equals(BotState.ASK_SURNAME)) {
-            masterDto.setName(usersAnswer);
-            log.info("master set name = " + usersAnswer);
-            replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
+                masterDto.setName(usersAnswer);
+                log.info("master set name = " + usersAnswer);
+                replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
+
         }
 
         if (botState.equals(BotState.ASK_ACTIVITY)) {
@@ -102,6 +102,8 @@ public class FillingMasterProfile implements HandleRegistration {
             if (inputMessage.getContact() == null) {
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
             } else {
+                botState = BotState.ASK_DAY;
+                masterDataCache.setUsersCurrentBotState(chatId, botState);
                 log.info("master set phoneNumber = " + inputMessage.getContact()
                         .getPhoneNumber());
                 masterDto.setPhone(inputMessage.getContact()
