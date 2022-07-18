@@ -12,9 +12,11 @@ import com.bot.eyelashes.repository.MasterRepository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -60,12 +62,20 @@ public class MasterDataCache implements DataCache {
     }
 
 
+    @Transactional
     public void setMasterInDb(MasterDto masterDto) {
+        Optional<Master> masterByTelegramId = masterRepository.findMasterByTelegramId(masterDto.getTelegramId());
         Master master = masterMapper.toEntity(masterDto);
+        masterByTelegramId.ifPresent(value -> masterRepository.deleteByTelegramId(value.getTelegramId()));
         masterRepository.save(master);
+
     }
+    @Transactional
     public void setScheduleInDb(ScheduleDto scheduleDto) {
+        long telegramId = scheduleDto.getTelegramId();
+        Optional<Schedule> masterSchedule = scheduleRepository.findByTelegramId(telegramId);
         Schedule schedule = scheduleMapper.toEntity(scheduleDto);
+        masterSchedule.ifPresent(schedule1 -> scheduleRepository.deleteByTelegramId(telegramId));
         scheduleRepository.save(schedule);
     }
 }

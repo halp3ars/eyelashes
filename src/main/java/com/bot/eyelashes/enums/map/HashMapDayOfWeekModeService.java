@@ -1,4 +1,4 @@
-package com.bot.eyelashes.service;
+package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.enums.DayOfWeek;
 import org.springframework.stereotype.Service;

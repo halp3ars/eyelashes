@@ -1,7 +1,8 @@
 package com.bot.eyelashes.enums.map;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.callbackquery.ListClientRecordToMasterCallback;
+import com.bot.eyelashes.handler.callbackquery.impl.ReplaceDateRecordCallback;
+import com.bot.eyelashes.handler.callbackquery.impl.ListClientRecordToMasterCallback;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackClientImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackInfoImpl;
 import com.bot.eyelashes.handler.callbackquery.impl.CallbackMenuImpl;
@@ -30,7 +31,13 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackMasterTimeToImpl") Callback callbackMasterTimeToImpl,
                                 @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl,
                                 @Qualifier("MasterDayCallback") Callback callbackMasterDay,
-                                @Qualifier("ListClientByDayCallback") Callback callbackListClientByDay
+                                @Qualifier("ListClientByDayCallback") Callback callbackListClientByDay,
+                                @Qualifier("InfoClientForMasterCallback") Callback callbackInfoClientForMaster,
+                                @Qualifier("ReplaceTimeRecordCallback") Callback callbackReplaceTimeRecord,
+                                @Qualifier("FinalReplaceRecordToMasterCallback") Callback finalReplaceRecord,
+                                @Qualifier("ProfileMasterCallback") Callback callbackProfileMaster,
+                                @Qualifier("UpdateProfileMasterCallback") Callback callbackUpdateProfileMaster,
+                                @Qualifier("DayForCheckClientRecordToMaster") Callback callbackCheckDayRecordToMaster
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
@@ -51,8 +58,14 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
         CALLBACK_MAP.put("REGISTERED",callbackMasterRegisteredImpl);
         CALLBACK_MAP.put("MASTER_DAY",callbackMasterDay);
-        CALLBACK_MAP.put("LIST_CLIENT_RECORD_TO_MASTER", new ListClientRecordToMasterCallback());
+        CALLBACK_MAP.put("LIST_CLIENT_RECORD_TO_MASTER", callbackCheckDayRecordToMaster);
         CALLBACK_MAP.put("DAY_CLIENT_RECORD_TO_MASTER", callbackListClientByDay);
+        CALLBACK_MAP.put("RECORDED_CLIENT", callbackInfoClientForMaster);
+        CALLBACK_MAP.put("REPLACE_RECORD", new ReplaceDateRecordCallback());
+        CALLBACK_MAP.put("REPLACE_DAY_RECORD_TO_MASTER", callbackReplaceTimeRecord);
+        CALLBACK_MAP.put("REPLACE_TIME_RECORD_TO_MASTER", finalReplaceRecord);
+        CALLBACK_MAP.put("MASTER_PROFILE", callbackProfileMaster);
+        CALLBACK_MAP.put("REPLACE_PROFILE", callbackUpdateProfileMaster);
     }
 
     public Callback getCallback(String keyCallback) {

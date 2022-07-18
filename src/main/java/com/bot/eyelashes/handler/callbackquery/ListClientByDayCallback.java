@@ -33,30 +33,36 @@ public class ListClientByDayCallback implements Callback {
         long chatId = callbackQuery.getMessage().getChatId();
         ScheduleMasterMap scheduleMasterMap = new ScheduleMasterMap();
         String day = scheduleMasterMap.getDay(callbackQuery.getData().split("/")[1]);
+
+        List<RecordToMaster> recordedClient = recordToMasterRepository.findByDayAndMasterId(day, chatId);
+        InlineKeyboardMarkup keyboard = generateKeyboardClientByDay(recordedClient);
+        if (recordedClient.size() == 0) {
+            return messageService.getReplyMessageWithKeyboard(chatId, "Записаных клиентов на " + day +
+                            " не найдено.\nВернитесь на главное меню", keyboardForEmptyListClient());
+        }
+
+        return messageService.getReplyMessageWithKeyboard(chatId, "Клиенты записанные на " + day, keyboard);
+    }
+
+    private InlineKeyboardMarkup generateKeyboardClientByDay(List<RecordToMaster>  recordedClient) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-
-        Optional<RecordToMaster> recordedClient = recordToMasterRepository.findByDayAndMasterId(day, chatId);
-
-        if (recordedClient.isPresent()) {
-            Optional<Client> client = clientRepository.findByTelegramId(recordedClient.get().getClientId());
-            if (recordedClient.get().getClientId().equals(client.get().getTelegramId())) {
+        for (RecordToMaster record : recordedClient) {
+            Optional<Client> client = clientRepository.findByTelegramId(record.getClientId());
+            if (record.getClientId().equals(client.get().getTelegramId())) {
                 buttons.add(List.of(
                         InlineKeyboardButton.builder()
-                                .text(client.get().getName() + " " + client.get().getSurname() +
-                                        " записан на "+ recordedClient.get().getTime() + " : 00")
-                                .callbackData("RECORDED_CLIENT/" + client.get().getId())
+                                .text(client.get()
+                                        .getName() + " " + client.get()
+                                        .getSurname() + " записан на "
+                                        + record.getTime() + " : 00")
+                                .callbackData("RECORDED_CLIENT/" + client.get()
+                                        .getTelegramId())
                                 .build()
                 ));
-                keyboard.setKeyboard(buttons);
-
-                return messageService.getReplyMessageWithKeyboard(chatId, "Клиенты записанные на " + day, keyboard);
             }
         }
 
-        return messageService.getReplyMessageWithKeyboard(chatId, "Записаных клиентов на " + day +
-                " не найдено.\nПожалуйста выберите другой день недели или вернитесь на главное меню",
-                keyboardForEmptyListClient());
+        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
     }
 
     private InlineKeyboardMarkup keyboardForEmptyListClient() {

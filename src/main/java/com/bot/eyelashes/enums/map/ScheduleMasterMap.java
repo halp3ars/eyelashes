@@ -12,6 +12,8 @@ public class ScheduleMasterMap {
         SCHEDULE_MASTER_MAP.put("WEDNESDAY","Среда");
         SCHEDULE_MASTER_MAP.put("THURSDAY","Четверг");
         SCHEDULE_MASTER_MAP.put("FRIDAY","Пятница");
+        SCHEDULE_MASTER_MAP.put("SATURDAY","Суббота");
+        SCHEDULE_MASTER_MAP.put("SUNDAY","Воскресенье");
     }
 
     public Map getMap(){
@@ -20,5 +22,15 @@ public class ScheduleMasterMap {
 
     public String getDay(String keyDay) {
         return SCHEDULE_MASTER_MAP.get(keyDay);
+    }
+
+    public String getKey(String dayValue) {
+        for (var entry : SCHEDULE_MASTER_MAP.entrySet()) {
+            if (dayValue.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+
+        throw new NullPointerException("Key not search");
     }
 }

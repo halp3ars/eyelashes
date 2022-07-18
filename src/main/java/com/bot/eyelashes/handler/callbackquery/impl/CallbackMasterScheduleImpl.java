@@ -28,7 +28,6 @@ public class CallbackMasterScheduleImpl implements Callback {
         log.info("Master set activity = " + masterDto.getActivity());
         BotState botState = BotState.ASK_ADDRESS;
         masterDataCache.setUsersCurrentBotState(chatId, botState);
-
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());
     }
 

@@ -26,6 +26,7 @@ public class CallbackMasterRegistrationImpl implements Callback {
     private final MasterRepository masterRepository;
     private final MessageService messageService;
 
+
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         if (masterRepository.existsByTelegramId(callbackQuery.getMessage().getChatId())) {
@@ -47,7 +48,11 @@ public class CallbackMasterRegistrationImpl implements Callback {
         List<List<InlineKeyboardButton>> buttonsAuthMaster = new ArrayList<>();
         buttonsAuthMaster.add(List.of(
                 InlineKeyboardButton.builder()
-                        .text("Список клиентов")
+                        .text("Профиль")
+                        .callbackData("MASTER_PROFILE")
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("Записи")
                         .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
                         .build()
         ));

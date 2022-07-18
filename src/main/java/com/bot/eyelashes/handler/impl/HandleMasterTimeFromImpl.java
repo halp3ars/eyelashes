@@ -1,6 +1,7 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -9,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class HandleMasterTimeFromImpl implements Handle {
     @Override
     public SendMessage getMessage(Update update) {
@@ -46,9 +48,5 @@ public class HandleMasterTimeFromImpl implements Handle {
                 .keyboardRow(rowSecond)
                 .keyboardRow(rowThird)
                 .build();
-    }
-
-    private String getDayButton(String saved, String current) {
-        return saved.equals(current) ? current + "✅" : current;
     }
 }
