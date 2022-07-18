@@ -18,8 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
@@ -35,6 +40,7 @@ public class Bot extends TelegramLongPollingBot {
     private final BotStateContext botStateContext;
     public static boolean masterRegistration;
     public static boolean clientRegistration;
+    public static HashMap<Long, Integer> messageId = new HashMap<>();
 
 
     @SneakyThrows
@@ -49,6 +55,19 @@ public class Bot extends TelegramLongPollingBot {
                     .getData()
                     .split("/")[0]);
             execute(callback.getCallbackQuery(update.getCallbackQuery()));
+            if (!messageId.isEmpty()) {
+                execute(DeleteMessage.builder()
+                        .messageId(messageId.get(update.getCallbackQuery()
+                                .getMessage()
+                                .getChatId()))
+                        .chatId(update.getCallbackQuery()
+                                .getMessage()
+                                .getChatId()
+                                .toString())
+                        .build());
+                messageId.clear();
+            }
+
         } else if (update.getMessage()
                 .hasText()) {
             if ((update.getMessage()
@@ -71,6 +90,7 @@ public class Bot extends TelegramLongPollingBot {
                 execute(replyMessage);
             }
         }
+
     }
 
 

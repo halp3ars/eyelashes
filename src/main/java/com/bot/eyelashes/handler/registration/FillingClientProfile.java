@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -108,14 +110,16 @@ public class FillingClientProfile implements HandleRegistration {
                     .build();
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
+            Bot.messageId.put(chatId, message.getMessageId());
             HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
             replyToClient = SendMessage.builder()
-                    .text("Выберите время")
+                    .text("День - " + recordToMasterDto.getDay() + "\n" + "Выберите время")
                     .replyMarkup(handleClientTime.createInlineKeyboard(message))
                     .chatId(chatId.toString())
                     .build();
         }
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
+            Bot.messageId.put(chatId, message.getMessageId());
             recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setClientId(chatId);

@@ -41,7 +41,8 @@ public class HandleClientScheduleImpl implements Handle {
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row3 = new ArrayList<>();
         List<String> trueDays = scheduleClientMap.getTrueDays();
-        trueDays.sort(Comparator.comparing(day -> List.of("Понедельник","Вторник","Среда", "Четверг","Пятница","Суббота","Воскресенье").indexOf(day)));
+        trueDays.sort(Comparator.comparing(day -> List.of("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье")
+                .indexOf(day)));
         for (int days = 0; days < trueDays.size(); days++) {
             if (days < 3) {
                 row1.add(InlineKeyboardButton.builder()
@@ -50,7 +51,7 @@ public class HandleClientScheduleImpl implements Handle {
                                 .get(days))
                         .build());
             }
-            if (days > 2 & days < 5 ) {
+            if (days > 2 & days < 5) {
                 row2.add(InlineKeyboardButton.builder()
                         .text(trueDays.get(days))
                         .callbackData("DATE/" + trueDays
