@@ -102,6 +102,7 @@ public class FillingClientProfile implements HandleRegistration {
                         .getUserName());
                 recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
             }
+            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
             HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
             replyToClient = SendMessage.builder()
                     .text("Выберите день на неделе")
@@ -111,6 +112,7 @@ public class FillingClientProfile implements HandleRegistration {
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             Bot.messageId.put(chatId, message.getMessageId());
+            clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
             HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
             replyToClient = SendMessage.builder()
                     .text("День - " + recordToMasterDto.getDay() + "\n" + "Выберите время")

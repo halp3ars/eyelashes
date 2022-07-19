@@ -26,9 +26,14 @@ public class CallbackClientDateImpl implements Callback {
         RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(chatId);
         recordToMasterDto.setDay(callbackQuery.getData()
                 .split("/")[1]);
-        ClientBotState clientBotState = ClientBotState.ASK_CLIENT_TIME;
+        ClientBotState clientBotState = clientDataCache.getClientBotState(callbackQuery.getMessage()
+                .getChatId());
         clientDataCache.setClientBotState(chatId, clientBotState);
         clientDataCache.saveRecordData(chatId, recordToMasterDto);
-        return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
+        if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
+            return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
+        } else {
+            return clientBotStateContext.processInputClientMessage(ClientBotState.NONE, callbackQuery.getMessage());
+        }
     }
 }

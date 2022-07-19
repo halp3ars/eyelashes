@@ -55,19 +55,6 @@ public class Bot extends TelegramLongPollingBot {
                     .getData()
                     .split("/")[0]);
             execute(callback.getCallbackQuery(update.getCallbackQuery()));
-            if (!messageId.isEmpty()) {
-                execute(DeleteMessage.builder()
-                        .messageId(messageId.get(update.getCallbackQuery()
-                                .getMessage()
-                                .getChatId()))
-                        .chatId(update.getCallbackQuery()
-                                .getMessage()
-                                .getChatId()
-                                .toString())
-                        .build());
-                messageId.clear();
-            }
-
         } else if (update.getMessage()
                 .hasText()) {
             if ((update.getMessage()
