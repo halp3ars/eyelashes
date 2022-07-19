@@ -90,28 +90,33 @@ public class FillingClientProfile implements HandleRegistration {
             }
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_DATE)) {
-            if (message.getContact() == null) {
+            if (message.getContact() == null & clientRepository.findByTelegramId(chatId)
+                    .isEmpty()) {
                 clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_DATE);
+                replyToClient = SendMessage.builder()
+                        .text("Надо отправить с помощью кнопки")
+                        .chatId(chatId.toString())
+                        .build();
             } else {
-                log.info("master set phoneNumber = " + message.getContact()
-                        .getPhoneNumber());
-                clientDto.setPhoneNumber(message.getContact()
-                        .getPhoneNumber());
-                clientDto.setTelegramId(chatId);
-                clientDto.setTelegramNick(message.getFrom()
-                        .getUserName());
-                recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
+                if (clientRepository.findByTelegramId(chatId)
+                        .isEmpty()) {
+                    clientDto.setPhoneNumber(message.getContact()
+                            .getPhoneNumber());
+                    clientDto.setTelegramId(chatId);
+                    clientDto.setTelegramNick(message.getFrom()
+                            .getUserName());
+                    recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
+                }
+                clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
+                HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
+                replyToClient = SendMessage.builder()
+                        .text("Выберите день на неделе")
+                        .replyMarkup(handleScheduleClient.createInlineKeyboard())
+                        .chatId(chatId.toString())
+                        .build();
             }
-            clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
-            HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
-            replyToClient = SendMessage.builder()
-                    .text("Выберите день на неделе")
-                    .replyMarkup(handleScheduleClient.createInlineKeyboard())
-                    .chatId(chatId.toString())
-                    .build();
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
-            Bot.messageId.put(chatId, message.getMessageId());
             clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
             HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
             replyToClient = SendMessage.builder()
@@ -121,7 +126,6 @@ public class FillingClientProfile implements HandleRegistration {
                     .build();
         }
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
-            Bot.messageId.put(chatId, message.getMessageId());
             recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
             recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setClientId(chatId);

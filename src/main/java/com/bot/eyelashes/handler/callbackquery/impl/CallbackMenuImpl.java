@@ -15,7 +15,7 @@ public class CallbackMenuImpl implements Callback {
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .text("Меню")
+                .text("Кем вы являетесь ?")
                 .build();
     }
 }
