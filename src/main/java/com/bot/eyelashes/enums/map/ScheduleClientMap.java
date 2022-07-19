@@ -21,6 +21,8 @@ public class ScheduleClientMap {
         SCHEDULE_MAP.put("Среда", scheduleDto.isWednesday());
         SCHEDULE_MAP.put("Четверг", scheduleDto.isThursday());
         SCHEDULE_MAP.put("Пятница", scheduleDto.isFriday());
+        SCHEDULE_MAP.put("Суббота", scheduleDto.isSaturday());
+        SCHEDULE_MAP.put("Воскресенье", scheduleDto.isSunday());
     }
 
     public List<String> getTrueDays() {

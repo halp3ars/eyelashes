@@ -47,15 +47,13 @@ public class HandleRecordMenuImpl implements Handle {
         masterId = masterRepository.findById(id)
                 .get()
                 .getTelegramId();
-
-
             buttons.add(Arrays.asList(
                     InlineKeyboardButton.builder()
                             .text("Записаться")
                             .callbackData("RECORD")
                             .build(),
                     InlineKeyboardButton.builder()
-                            .text("Свзяаться")
+                            .text("Связаться")
                             .url("https://t.me/" + telegramNick)
                             .build()));
             inlineKeyboardMarkup.setKeyboard(buttons);

@@ -10,6 +10,8 @@ public class ScheduleDto {
     private boolean wednesday;
     private boolean thursday;
     private boolean friday;
+    private boolean sunday;
+    private boolean saturday;
     private Long telegramId;
     private int timeFrom;
     private int timeTo;

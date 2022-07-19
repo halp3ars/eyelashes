@@ -15,17 +15,20 @@ public class HandleClientImpl implements Handle {
 
     @Override
     public SendMessage getMessage(Update update) {
-        return null;
+        return SendMessage.builder()
+                .chatId(update.getMessage()
+                        .getChatId()
+                        .toString())
+                .replyMarkup(createInlineKeyboard())
+                .text("Выберите вид деятельности")
+                .build();
     }
-
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         TypeOfActivity typeOfActivity = new TypeOfActivity();
-        buttons.add(Arrays.asList(
-                InlineKeyboardButton.builder()
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.addAll(List.of(InlineKeyboardButton.builder()
                         .text(typeOfActivity.getCommand("EYEBROWS"))
                         .callbackData("EYEBROWS")
                         .build(),
@@ -37,7 +40,14 @@ public class HandleClientImpl implements Handle {
                         .text(typeOfActivity.getCommand("NAILS"))
                         .callbackData("NAILS")
                         .build()));
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(InlineKeyboardButton.builder()
+                .text("Мои записи")
+                .callbackData("ALL_RECORDS")
+                .build());
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(row1)
+                .keyboardRow(row2)
+                .build();
     }
 }

@@ -24,7 +24,8 @@ public class CallbackMasterRegistrationImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        if (masterRepository.existsByTelegramId(callbackQuery.getMessage().getChatId())) {
+        if (masterRepository.existsByTelegramId(callbackQuery.getMessage()
+                .getChatId())) {
             return SendMessage.builder()
                     .chatId(callbackQuery.getMessage()
                             .getChatId()
@@ -32,7 +33,6 @@ public class CallbackMasterRegistrationImpl implements Callback {
                     .text("Вы авторизированы")
                     .build();
         }
-
         BotState botState = BotState.ASK_NAME;
         Bot.masterRegistration = true;
         Bot.clientRegistration = false;
