@@ -13,6 +13,6 @@ public class ScheduleDto {
     private boolean sunday;
     private boolean saturday;
     private Long telegramId;
-    private int timeFrom;
-    private int timeTo;
+    private Integer timeFrom;
+    private Integer timeTo;
 }

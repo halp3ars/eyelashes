@@ -22,6 +22,7 @@ public class HandleClientAllRecordsImpl implements Handle {
     public SendMessage getMessage(Update update) {
         return null;
     }
+
     public InlineKeyboardMarkup getMenuButton() {
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         firstRow.add(

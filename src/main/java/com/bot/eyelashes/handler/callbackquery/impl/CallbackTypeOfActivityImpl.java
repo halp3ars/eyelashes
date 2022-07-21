@@ -39,18 +39,6 @@ public class CallbackTypeOfActivityImpl implements Callback {
         if (recordToMaster.isPresent()) {
             HandleCheckRecordImpl handleCheckRecord = new HandleCheckRecordImpl(masterRepository, recordToMasterRepository);
             return handleCheckRecord.getMessageWithCallback(callbackQuery);
-        } else if (handleTypeOfActivity.createInlineKeyboardWithCallback(callbackQuery)
-                .getKeyboard()
-                .isEmpty()) {
-            List<InlineKeyboardButton> buttons = new ArrayList<>();
-            buttons.add(InlineKeyboardButton.builder().text("Назад").callbackData("CLIENT").build());
-            return SendMessage.builder()
-                    .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(buttons).build())
-                    .chatId(callbackQuery.getMessage()
-                            .getChatId()
-                            .toString())
-                    .text("Мастера по данной категории не представлены")
-                    .build();
         } else {
             return SendMessage.builder()
                     .replyMarkup(handleTypeOfActivity.createInlineKeyboardWithCallback(callbackQuery))

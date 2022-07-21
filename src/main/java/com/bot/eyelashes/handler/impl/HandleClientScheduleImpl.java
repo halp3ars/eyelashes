@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.webapp.WebAppData;
+import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +29,8 @@ public class HandleClientScheduleImpl implements Handle {
 
     private final ScheduleRepository scheduleRepository;
 
+    private final List<String> DAYS = List.of("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье");
+
     @Override
     public SendMessage getMessage(Update update) {
         return null;
@@ -41,8 +45,7 @@ public class HandleClientScheduleImpl implements Handle {
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row3 = new ArrayList<>();
         List<String> trueDays = scheduleClientMap.getTrueDays();
-        trueDays.sort(Comparator.comparing(day -> List.of("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье")
-                .indexOf(day)));
+        trueDays.sort(Comparator.comparing(DAYS::indexOf));
         for (int days = 0; days < trueDays.size(); days++) {
             if (days < 3) {
                 row1.add(InlineKeyboardButton.builder()

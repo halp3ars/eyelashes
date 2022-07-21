@@ -11,7 +11,7 @@ public interface ScheduleMapper {
     @Mapping(source = "saturday",target = "saturday")
     Schedule toEntity(ScheduleDto scheduleDto);
 
-    @Mapping(source = "saturday",target = "saturday")
+    @Mapping(source = "timeFrom",target = "timeFrom")
     ScheduleDto toDto(Schedule schedule);
 
 }

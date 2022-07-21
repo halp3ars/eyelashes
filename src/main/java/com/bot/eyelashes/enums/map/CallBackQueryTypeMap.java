@@ -29,11 +29,13 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("CallbackMasterRegisteredImpl") Callback callbackMasterRegisteredImpl,
                                 @Qualifier("CallbackClientAllRecordsImpl") Callback callbackClientAllRecordsImpl,
                                 @Qualifier("CallbackClientAllDeclineImpl") Callback callbackClientAllDeclineImpl,
-                                @Qualifier("CallbackClientAllChangeDateImpl") Callback callbackClientAllChangeDateImpl
+                                @Qualifier("CallbackClientAllChangeDateImpl") Callback callbackClientAllChangeDateImpl,
+                                @Qualifier("CallbackDeclineAllRecordsImpl") Callback callbackDeclineAllRecordsImpl,
+                                @Qualifier("CallbackClientImpl") Callback callbackClientImpl
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
-        CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
+        CALLBACK_MAP.put("CLIENT", callbackClientImpl);
         CALLBACK_MAP.put("NAILS", callbackActivity);
         CALLBACK_MAP.put("EYEBROWS", callbackActivity);
         CALLBACK_MAP.put("EYELASHES", callbackActivity);
@@ -55,6 +57,7 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("ALL_RECORDS", callbackClientAllRecordsImpl);
         CALLBACK_MAP.put("DECLINE_ALL_RECORD", callbackClientAllDeclineImpl);
         CALLBACK_MAP.put("CHANGE_RECORD_ALL", callbackClientAllChangeDateImpl);
+        CALLBACK_MAP.put("DECLINE_ALL_RECORDS", callbackDeclineAllRecordsImpl);
     }
 
     public Callback getCallback(String keyCallback) {
