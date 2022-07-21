@@ -1,29 +1,28 @@
 package com.bot.eyelashes.handler.callbackquery.impl;
 
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.handler.impl.HandleClientImpl;
-import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.handler.impl.HandleClientAllMenuDeclineImpl;
+import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
-
 @RequiredArgsConstructor
-@Service("CallbackClientImpl")
-public class CallbackClientImpl implements Callback {
+@Service("CallbackClientAllDeclineImpl")
+public class CallbackClientMenuAllDeclineImpl implements Callback {
 
-    private final MasterRepository masterRepository;
+    private final RecordToMasterRepository recordToMasterRepository;
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        HandleClientImpl handleClient = new HandleClientImpl(masterRepository);
+        HandleClientAllMenuDeclineImpl handleClientAllDecline = new HandleClientAllMenuDeclineImpl(recordToMasterRepository);
         return SendMessage.builder()
+                .text("Выберите какую запись вы хотите отменить")
                 .chatId(callbackQuery.getMessage()
                         .getChatId()
                         .toString())
-                .replyMarkup(handleClient.createInlineKeyboard(callbackQuery))
-                .text("Выберите вид деятельности")
+                .replyMarkup(handleClientAllDecline.createInlineKeyboard(callbackQuery))
                 .build();
     }
 }

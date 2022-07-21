@@ -23,16 +23,27 @@ public class CallbackChangeDateImpl implements Callback {
     private final ClientBotStateContext clientBotStateContext;
     private final RecordToMasterRepository recordToMasterRepository ;
 
-    @Override
     @Transactional
+    @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        recordToMasterRepository.deleteByClientIdAndActivity(callbackQuery.getMessage().getChatId(),CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage().getChatId()));
+        if (callbackQuery.getData()
+                .split("/")[1].equals("ONE_RECORD")) {
+            deleteRecord(callbackQuery.getMessage()
+                    .getChatId(), CallbackTypeOfActivityImpl.activity.get(callbackQuery.getMessage()
+                    .getChatId()));
+        } else {
+            deleteRecord(callbackQuery.getMessage().getChatId(),callbackQuery.getData().split("/")[1]);
+        }
         Bot.clientRegistration = true;
         Bot.masterRegistration = false;
         ClientBotState clientBotState = ClientBotState.ASK_CLIENT_DATE;
         clientDataCache.setClientBotState(callbackQuery.getMessage()
                 .getChatId(), clientBotState);
         return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
+    }
+
+    public void deleteRecord(Long chatId, String activity) {
+        recordToMasterRepository.deleteByClientIdAndActivity(chatId, activity);
     }
 
 }

@@ -24,11 +24,17 @@ public class CallbackClientTimeImpl implements Callback {
                 .getChatId();
         RecordToMasterDto recordToMasterDto = clientDataCache.getRecordData(chatId);
         recordToMasterDto.setTime(callbackQuery.getData()
-                   .split("/")[1]);
-        ClientBotState clientBotState = ClientBotState.PROFILE_CLIENT_FIELD;
+                .split("/")[1]);
+        ClientBotState clientBotState = clientDataCache.getClientBotState(callbackQuery.getMessage()
+                .getChatId());
         clientDataCache.setClientBotState(callbackQuery.getMessage()
                 .getChatId(), clientBotState);
         clientDataCache.saveRecordData(chatId, recordToMasterDto);
-        return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
+        if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
+            return clientBotStateContext.processInputClientMessage(clientBotState, callbackQuery.getMessage());
+        }else {
+            return clientBotStateContext.processInputClientMessage(ClientBotState.NONE, callbackQuery.getMessage());
+        }
+
     }
 }

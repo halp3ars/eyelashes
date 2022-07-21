@@ -20,7 +20,8 @@ public class HandleMainMenuImpl implements Handle {
         messageAutoDeleteTimerChanged.setMessageAutoDeleteTime(0);
         return SendMessage.builder()
                 .replyMarkup(createInlineKeyboard())
-                .chatId(update.getMessage().getChatId()
+                .chatId(update.getMessage()
+                        .getChatId()
                         .toString())
                 .text("Кто вы ?")
                 .build();

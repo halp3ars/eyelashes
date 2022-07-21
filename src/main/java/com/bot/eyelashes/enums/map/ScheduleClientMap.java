@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleClientMap {
 
-    private static final Map<String, Boolean> SCHEDULE_MAP = new ConcurrentHashMap<>();
+    private final Map<String, Boolean> SCHEDULE_MAP = new ConcurrentHashMap<>();
 
     public ScheduleClientMap(ScheduleDto scheduleDto) {
         SCHEDULE_MAP.put("Понедельник", scheduleDto.isMonday());
@@ -21,6 +21,8 @@ public class ScheduleClientMap {
         SCHEDULE_MAP.put("Среда", scheduleDto.isWednesday());
         SCHEDULE_MAP.put("Четверг", scheduleDto.isThursday());
         SCHEDULE_MAP.put("Пятница", scheduleDto.isFriday());
+        SCHEDULE_MAP.put("Суббота", scheduleDto.isSaturday());
+        SCHEDULE_MAP.put("Воскресенье", scheduleDto.isSunday());
     }
 
     public List<String> getTrueDays() {
