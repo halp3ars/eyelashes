@@ -16,8 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.*;
 
 @RequiredArgsConstructor
-public class  HandleCheckRecordImpl implements Handle {
-
+public class HandleCheckRecordImpl implements Handle {
 
     private final MasterRepository masterRepository;
     private final RecordToMasterRepository record;

@@ -1,7 +1,6 @@
 package com.bot.eyelashes.handler.impl;
 
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class HandleClientAllDeclineImpl implements Handle {
+public class HandleClientAllMenuDeclineImpl implements Handle {
 
 
     private final RecordToMasterRepository record;
@@ -35,17 +34,23 @@ public class HandleClientAllDeclineImpl implements Handle {
                 .getChatId();
         List<InlineKeyboardButton> recordRow = new ArrayList<>();
         List<InlineKeyboardButton> backRow = new ArrayList<>();
+        List<InlineKeyboardButton> middleRow = new ArrayList<>();
         record.findAllByClientId(chatId)
                 .forEach(record -> recordRow.add(InlineKeyboardButton.builder()
                         .text(record.getActivity() + " | " + record.getDay())
                         .callbackData("DECLINE_RECORD/" + record.getActivity())
                         .build()));
+        middleRow.add(InlineKeyboardButton.builder()
+                .callbackData("DECLINE_ALL_RECORDS")
+                .text("Удалить все записи")
+                .build());
         backRow.add(InlineKeyboardButton.builder()
                 .callbackData("ALL_RECORDS")
                 .text("Назад")
                 .build());
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(recordRow)
+                .keyboardRow(middleRow)
                 .keyboardRow(backRow)
                 .build();
     }
