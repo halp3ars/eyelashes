@@ -30,6 +30,7 @@ public class CallbackMasterRegistrationImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         if (masterRepository.existsByTelegramId(callbackQuery.getMessage().getChatId())) {
+
             return messageService.getReplyMessageWithKeyboard(callbackQuery.getMessage().getChatId(),
                     "Выберите действие",
                     keyboardForAuthMaster());
@@ -45,20 +46,30 @@ public class CallbackMasterRegistrationImpl implements Callback {
     }
 
     private InlineKeyboardMarkup keyboardForAuthMaster() {
-        List<List<InlineKeyboardButton>> buttonsAuthMaster = new ArrayList<>();
-        buttonsAuthMaster.add(List.of(
+        List<InlineKeyboardButton> rowMain = new ArrayList<>();
+        List<InlineKeyboardButton> rowSecond = new ArrayList<>();
+        rowMain.add(
                 InlineKeyboardButton.builder()
                         .text("Профиль")
                         .callbackData("MASTER_PROFILE")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text("Записи")
-                        .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
                         .build()
-        ));
+        );
+        rowMain.add(
+                InlineKeyboardButton.builder()
+                .text("Записи")
+                .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
+                .build()
+        );
 
+//        rowSecond.add(
+//                InlineKeyboardButton.builder()
+//                        .text("Удалить профиль")
+//                        .callbackData("ANSWER_DELETE_MASTER")
+//                        .build()
+//        );
         return InlineKeyboardMarkup.builder()
-                .keyboard(buttonsAuthMaster)
+                .keyboardRow(rowMain)
+                .keyboardRow(rowSecond)
                 .build();
     }
 }

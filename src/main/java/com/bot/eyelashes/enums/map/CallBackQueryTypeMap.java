@@ -37,7 +37,9 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("FinalReplaceRecordToMasterCallback") Callback finalReplaceRecord,
                                 @Qualifier("ProfileMasterCallback") Callback callbackProfileMaster,
                                 @Qualifier("UpdateProfileMasterCallback") Callback callbackUpdateProfileMaster,
-                                @Qualifier("DayForCheckClientRecordToMaster") Callback callbackCheckDayRecordToMaster
+                                @Qualifier("DayForCheckClientRecordToMaster") Callback callbackCheckDayRecordToMaster,
+                                @Qualifier("AnswerDeleteProfileMasterCallbackImpl") Callback callbackAnswerDeleteProfile,
+                                @Qualifier("DeleteProfileMasterCallbackImpl") Callback callbackDeleteProfile
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
@@ -66,6 +68,8 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("REPLACE_TIME_RECORD_TO_MASTER", finalReplaceRecord);
         CALLBACK_MAP.put("MASTER_PROFILE", callbackProfileMaster);
         CALLBACK_MAP.put("REPLACE_PROFILE", callbackUpdateProfileMaster);
+        CALLBACK_MAP.put("ANSWER_DELETE_MASTER", callbackAnswerDeleteProfile);
+        CALLBACK_MAP.put("DELETE_MASTER", callbackDeleteProfile);
     }
 
     public Callback getCallback(String keyCallback) {

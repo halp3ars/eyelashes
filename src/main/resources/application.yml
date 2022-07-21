@@ -14,7 +14,6 @@ spring:
           query:
             timeout: '6000000'
 
-
   h2:
     console:
       enabled: true
@@ -25,3 +24,15 @@ spring:
 telegram:
   nameBot: '@BeautyEyelashesBot'
   tokenBot: '5531596418:AAFw9TtWSvIgZSD_-KpRi0JUDz1LWXmfQSY'
+server:
+  ssl:
+    enabled: true
+    key-alias: tomcat-localhost
+    key-password: password
+    key-store: keystore.jks
+    key-store-provider: SUN
+    key-store-type: JKS
+    key-store-password: password
+  max-http-header-size: 1048576
+  port: 8080
+

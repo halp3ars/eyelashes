@@ -32,9 +32,7 @@ public class MasterDayCallback implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         BotState botState = BotState.ASK_DAY;
         ScheduleDto userScheduleData = masterDataCache.getUserScheduleData(chatId);
         String day = callbackQuery.getData().split("/")[1];
@@ -43,7 +41,8 @@ public class MasterDayCallback implements Callback {
         dayOfWeekModeService.setTargetDay(chatId, newDayOfWeek);
         dayOfWeekModeService.setOriginalDay(chatId, newDayOfWeek);
         setCurrentDay(day, userScheduleData);
-        generateKeyboardWithText(callbackQuery.getMessage().getChatId());
+        Integer messageId = callbackQuery.getMessage().getMessageId();
+        generateKeyboardWithText(callbackQuery.getMessage().getChatId(), messageId);
 
 
 
@@ -71,7 +70,7 @@ public class MasterDayCallback implements Callback {
         if (day.equals("SUNDAY")) userScheduleData.setSunday(true);
     }
 
-    public EditMessageReplyMarkup generateKeyboardWithText(long chatId) {
+    public EditMessageReplyMarkup generateKeyboardWithText(long chatId, Integer messageId) {
         List<InlineKeyboardButton> rowMain = new ArrayList<>();
         List<InlineKeyboardButton> rowSecond = new ArrayList<>();
         List<InlineKeyboardButton> rowThird = new ArrayList<>();
@@ -96,7 +95,7 @@ public class MasterDayCallback implements Callback {
                                     .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
                                     .build()
                     );
-                } else {
+                } else if (day.equals(DayOfWeek.SUNDAY)){
                     rowThird.add(
                             InlineKeyboardButton.builder()
                                     .text(getDayButton(targetDay.getNameDay(), originalDay.getNameDay()))
@@ -112,7 +111,10 @@ public class MasterDayCallback implements Callback {
                 .keyboardRow(rowThird)
                 .build();
 
-        return EditMessageReplyMarkup.builder().replyMarkup(keyboard).build();
+        return EditMessageReplyMarkup.builder().replyMarkup(keyboard)
+                .chatId(String.valueOf(chatId))
+                .messageId(messageId)
+                .build();
     }
 
     private String getDayButton(String saved, String current) {

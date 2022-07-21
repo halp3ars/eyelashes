@@ -147,7 +147,7 @@ public class HandleMasterScheduleImpl implements Handle {
                                     .callbackData("MASTER_DAY/" + DayOfWeek.valueOf(day.name()))
                                     .build()
                     );
-                } else {
+                } else if(day.equals(DayOfWeek.SUNDAY)){
                     rowThird.add(
                             InlineKeyboardButton.builder()
                                     .text(getDayButton(targetDay.getNameDay(), day.getNameDay()))
@@ -157,13 +157,6 @@ public class HandleMasterScheduleImpl implements Handle {
                 }
             }
         }
-        InlineKeyboardMarkup keyboard = InlineKeyboardMarkup.builder()
-                .keyboardRow(rowMain)
-                .keyboardRow(rowSecond)
-                .keyboardRow(rowThird)
-                .build();
-
-
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(rowMain)

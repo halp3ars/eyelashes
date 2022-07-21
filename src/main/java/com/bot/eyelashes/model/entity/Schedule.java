@@ -31,8 +31,8 @@ public class Schedule {
     @Column(name = "telegramId")
     private Long telegramId;
     @Column(name = "time_from")
-    private int timeFrom;
+    private Integer timeFrom;
     @Column(name = "time_to")
-    private int timeTo;
+    private Integer timeTo;
 
 }

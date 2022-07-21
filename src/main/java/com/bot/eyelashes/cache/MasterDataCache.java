@@ -68,7 +68,6 @@ public class MasterDataCache implements DataCache {
         Master master = masterMapper.toEntity(masterDto);
         masterByTelegramId.ifPresent(value -> masterRepository.deleteByTelegramId(value.getTelegramId()));
         masterRepository.save(master);
-
     }
     @Transactional
     public void setScheduleInDb(ScheduleDto scheduleDto) {
