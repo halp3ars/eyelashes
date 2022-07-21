@@ -12,10 +12,8 @@ public class CallbackMenuImpl implements Callback {
         HandleMainMenuImpl handleMainMenu = new HandleMainMenuImpl();
         return SendMessage.builder()
                 .replyMarkup(handleMainMenu.createInlineKeyboard())
-                .chatId(callbackQuery.getMessage()
-                        .getChatId()
-                        .toString())
-                .text("Кем вы являетесь ?")
+                .chatId(callbackQuery.getMessage().getChatId().toString())
+                .text("Кем вы являетесь ? ")
                 .build();
     }
 }

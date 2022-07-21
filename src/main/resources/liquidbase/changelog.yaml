@@ -1,0 +1,5 @@
+databaseChangeLog: #параметр в котором находятся миграции
+  - include: # список активных миграций
+      file: liquidbase/changeset/create-master-table.yaml
+  - include:
+      file: liquidbase/changeset/create-client-table.yaml

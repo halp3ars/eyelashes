@@ -34,7 +34,7 @@ public class BotStateContext {
 
     private boolean isFillingProfileState(BotState botState) {
         return switch (botState) {
-            case ASK_TIME_FROM,ASK_ADDRESS, ASK_TIME_TO,ASK_DATE, ASK_READY, ASK_SURNAME, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_NAME, FILLING_PROFILE, REGISTERED ->
+            case ASK_TIME_FROM,ASK_ADDRESS, ASK_TIME_TO, ASK_DAY, ASK_READY, ASK_SURNAME, ASK_PHONE, ASK_DEFAULT, ASK_ACTIVITY, PROFILE_FIELD, ASK_NAME, FILLING_PROFILE, REGISTERED ->
                     true;
             default -> false;
         };

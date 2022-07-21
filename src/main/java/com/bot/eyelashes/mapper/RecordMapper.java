@@ -11,4 +11,5 @@ public interface RecordMapper {
 
     @Mapping(source = "clientId",target = "clientId")
     RecordToMaster toEntity(RecordToMasterDto recordToMasterDto);
+    RecordToMasterDto toDto(RecordToMaster recordToMaster);
 }

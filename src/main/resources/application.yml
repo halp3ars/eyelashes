@@ -5,6 +5,7 @@ spring:
       maximum-pool-size: '5'
     url: jdbc:postgresql://db-postgresql-fra1-69062-do-user-11372412-0.b.db.ondigitalocean.com:25060/eyelashes
     password: AVNS_ClMzraDTLV4mXFQ
+
   jpa:
     generate-ddl: 'true'
     properties:
@@ -13,7 +14,25 @@ spring:
           query:
             timeout: '6000000'
 
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    enabled: true
+    change-log: classpath:liquidbase/changelog.yaml
 
 telegram:
-  nameBot: '@ndfsdjkgnj_bot'
-  tokenBot: '5590216654:AAEUna_vQ97Qu9NCktXI2iy96ekLlihty20'
+  nameBot: '@BeautyEyelashesBot'
+  tokenBot: '5531596418:AAFw9TtWSvIgZSD_-KpRi0JUDz1LWXmfQSY'
+server:
+  ssl:
+    enabled: true
+    key-alias: tomcat-localhost
+    key-password: password
+    key-store: keystore.jks
+    key-store-provider: SUN
+    key-store-type: JKS
+    key-store-password: password
+  max-http-header-size: 1048576
+  port: 8080
+

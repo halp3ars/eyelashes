@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface MasterRepository extends JpaRepository<Master, Long> {
-
-    Optional<Master> findMasterByTelegramId(Long telegramId);
+    Optional<Master> findMasterByTelegramId(Long telegramsId);
     List<Master> findByActivity(String activity);
     Boolean existsByTelegramId(Long id);
+    void deleteByTelegramId(Long masterId);
 }

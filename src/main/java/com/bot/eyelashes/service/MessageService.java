@@ -21,53 +21,38 @@ public class MessageService {
                 .build();
     }
 
-    public SendMessage getReplyMessageForService(Long chatId, String text) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(List.of(
-                InlineKeyboardButton.builder()
-                        .text("Брови")
-                        .callbackData("Брови")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text("Ресницы")
-                        .callbackData("Ресницы")
-                        .build(),
-                InlineKeyboardButton.builder()
-                        .text("Ногти")
-                        .callbackData("Ногти")
-                        .build()
-        ));
-
-        InlineKeyboardMarkup keyboardService = new InlineKeyboardMarkup();
-        keyboardService.setKeyboard(buttons);
-
+    public SendMessage getReplyMessageForContact(Long chatId, String text) {
         return SendMessage.builder()
                 .text(text)
                 .chatId(chatId.toString())
-                .replyMarkup(keyboardService)
+                .replyMarkup(keyboardContact())
                 .build();
     }
 
-    public SendMessage getReplyMessageForSchedule(Long chatId, String text) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(List.of(
-                InlineKeyboardButton.builder()
-                        .callbackData("SCHEDULE")
-                        .text("Главное меню")
-                        .build()
-        ));
+    public ReplyKeyboardMarkup keyboardContact() {
+        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> row = new ArrayList<>();
+        KeyboardRow rowAddress = new KeyboardRow();
 
-        InlineKeyboardMarkup keyboardSchedule = InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
-                .build();
+        rowAddress.add(KeyboardButton.builder()
+                .text("Номер телефона")
+                .requestContact(true)
+                .build());
+        row.add(rowAddress);
 
+        markup.setSelective(true);
+        markup.setOneTimeKeyboard(true);
+        markup.setResizeKeyboard(true);
+        markup.setKeyboard(row);
+
+        return markup;
+    }
+
+    public SendMessage getReplyMessageWithKeyboard(Long chatId, String text, InlineKeyboardMarkup keyboard) {
         return SendMessage.builder()
-                .text(text)
-                .replyMarkup(keyboardSchedule)
                 .chatId(chatId.toString())
+                .text(text)
+                .replyMarkup(keyboard)
                 .build();
     }
-
-
-
 }

@@ -11,20 +11,22 @@ import com.bot.eyelashes.handler.BotStateContext;
 import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
-import com.bot.eyelashes.repository.MasterRepository;
+import com.bot.eyelashes.handler.callbackquery.DayCallback;
+import com.bot.eyelashes.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
@@ -40,46 +42,52 @@ public class Bot extends TelegramLongPollingBot {
     private final BotStateContext botStateContext;
     public static boolean masterRegistration;
     public static boolean clientRegistration;
-    public static HashMap<Long, Integer> messageId = new HashMap<>();
-
-
+    private final CommandMap commandMap;
+    private final DayCallback dayCallback;
+    private final ScheduleService scheduleService;
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        CommandMap commandMap = new CommandMap();
+        scheduleService.setMessage(message);
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery()
-                    .getData()
-                    .split("/")[0]);
-            execute(callback.getCallbackQuery(update.getCallbackQuery()));
-        } else if (update.getMessage()
-                .hasText()) {
-            if ((update.getMessage()
-                    .getText()
-                    .startsWith("/"))) {
+            log.info("callback = " + update.getCallbackQuery().getData());
+            if (update.getCallbackQuery().getData().startsWith("MASTER_DAY")) {
+                execute(dayCallback.processInputMessage(update));
+            } else {
+                ScheduleService.masterId = update.getCallbackQuery().getMessage().getChatId();
+
+                Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData()
+                        .split("/")[0]);
+                execute(callback.getCallbackQuery(update.getCallbackQuery()));
+            }
+        } else if (update.getMessage().hasText()) {
+            ScheduleService.masterId = update.getMessage().getChatId();
+            if (update.getMessage().hasContact()) {
+                botState = BotState.ASK_DAY;
+                masterDataCache.setUsersCurrentBotState(update.getMessage().getChatId(), botState);
+            } else if ((update.getMessage().getText().startsWith("/"))) {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));
             }
         }
         if (masterRegistration) {
-            botState = masterDataCache.getUsersCurrentBotState(update.getMessage()
-                    .getChatId());
-            replyMessage = botStateContext.processInputMessage(botState, message);
-            execute(replyMessage);
+            if (update.hasMessage()) {
+                botState = masterDataCache.getUsersCurrentBotState(update.getMessage().getChatId());
+                replyMessage = botStateContext.processInputMessage(botState, message);
+                execute(replyMessage);
+            }
         } else if (clientRegistration) {
             if (update.hasMessage()) {
-                clientBotState = clientDataCache.getClientBotState(update.getMessage()
-                        .getChatId());
+                clientBotState = clientDataCache.getClientBotState(update.getMessage().getChatId());
                 replyMessage = clientBotStateContext.processInputClientMessage(clientBotState, update.getMessage());
                 execute(replyMessage);
             }
         }
 
     }
-
 
     @Override
     public String getBotUsername() {
