@@ -8,6 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface MasterMapper {
     @Mapping(source = "phone", target = "phoneNumber")
-    @Mapping(source = "activity", target = "activity")
     Master toEntity(MasterDto masterDto);
 }

@@ -36,8 +36,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class FillingClientProfile implements HandleRegistration {
-
-
     private final ClientDataCache clientDataCache;
     private final MessageService messageService;
     private final ScheduleMapper scheduleMapper;
@@ -53,7 +51,6 @@ public class FillingClientProfile implements HandleRegistration {
         }
         return processClientInput(message);
     }
-
 
     private SendMessage processClientInput(Message message) {
         String clientAnswer = message.getText();
@@ -167,6 +164,7 @@ public class FillingClientProfile implements HandleRegistration {
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
+
 
     @Override
     public BotState getHandleName() {

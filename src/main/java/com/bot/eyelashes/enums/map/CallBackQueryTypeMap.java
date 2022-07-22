@@ -39,11 +39,16 @@ public class CallBackQueryTypeMap {
                                 @Qualifier("UpdateProfileMasterCallback") Callback callbackUpdateProfileMaster,
                                 @Qualifier("DayForCheckClientRecordToMaster") Callback callbackCheckDayRecordToMaster,
                                 @Qualifier("AnswerDeleteProfileMasterCallbackImpl") Callback callbackAnswerDeleteProfile,
-                                @Qualifier("DeleteProfileMasterCallbackImpl") Callback callbackDeleteProfile
+                                @Qualifier("DeleteProfileMasterCallbackImpl") Callback callbackDeleteProfile,
+                                @Qualifier("CallbackClientAllRecordsImpl") Callback callbackClientAllRecordsImpl,
+                                @Qualifier("CallbackClientAllDeclineImpl") Callback callbackClientAllDeclineImpl,
+                                @Qualifier("CallbackClientAllChangeDateImpl") Callback callbackClientAllChangeDateImpl,
+                                @Qualifier("CallbackDeclineAllRecordsImpl") Callback callbackDeclineAllRecordsImpl,
+                                @Qualifier("CallbackClientImpl") Callback callbackClientImpl
     ) {
         CALLBACK_MAP.put("INFO", new CallbackInfoImpl());
         CALLBACK_MAP.put("MENU", new CallbackMenuImpl());
-        CALLBACK_MAP.put("CLIENT", new CallbackClientImpl());
+        CALLBACK_MAP.put("CLIENT", callbackClientImpl);
         CALLBACK_MAP.put("NAILS", callbackActivity);
         CALLBACK_MAP.put("EYEBROWS", callbackActivity);
         CALLBACK_MAP.put("EYELASHES", callbackActivity);
@@ -54,12 +59,12 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("TIME", callbackTimeClient);
         CALLBACK_MAP.put("RECORD", callbackRecord);
         CALLBACK_MAP.put("CHANGE_DATE", callbackChangeDate);
-        CALLBACK_MAP.put("MASTER_ACTIVITY",callbackMasterScheduleImpl);
+        CALLBACK_MAP.put("MASTER_ACTIVITY", callbackMasterScheduleImpl);
         CALLBACK_MAP.put("MASTER", callbackMasterRegistration);
         CALLBACK_MAP.put("MASTER_TIME", callbackMasterTimeFromImpl);
         CALLBACK_MAP.put("TIME_TO", callbackMasterTimeToImpl);
-        CALLBACK_MAP.put("REGISTERED",callbackMasterRegisteredImpl);
-        CALLBACK_MAP.put("MASTER_DAY",callbackMasterDay);
+        CALLBACK_MAP.put("REGISTERED", callbackMasterRegisteredImpl);
+        CALLBACK_MAP.put("MASTER_DAY", callbackMasterDay);
         CALLBACK_MAP.put("LIST_CLIENT_RECORD_TO_MASTER", callbackCheckDayRecordToMaster);
         CALLBACK_MAP.put("DAY_CLIENT_RECORD_TO_MASTER", callbackListClientByDay);
         CALLBACK_MAP.put("RECORDED_CLIENT", callbackInfoClientForMaster);
@@ -70,6 +75,10 @@ public class CallBackQueryTypeMap {
         CALLBACK_MAP.put("REPLACE_PROFILE", callbackUpdateProfileMaster);
         CALLBACK_MAP.put("ANSWER_DELETE_MASTER", callbackAnswerDeleteProfile);
         CALLBACK_MAP.put("DELETE_MASTER", callbackDeleteProfile);
+        CALLBACK_MAP.put("ALL_RECORDS", callbackClientAllRecordsImpl);
+        CALLBACK_MAP.put("DECLINE_ALL_RECORD", callbackClientAllDeclineImpl);
+        CALLBACK_MAP.put("CHANGE_RECORD_ALL", callbackClientAllChangeDateImpl);
+        CALLBACK_MAP.put("DECLINE_ALL_RECORDS", callbackDeclineAllRecordsImpl);
     }
 
     public Callback getCallback(String keyCallback) {

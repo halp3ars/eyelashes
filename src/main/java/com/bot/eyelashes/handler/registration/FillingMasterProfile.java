@@ -118,7 +118,7 @@ public class FillingMasterProfile implements HandleRegistration {
                         .getPhoneNumber());
                 masterDto.setPhone(inputMessage.getContact().getPhoneNumber());
             }
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
             /*handleMasterSchedule.generateKeyboardWithText1(chatId)*/
             replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите дни",
                     handleMasterSchedule.generateKeyboardWithText1(chatId));

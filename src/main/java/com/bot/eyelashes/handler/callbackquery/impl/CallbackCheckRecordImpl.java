@@ -20,7 +20,6 @@ public class CallbackCheckRecordImpl implements Callback {
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        Bot.messageId.put(callbackQuery.getMessage().getChatId(),callbackQuery.getMessage().getMessageId());
         HandleCheckRecordImpl handleCheckRecord = new HandleCheckRecordImpl(masterRepository,record);
         return handleCheckRecord.getMessageWithCallback(callbackQuery);
     }
