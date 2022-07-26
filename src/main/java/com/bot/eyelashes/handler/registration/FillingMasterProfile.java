@@ -76,7 +76,7 @@ public class FillingMasterProfile implements HandleRegistration {
                 replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
             } else {
-                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита");
+                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
             }
         }
 
@@ -90,17 +90,17 @@ public class FillingMasterProfile implements HandleRegistration {
                         handleTypeOfActivity.createInlineKeyboard());
 
             } else {
-                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита");
+                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
             }
         }
+
         if (botState.equals(BotState.ASK_ADDRESS)) {
-            masterDto.setTelegramNick(inputMessage.getChat()
-                    .getUserName());
-            log.info("master set telegramNickName = " + inputMessage.getChat()
-                    .getUserName());
+            masterDto.setTelegramNick(inputMessage.getChat().getUserName());
+            log.info("master set telegramNickName = " + inputMessage.getChat().getUserName());
             replyToUser = messageService.getReplyMessage(chatId, "Введите адрес");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_PHONE);
         }
+
         if (botState.equals(BotState.ASK_PHONE)) {
             masterDto.setAddress(usersAnswer);
             log.info("master set address = " + usersAnswer);
@@ -109,19 +109,19 @@ public class FillingMasterProfile implements HandleRegistration {
         }
 
         if (botState.equals(BotState.ASK_DAY)) {
-            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
+//            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
             if (inputMessage.getContact() == null) {
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
+                replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер. Отправьте с помощью кнопки.");
             } else {
                 masterDataCache.setUsersCurrentBotState(chatId, botState);
-                log.info("master set phoneNumber = " + inputMessage.getContact()
-                        .getPhoneNumber());
+                log.info("master set phoneNumber = " + inputMessage.getContact().getPhoneNumber());
                 masterDto.setPhone(inputMessage.getContact().getPhoneNumber());
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
+                //handleMasterSchedule.generateKeyboardWithText1(chatId)
+                replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Составте свое расписание.",
+                        createButtonForSchedule());
             }
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_FROM);
-            /*handleMasterSchedule.generateKeyboardWithText1(chatId)*/
-            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите дни",
-                    handleMasterSchedule.generateKeyboardWithText1(chatId));
         }
 
         if (botState.equals(BotState.ASK_TIME_FROM)) {
@@ -144,7 +144,6 @@ public class FillingMasterProfile implements HandleRegistration {
                 replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Вы зарегистрированы.\n",
                         createFinalButton());
             masterDataCache.setScheduleInDb(userScheduleData);
-//            scheduleService.setMessage(replyToUser);
                 Bot.masterRegistration = false;
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.NONE);
         }
@@ -153,8 +152,9 @@ public class FillingMasterProfile implements HandleRegistration {
 
         return replyToUser;
     }
+
     private InlineKeyboardMarkup createButtonForSchedule() {
-        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://192.168.111.159:3000").build();
+        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://165.22.78.55:3000").build();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Collections.singletonList(InlineKeyboardButton.builder()
                 .text("Расписание")

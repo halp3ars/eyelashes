@@ -21,6 +21,17 @@ spring:
     enabled: true
     change-log: classpath:liquidbase/changelog.yaml
 
+security:
+  require-ssl: 'true'
+
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: java_ssl.p12
+    key-password: changeit
+    enabled: true
+  port: 8080
+
 telegram:
   nameBot: '@BeautyEyelashesBot'
   tokenBot: '5531596418:AAFw9TtWSvIgZSD_-KpRi0JUDz1LWXmfQSY'

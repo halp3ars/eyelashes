@@ -17,9 +17,6 @@ import java.util.List;
 @Service("AnswerDeleteProfileMasterCallbackImpl")
 @RequiredArgsConstructor
 public class AnswerDeleteProfileMasterCallbackImpl implements Callback {
-    private final MasterRepository masterRepository;
-    private final ScheduleRepository scheduleRepository;
-
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();

@@ -19,12 +19,11 @@ public class ScheduleController {
     @PostMapping(value = "/schedule", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message setScheduleMaster(@RequestBody ScheduleDto scheduleDto) throws TelegramApiException {
         scheduleService.saveSchedule(scheduleDto);
-//        masterDataCache.setUsersCurrentBotState(649681305L, BotState.REGISTERED);
         return bot.execute(scheduleService.sendMessageForAuth());
     }
 
-
-
-
-
+    @GetMapping(value = "/get")
+    public String getOkMessage(){
+        return "ok";
+    }
 }

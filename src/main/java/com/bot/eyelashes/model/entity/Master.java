@@ -32,4 +32,7 @@ public class Master {
     private Long telegramId;
     @Column(name = "telegram_nickname")
     private String telegramNick;
+
+    @ManyToMany
+    private Set<Activity> activities;
 }

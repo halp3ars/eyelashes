@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ public class CallbackMasterRegistrationImpl implements Callback {
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
         if (masterRepository.existsByTelegramId(callbackQuery.getMessage().getChatId())) {
-
             return messageService.getReplyMessageWithKeyboard(callbackQuery.getMessage().getChatId(),
                     "Выберите действие",
                     keyboardForAuthMaster());
@@ -45,7 +45,19 @@ public class CallbackMasterRegistrationImpl implements Callback {
         return botStateContext.processInputMessage(botState, callbackQuery.getMessage());
     }
 
+//    private InlineKeyboardMarkup createButtonForSchedule() {
+//        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://165.22.78.55:3000").build();//https://192.168.111.159:3000
+//        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+//        buttons.add(Collections.singletonList(InlineKeyboardButton.builder()
+//                .text("Расписание")
+//                .webApp(webAppInfo)
+//                .build()));
+//
+//        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
+//    }
+
     private InlineKeyboardMarkup keyboardForAuthMaster() {
+        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://165.22.78.55:3000").build(); //https://192.168.111.159:3000
         List<InlineKeyboardButton> rowMain = new ArrayList<>();
         List<InlineKeyboardButton> rowSecond = new ArrayList<>();
         rowMain.add(
@@ -56,17 +68,24 @@ public class CallbackMasterRegistrationImpl implements Callback {
         );
         rowMain.add(
                 InlineKeyboardButton.builder()
-                .text("Записи")
+                .text("Записи") // Записи
+//                        .webApp(webAppInfo)
                 .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
                 .build()
         );
 
-//        rowSecond.add(
-//                InlineKeyboardButton.builder()
-//                        .text("Удалить профиль")
-//                        .callbackData("ANSWER_DELETE_MASTER")
-//                        .build()
-//        );
+        rowSecond.add(
+                InlineKeyboardButton.builder()
+                        .text("Удалить профиль")
+                        .callbackData("ANSWER_DELETE_MASTER")
+                        .build()
+        );
+        rowSecond.add(
+                InlineKeyboardButton.builder()
+                        .text("Меню")
+                        .callbackData("MENU")
+                        .build()
+        );
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(rowMain)
                 .keyboardRow(rowSecond)

@@ -38,20 +38,36 @@ public class HandleCommandMasterImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(List.of(
+        List<InlineKeyboardButton> rowMain = new ArrayList<>();
+        List<InlineKeyboardButton> rowSecond = new ArrayList<>();
+        rowMain.add(
                 InlineKeyboardButton.builder()
                         .text("Профиль")
                         .callbackData("MASTER_PROFILE")
-                        .build(),
+                        .build()
+        );
+        rowMain.add(
                 InlineKeyboardButton.builder()
                         .text("Записи")
                         .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
                         .build()
-        ));
+        );
 
+        rowSecond.add(
+                InlineKeyboardButton.builder()
+                        .text("Удалить профиль")
+                        .callbackData("ANSWER_DELETE_MASTER")
+                        .build()
+        );
+        rowSecond.add(
+                InlineKeyboardButton.builder()
+                        .text("Меню")
+                        .callbackData("MENU")
+                        .build()
+        );
         return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
+                .keyboardRow(rowMain)
+                .keyboardRow(rowSecond)
                 .build();
     }
 

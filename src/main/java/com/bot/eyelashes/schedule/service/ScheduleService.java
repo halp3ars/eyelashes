@@ -1,6 +1,7 @@
 package com.bot.eyelashes.schedule.service;
 
 import com.bot.eyelashes.cache.MasterDataCache;
+import com.bot.eyelashes.handler.BotStateContext;
 import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
@@ -12,8 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -26,13 +30,11 @@ import java.util.List;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
-
-    public static long masterId;
     private final MasterDataCache masterDataCache;
-    @Setter
-    @Getter
-    private Message message;
+    public static long masterId;
 
+
+    @Transactional
     public void saveSchedule(ScheduleDto scheduleDto) {
         Schedule schedule = scheduleMapper.toEntity(scheduleDto);
         schedule.setTelegramId(masterId);
@@ -48,7 +50,7 @@ public class ScheduleService {
         Bot.masterRegistration = false;
 
         return SendMessage.builder()
-                .text("Вы зарегистрированы.")
+                .text("Вы зарегистрированы.\nПерейдите в главное меню")
                 .replyMarkup(createFinalButton())
                 .chatId(masterId)
                 .build();
@@ -58,7 +60,7 @@ public class ScheduleService {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(InlineKeyboardButton.builder()
                 .text("Меню")
-                .callbackData("MENU")
+                .callbackData("MASTER")
                 .build()));
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
