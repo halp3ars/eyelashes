@@ -165,7 +165,6 @@ public class FillingClientProfile implements HandleRegistration {
         return inlineKeyboardMarkup;
     }
 
-
     @Override
     public BotState getHandleName() {
         return null;
