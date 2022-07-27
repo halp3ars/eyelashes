@@ -16,11 +16,12 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 public class CallbackRecordMenuImpl implements Callback {
 
     private final MasterRepository masterRepository;
+    private final ClientDataCache clientDataCache;
 
 
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository);
+        HandleRecordMenuImpl handleRecordToMaster = new HandleRecordMenuImpl(masterRepository,clientDataCache);
         return SendMessage.builder()
                 .replyMarkup(handleRecordToMaster.createInlineKeyboardWithCallback(callbackQuery))
                 .chatId(callbackQuery.getMessage()

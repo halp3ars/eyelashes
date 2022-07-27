@@ -1,34 +1,31 @@
 package com.bot.eyelashes.handler.impl;
 
-import com.bot.eyelashes.enums.map.ScheduleClientMap;
+import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.handler.Handle;
-import com.bot.eyelashes.handler.registration.ScheduleForClient;
-import com.bot.eyelashes.mapper.ScheduleMapper;
-import com.bot.eyelashes.model.dto.ScheduleDto;
-import com.bot.eyelashes.repository.ScheduleRepository;
+import com.bot.eyelashes.model.entity.PeriodOfWork;
+import com.bot.eyelashes.model.entity.Schedule2;
+import com.bot.eyelashes.repository.Schedule2Repository;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.webapp.WebAppData;
-import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
+@Transactional
 public class HandleClientScheduleImpl implements Handle {
 
 
-    private final ScheduleMapper scheduleMapper;
 
-    private final ScheduleRepository scheduleRepository;
-
+    private final Schedule2Repository schedule2Repository;
+    private final ClientDataCache clientDataCache;
     private final List<String> DAYS = List.of("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье");
 
     @Override
@@ -38,14 +35,20 @@ public class HandleClientScheduleImpl implements Handle {
 
     @Override
     public InlineKeyboardMarkup createInlineKeyboard() {
-        ScheduleForClient scheduleForClient = new ScheduleForClient(scheduleRepository, scheduleMapper);
-        ScheduleDto scheduleDto = scheduleForClient.getMasterDays(HandleRecordMenuImpl.masterId);
-        ScheduleClientMap scheduleClientMap = new ScheduleClientMap(scheduleDto);
+        return null;
+    }
+
+    public InlineKeyboardMarkup createInlineKeyboard(Long chatId) {
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row3 = new ArrayList<>();
-        List<String> trueDays = scheduleClientMap.getTrueDays();
-        trueDays.sort(Comparator.comparing(DAYS::indexOf));
+        clientDataCache.getRecordData(chatId).getMasterId();
+        Schedule2 schedule = schedule2Repository.findByTelegramId(clientDataCache.getRecordData(chatId).getMasterId());
+        List<PeriodOfWork> periodOfWorks = schedule.getPeriodOfWorks();
+        List<String> trueDays = periodOfWorks.stream()
+                .map(PeriodOfWork::getDay)
+                .sorted(Comparator.comparing(DAYS::indexOf))
+                .toList();
         for (int days = 0; days < trueDays.size(); days++) {
             if (days < 3) {
                 row1.add(InlineKeyboardButton.builder()

@@ -5,28 +5,29 @@ import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.registration.TimeForClient;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
+import com.bot.eyelashes.model.entity.PeriodOfWork;
+import com.bot.eyelashes.model.entity.Schedule2;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
-import com.bot.eyelashes.repository.ScheduleRepository;
+import com.bot.eyelashes.repository.Schedule2Repository;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 @RequiredArgsConstructor
 public class HandleClientTimeImpl implements Handle {
 
-    private final RecordToMasterRepository recordToMasterRepository;
 
-    private final ScheduleRepository scheduleRepository;
+    private final Schedule2Repository schedule2Repository;
     private final ClientDataCache clientDataCache;
+    private final RecordToMasterRepository recordToMasterRepository;
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -39,14 +40,13 @@ public class HandleClientTimeImpl implements Handle {
         return null;
     }
 
-    public InlineKeyboardMarkup createInlineKeyboard(Message message) {
-        TimeForClient timeForClient = new TimeForClient(recordToMasterRepository, scheduleRepository);
+    public InlineKeyboardMarkup createInlineKeyboard(Long chatId) {
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         List<InlineKeyboardButton> row3 = new ArrayList<>();
         List<InlineKeyboardButton> row4 = new ArrayList<>();
-        RecordToMasterDto recordData = clientDataCache.getRecordData(message.getChatId());
-        List<Integer> workTime = timeForClient.getWorkTime(HandleRecordMenuImpl.masterId,recordData.getDay(),message.getChatId());
+        TimeForClient timeForClient = new TimeForClient(recordToMasterRepository,schedule2Repository,clientDataCache);
+        List<Integer> workTime = timeForClient.getWorkTime(chatId);
         for (int i = 0; i < workTime.size(); i++) {
             if (workTime.get(i) >= 8 & workTime.get(i) <= 10) {
                 String timeString = workTime.get(i)
