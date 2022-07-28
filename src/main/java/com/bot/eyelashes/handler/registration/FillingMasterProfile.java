@@ -10,29 +10,21 @@ import com.bot.eyelashes.handler.impl.HandleMasterTimeFromImpl;
 import com.bot.eyelashes.handler.impl.HandleMasterTimeToImpl;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
-import com.bot.eyelashes.model.entity.Master;
-import com.bot.eyelashes.model.entity.Schedule;
-import com.bot.eyelashes.repository.MasterRepository;
-import com.bot.eyelashes.repository.ScheduleRepository;
-import com.bot.eyelashes.schedule.service.ScheduleService;
 import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
 import com.bot.eyelashes.validation.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.webapp.WebAppData;
 import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -41,7 +33,6 @@ public class FillingMasterProfile implements HandleRegistration {
     private final MasterDataCache masterDataCache;
     private final MessageService messageService;
     private final HashMapDayOfWeekModeService dayOfWeekModeService;
-    private final ScheduleService scheduleService;
 
     @Override
     public SendMessage getMessage(Message message) {
@@ -109,7 +100,7 @@ public class FillingMasterProfile implements HandleRegistration {
         }
 
         if (botState.equals(BotState.ASK_DAY)) {
-//            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
+            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
             if (inputMessage.getContact() == null) {
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
                 replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер. Отправьте с помощью кнопки.");
@@ -118,7 +109,6 @@ public class FillingMasterProfile implements HandleRegistration {
                 log.info("master set phoneNumber = " + inputMessage.getContact().getPhoneNumber());
                 masterDto.setPhone(inputMessage.getContact().getPhoneNumber());
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
-                //handleMasterSchedule.generateKeyboardWithText1(chatId)
                 replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Составте свое расписание.",
                         createButtonForSchedule());
             }

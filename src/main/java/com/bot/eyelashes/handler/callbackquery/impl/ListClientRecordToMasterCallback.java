@@ -1,5 +1,6 @@
 package com.bot.eyelashes.handler.callbackquery.impl;
 
+import com.bot.eyelashes.enums.DayOfWeek;
 import com.bot.eyelashes.enums.map.ScheduleMasterMap;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.model.entity.RecordToMaster;
@@ -30,7 +31,7 @@ public class ListClientRecordToMasterCallback implements Callback {
             buttonEmptyDayRecord.add(Collections.singletonList(
                     InlineKeyboardButton.builder()
                             .text("Меню")
-                            .callbackData("MENU")
+                            .callbackData("MASTER")
                             .build()
             ));
             InlineKeyboardMarkup keyboard = InlineKeyboardMarkup.builder()
@@ -38,7 +39,7 @@ public class ListClientRecordToMasterCallback implements Callback {
                     .build();
 
             return messageService.getReplyMessageWithKeyboard(callbackQuery.getMessage().getChatId(),
-                    "Записей на вас не найдено.Вернитесь на главное меню", keyboard);
+                    "Записей на вас не найдено.\nВернитесь на главное меню", keyboard);
         }
 
         return messageService.getReplyMessageWithKeyboard(callbackQuery.getMessage().getChatId(),
@@ -50,6 +51,7 @@ public class ListClientRecordToMasterCallback implements Callback {
         for (RecordToMaster record : records) {
             days.add(record.getDay());
         }
+
         days.sort(Comparator.comparing(day -> List.of("Понедельник","Вторник","Среда", "Четверг","Пятница","Суббота","Воскресенье").indexOf(day)));
 
         return days;
@@ -92,7 +94,7 @@ public class ListClientRecordToMasterCallback implements Callback {
 
         rowThird.add(InlineKeyboardButton.builder()
                 .text("Меню")
-                .callbackData("MENU")
+                .callbackData("MASTER")
                 .build());
 
         return InlineKeyboardMarkup.builder()

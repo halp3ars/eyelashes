@@ -57,7 +57,6 @@ public class CallbackMasterRegistrationImpl implements Callback {
 //    }
 
     private InlineKeyboardMarkup keyboardForAuthMaster() {
-        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://165.22.78.55:3000").build(); //https://192.168.111.159:3000
         List<InlineKeyboardButton> rowMain = new ArrayList<>();
         List<InlineKeyboardButton> rowSecond = new ArrayList<>();
         rowMain.add(
@@ -69,7 +68,6 @@ public class CallbackMasterRegistrationImpl implements Callback {
         rowMain.add(
                 InlineKeyboardButton.builder()
                 .text("Записи") // Записи
-//                        .webApp(webAppInfo)
                 .callbackData("LIST_CLIENT_RECORD_TO_MASTER")
                 .build()
         );

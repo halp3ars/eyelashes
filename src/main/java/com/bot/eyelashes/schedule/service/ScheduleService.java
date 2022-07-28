@@ -6,6 +6,8 @@ import com.bot.eyelashes.mapper.ScheduleMapper;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.model.entity.Schedule;
+import com.bot.eyelashes.model.entity.Schedule2;
+import com.bot.eyelashes.repository.Schedule2Repository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.Bot;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class ScheduleService {
     private final ScheduleMapper scheduleMapper;
     private final MasterDataCache masterDataCache;
     public static long masterId;
+    private final Schedule2Repository schedule2Repository;
 
 
     @Transactional
@@ -65,5 +68,9 @@ public class ScheduleService {
         return InlineKeyboardMarkup.builder()
                 .keyboard(buttons)
                 .build();
+    }
+
+    public void saveSchedule2(Schedule2 schedule2) {
+        schedule2Repository.save(schedule2);
     }
 }

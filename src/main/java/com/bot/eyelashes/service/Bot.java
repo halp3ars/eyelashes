@@ -12,6 +12,7 @@ import com.bot.eyelashes.handler.ClientBotStateContext;
 import com.bot.eyelashes.handler.Handle;
 import com.bot.eyelashes.handler.callbackquery.Callback;
 import com.bot.eyelashes.handler.callbackquery.DayCallback;
+import com.bot.eyelashes.schedule.controller.ScheduleController;
 import com.bot.eyelashes.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -32,7 +33,6 @@ import java.util.HashMap;
 @Slf4j
 @RequiredArgsConstructor
 public class Bot extends TelegramLongPollingBot {
-
     private final TelegramProperties telegramProperties;
     private SendMessage replyMessage;
     private final ClientDataCache clientDataCache;
@@ -44,7 +44,6 @@ public class Bot extends TelegramLongPollingBot {
     public static boolean clientRegistration;
     private final CommandMap commandMap;
     private final DayCallback dayCallback;
-    private final ScheduleService scheduleService;
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
@@ -52,22 +51,19 @@ public class Bot extends TelegramLongPollingBot {
         BotState botState;
         ClientBotState clientBotState;
         if (update.hasCallbackQuery()) {
-            log.info("callback = " + update.getCallbackQuery().getData());
+            log.info("callback = " + update.getCallbackQuery().getData() + " pressed by " +
+                    update.getCallbackQuery().getFrom().getUserName());
             if (update.getCallbackQuery().getData().startsWith("MASTER_DAY")) {
                 execute(dayCallback.processInputMessage(update));
             } else {
                 ScheduleService.masterId = update.getCallbackQuery().getMessage().getChatId();
-
                 Callback callback = callBackQueryTypeMap.getCallback(update.getCallbackQuery().getData()
                         .split("/")[0]);
                 execute(callback.getCallbackQuery(update.getCallbackQuery()));
             }
         } else if (update.getMessage().hasText()) {
             ScheduleService.masterId = update.getMessage().getChatId();
-            if (update.getMessage().hasContact()) {
-                botState = BotState.ASK_DAY;
-                masterDataCache.setUsersCurrentBotState(update.getMessage().getChatId(), botState);
-            } else if ((update.getMessage().getText().startsWith("/"))) {
+            if ((update.getMessage().getText().startsWith("/"))) {
                 Handle handle = commandMap.getCommand(message.getText());
                 execute(handle.getMessage(update));
             }
