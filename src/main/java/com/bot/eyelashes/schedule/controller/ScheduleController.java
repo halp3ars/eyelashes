@@ -1,5 +1,6 @@
 package com.bot.eyelashes.schedule.controller;
 
+import com.bot.eyelashes.model.dto.Schedule2Dto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.model.entity.PeriodOfWork;
 import com.bot.eyelashes.model.entity.Schedule2;
@@ -35,9 +36,9 @@ public class ScheduleController {
         return "ok";
     }
 
-    @PostMapping("/setSchedule")
-    public void setSchedule2(@RequestBody Schedule2 schedule2) {
-        scheduleService.saveSchedule2(schedule2);
+    @PostMapping("/Schedule")
+    public void setSchedule2(@RequestBody Schedule2Dto schedule2Dto) {
+        scheduleService.saveSchedule2(schedule2Dto);
     }
 
     @GetMapping("/schedule/master")
