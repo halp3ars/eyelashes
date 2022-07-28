@@ -69,6 +69,7 @@ public class ScheduleService {
 
     public void saveSchedule2(Schedule2Dto schedule2Dto) {
         Schedule2 schedule2 = schedule2Mapper.toEntity(schedule2Dto);
+        schedule2.setTelegramId(masterId);
         schedule2Repository.save(schedule2);
     }
 }

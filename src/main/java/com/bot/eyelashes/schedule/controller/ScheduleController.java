@@ -34,9 +34,10 @@ public class ScheduleController {
         return "ok";
     }
 
-    @PostMapping("/Schedule")
-    public void setSchedule2(@RequestBody Schedule2Dto schedule2Dto) {
+    @PostMapping(value = "/Schedule")
+    public Message setSchedule2(@RequestBody Schedule2Dto schedule2Dto) throws TelegramApiException {
         scheduleService.saveSchedule2(schedule2Dto);
+        return bot.execute(scheduleService.sendMessageForAuth());
     }
 
     @GetMapping("/schedule/master")
