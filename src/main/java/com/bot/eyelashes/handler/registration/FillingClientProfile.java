@@ -13,6 +13,7 @@ import com.bot.eyelashes.model.dto.ClientDto;
 import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.repository.ClientRepository;
 import com.bot.eyelashes.repository.RecordToMasterRepository;
+import com.bot.eyelashes.repository.Schedule2Repository;
 import com.bot.eyelashes.repository.ScheduleRepository;
 import com.bot.eyelashes.service.Bot;
 import com.bot.eyelashes.service.MessageService;
@@ -42,6 +43,7 @@ public class FillingClientProfile implements HandleRegistration {
     private final ScheduleRepository scheduleRepository;
     private final RecordToMasterRepository recordToMasterRepository;
     private final ClientRepository clientRepository;
+    private final Schedule2Repository schedule2Repository;
 
     @Override
     public SendMessage getMessage(Message message) {
@@ -105,26 +107,25 @@ public class FillingClientProfile implements HandleRegistration {
                     recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
                 }
                 clientDataCache.setClientBotState(chatId, ClientBotState.ASK_CLIENT_TIME);
-                HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(scheduleMapper, scheduleRepository);
+                HandleClientScheduleImpl handleScheduleClient = new HandleClientScheduleImpl(schedule2Repository,clientDataCache);
                 replyToClient = SendMessage.builder()
                         .text("Выберите день на неделе")
-                        .replyMarkup(handleScheduleClient.createInlineKeyboard())
+                        .replyMarkup(handleScheduleClient.createInlineKeyboard(chatId))
                         .chatId(chatId.toString())
                         .build();
             }
         }
         if (clientBotState.equals(ClientBotState.ASK_CLIENT_TIME)) {
             clientDataCache.setClientBotState(chatId, ClientBotState.PROFILE_CLIENT_FIELD);
-            HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(recordToMasterRepository, scheduleRepository, clientDataCache);
+            HandleClientTimeImpl handleClientTime = new HandleClientTimeImpl(schedule2Repository, clientDataCache,recordToMasterRepository);
             replyToClient = SendMessage.builder()
                     .text("День - " + recordToMasterDto.getDay() + "\n" + "Выберите время")
-                    .replyMarkup(handleClientTime.createInlineKeyboard(message))
+                    .replyMarkup(handleClientTime.createInlineKeyboard(chatId))
                     .chatId(chatId.toString())
                     .build();
         }
         if (clientBotState.equals(ClientBotState.PROFILE_CLIENT_FIELD)) {
             recordToMasterDto.setActivity(CallbackTypeOfActivityImpl.activity.get(message.getChatId()));
-            recordToMasterDto.setMasterId(HandleRecordMenuImpl.masterId);
             recordToMasterDto.setClientId(chatId);
             if (clientRepository.findByTelegramId(chatId)
                     .isEmpty()) clientDataCache.setClientIntoDb(clientDto);
@@ -164,7 +165,6 @@ public class FillingClientProfile implements HandleRegistration {
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
-
 
     @Override
     public BotState getHandleName() {

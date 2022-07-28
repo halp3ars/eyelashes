@@ -4,17 +4,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+
+import java.util.List;
+
 
 @Entity
 @Getter
 @Setter
 public class Schedule2 {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<PeriodOfWork> periodOfWorks;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<PeriodOfWork> periodOfWorks;
     @Column(name = "telegramId")
     private Long telegramId;
+
+
 }
+

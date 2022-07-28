@@ -3,6 +3,7 @@ package com.bot.eyelashes.handler.impl;
 import com.bot.eyelashes.cache.ClientDataCache;
 import com.bot.eyelashes.enums.ClientBotState;
 import com.bot.eyelashes.handler.Handle;
+import com.bot.eyelashes.model.dto.RecordToMasterDto;
 import com.bot.eyelashes.repository.ClientRepository;
 import com.bot.eyelashes.repository.MasterRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.List;
 public class HandleRecordMenuImpl implements Handle {
 
     private final MasterRepository masterRepository;
-    public static Long masterId;
+    private final ClientDataCache clientDataCache;
 
     @Override
     public SendMessage getMessage(Update update) {
@@ -38,16 +39,20 @@ public class HandleRecordMenuImpl implements Handle {
         String callBackMasterId = callbackData.substring(callbackData.lastIndexOf("/") + 1);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        RecordToMasterDto recordData = clientDataCache.getRecordData(callbackQuery.getMessage()
+                .getChatId());
         Long id = masterRepository.findById(Long.parseLong(callBackMasterId))
                 .get()
                 .getId();
         String telegramNick = masterRepository.findById(id)
                 .get()
                 .getTelegramNick();
-        masterId = masterRepository.findById(id)
+        recordData.setMasterId(masterRepository.findById(id)
                 .get()
-                .getTelegramId();
-            buttons.add(Arrays.asList(
+                .getTelegramId());
+        clientDataCache.saveRecordData(callbackQuery.getMessage()
+                .getChatId(), recordData);
+        buttons.add(Arrays.asList(
                     InlineKeyboardButton.builder()
                             .text("Записаться")
                             .callbackData("RECORD")

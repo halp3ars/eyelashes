@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 @Getter
 @Setter
 @Entity(name = "period_of_work")
@@ -34,5 +35,6 @@ public class PeriodOfWork {
     private Integer fourthIntervalTo;
     @Column(name = "day")
     private String day;
+
 
 }
