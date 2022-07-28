@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class TimeForClient {
@@ -35,10 +34,14 @@ public class TimeForClient {
                         .equals(day))
                 .toList()
                 .get(0);
-        IntStream.range(periodOfWorks.getFirstIntervalFrom() - 1, periodOfWorks.getFirstIntervalTo() + 1).forEach(workHours::add);
-        IntStream.range(periodOfWorks.getSecondIntervalFrom(), periodOfWorks.getSecondIntervalTo() + 1).forEach(workHours::add);;
-        IntStream.range(periodOfWorks.getThirdIntervalFrom(), periodOfWorks.getThirdIntervalTo() + 1).forEach(workHours::add);;
-        IntStream.range(periodOfWorks.getFourthIntervalFrom(), periodOfWorks.getFourthIntervalTo() + 1).forEach(workHours::add);;
+        IntStream.range(periodOfWorks.getFirstIntervalFrom() - 1, periodOfWorks.getFirstIntervalTo() + 1)
+                .forEach(workHours::add);
+        IntStream.range(periodOfWorks.getSecondIntervalFrom(), periodOfWorks.getSecondIntervalTo() + 1)
+                .forEach(workHours::add);
+        IntStream.range(periodOfWorks.getThirdIntervalFrom(), periodOfWorks.getThirdIntervalTo() + 1)
+                .forEach(workHours::add);
+        IntStream.range(periodOfWorks.getFourthIntervalFrom(), periodOfWorks.getFourthIntervalTo() + 1)
+                .forEach(workHours::add);
         List<Integer> reservedTime = new ArrayList<>();
         recordToMaster.stream()
                 .filter(record -> record.getClientId()
