@@ -45,7 +45,7 @@ public class ProfileMasterCallback implements Callback {
                         .build(),
                 InlineKeyboardButton.builder()
                         .text("Меню")
-                        .callbackData("MENU")
+                        .callbackData("MASTER")
                         .build()
         ));
 

@@ -20,13 +20,16 @@ public class DeleteProfileMasterCallbackImpl implements Callback {
     private final MasterRepository masterRepository;
     private final ScheduleRepository scheduleRepository;
 
+    @Transactional
     @Override
     public SendMessage getCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        long chatId = callbackQuery.getMessage().getChatId();
         deleteMaster(chatId);
+        deleteScheduleMaster(chatId);
 
         return SendMessage.builder()
-                .text("Ваш профиль удален.\nВернитесь в главное меню")
+                .text("Ваш профиль удален.\nВернитесь в главное меню.")
+                .chatId(chatId)
                 .replyMarkup(createKeyboardForDeleteMaster())
                 .build();
     }
@@ -36,9 +39,16 @@ public class DeleteProfileMasterCallbackImpl implements Callback {
         masterRepository.deleteByTelegramId(masterId);
     }
 
+    @Transactional
+    public void deleteScheduleMaster(long masterId) {
+        scheduleRepository.deleteByTelegramId(masterId);
+    }
+
     private InlineKeyboardMarkup createKeyboardForDeleteMaster() {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        buttons.add(Collections.singletonList(InlineKeyboardButton.builder()
+        buttons.add(Collections.singletonList(
+                InlineKeyboardButton.builder()
+                        .text("Меню")
                 .callbackData("MENU")
                 .build()));
 

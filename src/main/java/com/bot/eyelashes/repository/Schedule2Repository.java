@@ -11,5 +11,4 @@ public interface Schedule2Repository extends JpaRepository<Schedule2, Long> {
     Schedule2 findByTelegramId(Long telegramId);
 
 
-
 }
