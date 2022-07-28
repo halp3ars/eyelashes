@@ -13,9 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin("*")
 @RestController
@@ -49,15 +47,15 @@ public class ScheduleController {
     @GetMapping("/day")
     public Schedule2 getSchedule2() {
         Schedule2 schedule2 = new Schedule2();
-        Set<PeriodOfWork> periodOfWorkSet = new HashSet<>();
+        List<PeriodOfWork> periodOfWorkList = new ArrayList<>();
         PeriodOfWork periodOfWork = new PeriodOfWork();
         periodOfWork.setDay("Суббота");
         periodOfWork.setFirstIntervalFrom(12);
-        periodOfWorkSet.add(new PeriodOfWork());
-        periodOfWorkSet.add(periodOfWork);
+        periodOfWorkList.add(new PeriodOfWork());
+        periodOfWorkList.add(periodOfWork);
 
         schedule2.setTelegramId(222222L);
-        schedule2.setPeriodOfWorks(periodOfWorkSet);
+        schedule2.setPeriodOfWorks(periodOfWorkList);
 
         return schedule2;
     }
