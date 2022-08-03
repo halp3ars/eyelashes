@@ -52,7 +52,9 @@ public class ListClientRecordToMasterCallback implements Callback {
             days.add(record.getDay());
         }
 
-        days.sort(Comparator.comparing(day -> List.of("Понедельник","Вторник","Среда", "Четверг","Пятница","Суббота","Воскресенье").indexOf(day)));
+        days.sort(Comparator.comparing(day -> List.of(DayOfWeek.MONDAY.getNameDay(), DayOfWeek.TUESDAY.getNameDay(),
+                DayOfWeek.WEDNESDAY.getNameDay(), DayOfWeek.THURSDAY.getNameDay(), DayOfWeek.FRIDAY.getNameDay(),
+                DayOfWeek.SATURDAY.getNameDay(), DayOfWeek.SUNDAY.getNameDay()).indexOf(day)));
 
         return days;
     }
@@ -66,7 +68,8 @@ public class ListClientRecordToMasterCallback implements Callback {
 
         for (String day : daysRecordToMaster) {
             String callbackDay = scheduleMasterMap.getKey(day);
-            if (day.equals("Понедельник") || day.equals("Вторник") || day.equals("Среда")) {
+            if (day.equals(DayOfWeek.MONDAY.getNameDay()) || day.equals(DayOfWeek.TUESDAY.getNameDay()) ||
+                    day.equals(DayOfWeek.WEDNESDAY.getNameDay())) {
                 rowMain.add(
                         InlineKeyboardButton.builder()
                                 .text(day)
@@ -75,7 +78,8 @@ public class ListClientRecordToMasterCallback implements Callback {
                 );
             }
 
-            if (day.equals("Четверг") || day.equals("Пятница") || day.equals("Суббота")) {
+            if (day.equals(DayOfWeek.THURSDAY.getNameDay()) || day.equals(DayOfWeek.FRIDAY.getNameDay()) ||
+                    day.equals(DayOfWeek.SUNDAY.getNameDay())) {
                 rowSecond.add(InlineKeyboardButton.builder()
                         .text(day)
                         .callbackData("DAY_CLIENT_RECORD_TO_MASTER/" + callbackDay)
@@ -83,7 +87,7 @@ public class ListClientRecordToMasterCallback implements Callback {
                 );
             }
 
-            if (day.equals("Воскресенье")) {
+            if (day.equals(DayOfWeek.SUNDAY.getNameDay())) {
                 rowThird.add(InlineKeyboardButton.builder()
                         .text(day)
                         .callbackData("DAY_CLIENT_RECORD_TO_MASTER/" + callbackDay)

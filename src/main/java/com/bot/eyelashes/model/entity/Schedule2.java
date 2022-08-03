@@ -12,8 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Schedule2 {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

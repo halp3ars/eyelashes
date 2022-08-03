@@ -34,6 +34,7 @@ public class ScheduleController {
         return "ok";
     }
 
+    @CrossOrigin("*")
     @PostMapping(value = "/Schedule")
     public Message setSchedule2(@RequestBody Schedule2Dto schedule2Dto) throws TelegramApiException {
         scheduleService.saveSchedule2(schedule2Dto);

@@ -34,13 +34,9 @@ public class ScheduleService {
     private final Schedule2Mapper schedule2Mapper;
 
 
-    @Transactional
     public void saveSchedule(ScheduleDto scheduleDto) {
         Schedule schedule = scheduleMapper.toEntity(scheduleDto);
         schedule.setTelegramId(masterId);
-        if (scheduleRepository.findByTelegramId(masterId).isPresent())
-            scheduleRepository.deleteByTelegramId(masterId);
-
         scheduleRepository.save(schedule);
     }
 
@@ -59,7 +55,7 @@ public class ScheduleService {
     private InlineKeyboardMarkup createFinalButton() {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(List.of(InlineKeyboardButton.builder()
-                .text("Меню")
+                .text("Меню мастера")
                 .callbackData("MASTER")
                 .build()));
         return InlineKeyboardMarkup.builder()

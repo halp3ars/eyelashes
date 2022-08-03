@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface Schedule2Repository extends JpaRepository<Schedule2, Long> {
-
-
     Schedule2 findByTelegramId(Long telegramId);
+    void deleteByTelegramId(long masterId);
 
 
 }
