@@ -3,7 +3,11 @@ package com.bot.eyelashes.handler.registration;
 import com.bot.eyelashes.cache.MasterDataCache;
 import com.bot.eyelashes.enums.BotState;
 import com.bot.eyelashes.enums.ClientBotState;
+import com.bot.eyelashes.enums.map.HashMapDayOfWeekModeService;
 import com.bot.eyelashes.handler.impl.HandleMasterActivityImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterScheduleImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterTimeFromImpl;
+import com.bot.eyelashes.handler.impl.HandleMasterTimeToImpl;
 import com.bot.eyelashes.model.dto.MasterDto;
 import com.bot.eyelashes.model.dto.ScheduleDto;
 import com.bot.eyelashes.service.Bot;
@@ -28,6 +32,7 @@ import java.util.List;
 public class FillingMasterProfile implements HandleRegistration {
     private final MasterDataCache masterDataCache;
     private final MessageService messageService;
+    private final HashMapDayOfWeekModeService dayOfWeekModeService;
 
     @Override
     public SendMessage getMessage(Message message) {
@@ -62,8 +67,7 @@ public class FillingMasterProfile implements HandleRegistration {
                 replyToUser = messageService.getReplyMessage(chatId, "Введите Вашу фамилию");
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_ACTIVITY);
             } else {
-                replyToUser = messageService.getReplyMessage(chatId,
-                        "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
+                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
             }
         }
 
@@ -75,17 +79,15 @@ public class FillingMasterProfile implements HandleRegistration {
                 HandleMasterActivityImpl handleTypeOfActivity = new HandleMasterActivityImpl();
                 replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите вид деятельности",
                         handleTypeOfActivity.createInlineKeyboard());
+
             } else {
-                replyToUser = messageService.getReplyMessage(chatId,
-                        "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
+                replyToUser = messageService.getReplyMessage(chatId, "Допустимы только буквы латинского и русского алфавита. Попробуйте ввести заново");
             }
         }
 
         if (botState.equals(BotState.ASK_ADDRESS)) {
-            masterDto.setTelegramNick(inputMessage.getChat()
-                    .getUserName());
-            log.info("master set telegramNickName = " + inputMessage.getChat()
-                    .getUserName());
+            masterDto.setTelegramNick(inputMessage.getChat().getUserName());
+            log.info("master set telegramNickName = " + inputMessage.getChat().getUserName());
             replyToUser = messageService.getReplyMessage(chatId, "Введите адрес");
             masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_PHONE);
         }
@@ -98,30 +100,42 @@ public class FillingMasterProfile implements HandleRegistration {
         }
 
         if (botState.equals(BotState.ASK_DAY)) {
+            HandleMasterScheduleImpl handleMasterSchedule = new HandleMasterScheduleImpl(dayOfWeekModeService);
             if (inputMessage.getContact() == null) {
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_DAY);
                 replyToUser = messageService.getReplyMessage(chatId, "Некорректный номер. Отправьте с помощью кнопки.");
             } else {
                 masterDataCache.setUsersCurrentBotState(chatId, botState);
-                log.info("master set phoneNumber = " + inputMessage.getContact()
-                        .getPhoneNumber());
-                masterDto.setPhone(inputMessage.getContact()
-                        .getPhoneNumber());
+                log.info("master set phoneNumber = " + inputMessage.getContact().getPhoneNumber());
+                masterDto.setPhone(inputMessage.getContact().getPhoneNumber());
                 masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
                 replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Составте свое расписание.",
                         createButtonForSchedule());
             }
         }
 
+        if (botState.equals(BotState.ASK_TIME_FROM)) {
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.ASK_TIME_TO);
+            HandleMasterTimeFromImpl handleMasterTimeFrom = new HandleMasterTimeFromImpl();
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите начало рабочего дня",
+                    handleMasterTimeFrom.createInlineKeyboard());
+        }
+        if (botState.equals(BotState.ASK_TIME_TO)) {
+            HandleMasterTimeToImpl handleMasterTimeTo = new HandleMasterTimeToImpl();
+            masterDataCache.setUsersCurrentBotState(chatId, BotState.REGISTERED);
+            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Выберите конец рабочего дня",
+                    handleMasterTimeTo.createInlineKeyboard());
+        }
         if (botState.equals(BotState.REGISTERED)) {
-            masterDataCache.setMasterInDb(masterDto);
-            userScheduleData.setTelegramId(chatId);
-            log.info("data master save in db");
-            replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Вы зарегистрированы.",
-                    createFinalButton());
+                masterDataCache.setMasterInDb(masterDto);
+                userScheduleData.setTelegramId(chatId);
+                log.info("data master save in db");
+
+                replyToUser = messageService.getReplyMessageWithKeyboard(chatId, "Вы зарегистрированы.\n",
+                        createFinalButton());
             masterDataCache.setScheduleInDb(userScheduleData);
-            Bot.masterRegistration = false;
-            masterDataCache.setUsersCurrentBotState(chatId, BotState.NONE);
+                Bot.masterRegistration = false;
+                masterDataCache.setUsersCurrentBotState(chatId, BotState.NONE);
         }
 
         masterDataCache.saveUserProfileData(chatId, masterDto);
@@ -130,19 +144,14 @@ public class FillingMasterProfile implements HandleRegistration {
     }
 
     private InlineKeyboardMarkup createButtonForSchedule() {
-        //https://octopus-app-ng6rh.ondigitalocean.app
-        WebAppInfo webAppInfo = WebAppInfo.builder()
-                .url("https://157.230.29.249:3000/")
-                .build();
+        WebAppInfo webAppInfo = WebAppInfo.builder().url("https://hammerhead-app-vyclj.ondigitalocean.app/").build();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         buttons.add(Collections.singletonList(InlineKeyboardButton.builder()
                 .text("Расписание")
                 .webApp(webAppInfo)
                 .build()));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(buttons).build();
     }
 
     private InlineKeyboardMarkup createFinalButton() {
